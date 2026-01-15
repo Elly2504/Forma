@@ -1,0 +1,129 @@
+---
+// Direct conversion CTA - no waitlist
+---
+
+<section class="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden">
+  <!-- Background effects -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[var(--gold-500)] rounded-full blur-[200px] opacity-10"></div>
+  <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[var(--gold-600)] rounded-full blur-[150px] opacity-5"></div>
+  
+  <div class="container relative">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Badge -->
+      <div class="counter-badge mx-auto mb-8 animate-fade-in">
+        <span class="counter-dot"></span>
+        <span>For Vintage Football Shirt Collectors</span>
+      </div>
+      
+      <!-- Main headline -->
+      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 animate-fade-in" style="animation-delay: 0.1s">
+        Know Your Shirt's <br/>
+        <span class="text-gradient">True Value</span> in 60 Seconds
+      </h1>
+      
+      <!-- Subheadline -->
+      <p class="text-xl md:text-2xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-10 animate-fade-in" style="animation-delay: 0.2s">
+        AI-powered condition grading and valuation for vintage football shirts. 
+        Finally, a <strong class="text-white">Kelley Blue Book</strong> for your collection.
+      </p>
+      
+      <!-- CTA - Direct conversion -->
+      <div class="animate-fade-in flex flex-col sm:flex-row items-center justify-center gap-4" style="animation-delay: 0.3s">
+        <a href="/app/signup" class="btn-primary text-lg px-8 py-4">
+          Try Free — No Credit Card
+        </a>
+        <span class="text-[var(--text-muted)] text-sm">3 free valuations/month</span>
+      </div>
+      
+      <!-- Social proof -->
+      <div class="mt-16 animate-fade-in" style="animation-delay: 0.4s">
+        <p class="text-[var(--text-muted)] text-sm mb-4">Trusted by collectors trading on</p>
+        <div class="flex items-center justify-center gap-8 opacity-60">
+          <span class="text-xl font-semibold">eBay</span>
+          <span class="text-xl font-semibold">Depop</span>
+          <span class="text-xl font-semibold">Vinted</span>
+          <span class="text-xl font-semibold">Classic Football Shirts</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Hero visual mockup -->
+    <div class="mt-16 max-w-5xl mx-auto animate-fade-in gold-glow rounded-2xl" style="animation-delay: 0.5s">
+      <div class="glass-card-gold p-4 md:p-8">
+        <!-- Mock dashboard preview -->
+        <div class="bg-[var(--bg-primary)] rounded-xl overflow-hidden">
+          <div class="flex items-center gap-2 px-4 py-3 bg-[var(--bg-elevated)] border-b border-[var(--border-subtle)]">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            <span class="ml-4 text-xs text-[var(--text-muted)]">app.kitticker.com</span>
+          </div>
+          <div class="p-6 md:p-10">
+            <div class="grid md:grid-cols-2 gap-8">
+              <!-- Shirt preview side -->
+              <div class="space-y-4">
+                <div class="aspect-square bg-[var(--bg-card)] rounded-xl flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-6xl mb-2">👕</div>
+                    <p class="text-[var(--text-muted)] text-sm">Arsenal 1991 Away</p>
+                    <p class="text-[var(--text-muted)] text-xs">JVC Sponsor • Adidas</p>
+                  </div>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                  {['Front', 'Back', 'Label', 'Detail'].map((label) => (
+                    <div class="aspect-square bg-[var(--bg-card)] rounded-lg flex items-center justify-center">
+                      <span class="text-[var(--text-muted)] text-xs">{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <!-- Valuation result side -->
+              <div class="space-y-6">
+                <div class="text-center md:text-left">
+                  <p class="text-[var(--text-muted)] text-sm">Estimated Value</p>
+                  <p class="text-5xl font-bold text-gradient">£185 - £220</p>
+                  <p class="text-green-400 text-sm mt-1">↑ 12% in last 90 days</p>
+                </div>
+                
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center">
+                    <span class="text-[var(--text-secondary)]">Condition Grade</span>
+                    <span class="bg-[var(--gold-500)] text-black px-3 py-1 rounded-full text-sm font-bold">A-</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-[var(--text-secondary)]">Fabric Quality</span>
+                    <div class="flex gap-1">
+                      {[1,2,3,4,5].map((i) => (
+                        <div class={`w-4 h-2 rounded-full ${i <= 4 ? 'bg-[var(--gold-500)]' : 'bg-[var(--bg-card)]'}`}></div>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-[var(--text-secondary)]">Print Condition</span>
+                    <div class="flex gap-1">
+                      {[1,2,3,4,5].map((i) => (
+                        <div class={`w-4 h-2 rounded-full ${i <= 5 ? 'bg-[var(--gold-500)]' : 'bg-[var(--bg-card)]'}`}></div>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-[var(--text-secondary)]">Authenticity</span>
+                    <span class="text-green-400 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Verified
+                    </span>
+                  </div>
+                </div>
+                
+                <button class="btn-primary w-full">Generate Certificate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,108 @@
+---
+const tiers = [
+  {
+    name: "Free",
+    price: "$0",
+    period: "forever",
+    description: "Try it out",
+    features: [
+      "3 valuations per month",
+      "Basic condition grade (A-F)",
+      "General price range",
+      "Watermarked reports"
+    ],
+    cta: "Start Free",
+    href: "/app/signup",
+    featured: false
+  },
+  {
+    name: "Collector",
+    price: "$9.99",
+    period: "/month",
+    description: "For serious collectors",
+    features: [
+      "25 valuations per month",
+      "Detailed condition breakdown",
+      "Exact price estimates",
+      "PDF certificates (shareable)",
+      "Price trend tracking",
+      "Priority AI processing"
+    ],
+    cta: "Get Collector",
+    href: "/app/signup?plan=collector",
+    featured: true
+  },
+  {
+    name: "Dealer",
+    price: "$49.99",
+    period: "/month",
+    description: "For traders & shops",
+    features: [
+      "100 valuations per month",
+      "Everything in Collector",
+      "API access",
+      "Bulk upload (10+ items)",
+      "White-label certificates",
+      "Dedicated support"
+    ],
+    cta: "Get Dealer",
+    href: "/app/signup?plan=dealer",
+    featured: false
+  }
+];
+---
+
+<section id="pricing" class="relative">
+  <div class="container">
+    <div class="text-center mb-16">
+      <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">Pricing</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6">
+        Simple, <span class="text-gradient">Transparent</span> Pricing
+      </h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">
+        Start free, upgrade when you need more. All plans include our core AI valuation technology.
+      </p>
+    </div>
+    
+    <div class="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      {tiers.map((tier) => (
+        <div class={`glass-card p-8 relative ${tier.featured ? 'border-[var(--gold-500)] gold-glow' : ''}`}>
+          {tier.featured && (
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--gold-500)] text-black text-xs font-bold py-1 px-4 rounded-full">
+              POPULAR
+            </div>
+          )}
+          
+          <div class="text-center mb-6">
+            <h3 class="text-xl font-bold mb-2">{tier.name}</h3>
+            <p class="text-[var(--text-muted)] text-sm">{tier.description}</p>
+          </div>
+          
+          <div class="text-center mb-6">
+            <span class="text-5xl font-bold">{tier.price}</span>
+            <span class="text-[var(--text-muted)]">{tier.period}</span>
+          </div>
+          
+          <ul class="space-y-3 mb-8">
+            {tier.features.map((feature) => (
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-[var(--gold-500)] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-[var(--text-secondary)] text-sm">{feature}</span>
+              </li>
+            ))}
+          </ul>
+          
+          <a href={tier.href} class={tier.featured ? 'btn-primary w-full block text-center' : 'btn-secondary w-full block text-center'}>
+            {tier.cta}
+          </a>
+        </div>
+      ))}
+    </div>
+    
+    <p class="text-center text-[var(--text-muted)] text-sm mt-10">
+      Need more valuations? <span class="text-[var(--gold-400)]">Credit packs available</span> from $0.30/valuation. No subscription required.
+    </p>
+  </div>
+</section>

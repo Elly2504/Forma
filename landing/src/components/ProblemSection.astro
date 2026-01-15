@@ -1,0 +1,47 @@
+---
+const painPoints = [
+  {
+    problem: "eBay prices don't account for condition",
+    description: "A 'good condition' listing could mean anything. You need exact grades for accurate values."
+  },
+  {
+    problem: "No reliable price guide exists",
+    description: "Unlike cars or watches, vintage football shirts have no 'Blue Book' reference."
+  },
+  {
+    problem: "Fakes flood the market",
+    description: "Without expert eyes, it's nearly impossible to verify authenticity before buying."
+  },
+  {
+    problem: "You're leaving money on the table",
+    description: "Underpriced sales and overpaid purchases add up. Knowledge is profit."
+  }
+];
+---
+
+<section id="problem" class="bg-[var(--bg-secondary)]">
+  <div class="container">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">The Problem</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6">
+          Vintage Shirt Pricing is a <span class="text-gradient">Guessing Game</span>
+        </h2>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        {painPoints.map((point, index) => (
+          <div class="glass-card p-6 flex gap-4" style={`animation-delay: ${index * 0.1}s`}>
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+              <span class="text-red-400 text-lg">✕</span>
+            </div>
+            <div>
+              <h3 class="font-semibold text-lg mb-2">{point.problem}</h3>
+              <p class="text-[var(--text-secondary)] text-sm">{point.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

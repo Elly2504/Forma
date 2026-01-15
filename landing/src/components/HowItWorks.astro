@@ -1,0 +1,47 @@
+---
+const features = [
+  {
+    icon: "📸",
+    title: "Upload Photos",
+    description: "Take 4 photos of your shirt: front, back, label, and any details. Our AI does the rest."
+  },
+  {
+    icon: "🔍",
+    title: "AI Condition Analysis",
+    description: "Advanced vision AI grades your shirt on 6 criteria: fabric wear, print quality, collar condition, and more."
+  },
+  {
+    icon: "💰",
+    title: "Get Your Valuation",
+    description: "Receive a condition-adjusted price range with market comparisons in under 60 seconds."
+  }
+];
+---
+
+<section id="how-it-works" class="relative">
+  <div class="bg-radial-gold absolute inset-0 pointer-events-none"></div>
+  <div class="container relative">
+    <div class="text-center mb-16">
+      <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">How It Works</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6">
+        Three Steps to Your <span class="text-gradient">True Value</span>
+      </h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">
+        No more guessing. No more leaving money on the table. Get an accurate, condition-based valuation in under a minute.
+      </p>
+    </div>
+    
+    <div class="grid lg:grid-cols-3 gap-8">
+      {features.map((feature, index) => (
+        <div class="glass-card feature-card p-8 text-center" style={`animation-delay: ${index * 0.1}s`}>
+          <div class="text-5xl mb-6">{feature.icon}</div>
+          <div class="w-10 h-10 rounded-full bg-[var(--gold-500)] text-black font-bold flex items-center justify-center mx-auto mb-4">
+            {index + 1}
+          </div>
+          <h3 class="text-xl font-semibold mb-3">{feature.title}</h3>
+          <p class="text-[var(--text-secondary)]">{feature.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

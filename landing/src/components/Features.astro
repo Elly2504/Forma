@@ -1,0 +1,58 @@
+---
+const features = [
+  {
+    icon: "🎯",
+    title: "Condition-Based Valuation",
+    description: "Unlike generic price guides, we factor in exact condition. A mint 1998 France shirt is worth 3x more than one with collar wear."
+  },
+  {
+    icon: "🤖",
+    title: "AI-Powered Analysis",
+    description: "Our vision AI examines fabric quality, print condition, label authenticity, and 6 other criteria photographers miss."
+  },
+  {
+    icon: "📊",
+    title: "Market Intelligence",
+    description: "Aggregated data from eBay, Depop, and collector marketplaces—all in one valuation."
+  },
+  {
+    icon: "📜",
+    title: "Verifiable Certificates",
+    description: "Share QR-verified condition reports with buyers. Build trust and command premium prices."
+  },
+  {
+    icon: "📈",
+    title: "Price Trends",
+    description: "Track how values change over time. Know when to hold and when to sell."
+  },
+  {
+    icon: "🛡️",
+    title: "Fake Detection",
+    description: "AI flags authenticity concerns before you buy. Protect your collection and your wallet."
+  }
+];
+---
+
+<section id="features" class="bg-[var(--bg-secondary)]">
+  <div class="container">
+    <div class="text-center mb-16">
+      <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">Features</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6">
+        Everything You Need to <span class="text-gradient">Trade Confidently</span>
+      </h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">
+        Built by collectors, for collectors. We understand what matters.
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {features.map((feature, index) => (
+        <div class="glass-card-gold feature-card p-6" style={`animation-delay: ${index * 0.05}s`}>
+          <div class="text-4xl mb-4">{feature.icon}</div>
+          <h3 class="text-xl font-semibold mb-3">{feature.title}</h3>
+          <p class="text-[var(--text-secondary)] text-sm">{feature.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
