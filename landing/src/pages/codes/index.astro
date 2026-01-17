@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const codes = await getCollection('codes');
+
+// Group by brand
+const groupedCodes = codes.reduce((acc, code) => {
+  const brand = code.data.brand;
+  if (!acc[brand]) acc[brand] = [];
+  acc[brand].push(code);
+  return acc;
+}, {} as Record<string, typeof codes>);
+
+const brands = Object.keys(groupedCodes).sort();
+---
+
+<BaseLayout 
+  title="Product Code Database | KitTicker"
+  description="Searchable database of verified football shirt product codes. Verify Nike, Adidas, and Umbro kit authenticity."
+  canonicalUrl="https://kitticker.com/codes"
+>
+  <Header />
+  
+  <main class="min-h-screen bg-[#0a0a0a] pt-24">
+    <!-- Hero -->
+    <section class="py-16 border-b border-white/10">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <span class="inline-block px-4 py-1.5 bg-amber-500/10 text-amber-400 rounded-full text-sm font-medium mb-6">
+          Database
+        </span>
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+          Product <span class="bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">Code</span> Database
+        </h1>
+        <p class="text-xl text-zinc-400 max-w-2xl mx-auto mb-8">
+          Verified product codes for authentic football shirts. Use these to verify your shirts or check before buying.
+        </p>
+        
+        <a href="/blog/nike-product-codes-guide" class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          Learn how to use product codes →
+        </a>
+      </div>
+    </section>
+    
+    <!-- Stats -->
+    <section class="py-8 border-b border-white/10">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex flex-wrap justify-center gap-8 text-center">
+          <div>
+            <p class="text-3xl font-bold text-white">{codes.length}</p>
+            <p class="text-zinc-400 text-sm">Verified Codes</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-white">{brands.length}</p>
+            <p class="text-zinc-400 text-sm">Brands</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-white">{codes.filter(c => c.data.verified).length}</p>
+            <p class="text-zinc-400 text-sm">Community Verified</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Codes by Brand -->
+    {brands.map(brand => (
+      <section class="py-12 border-b border-white/10" id={brand.toLowerCase()}>
+        <div class="max-w-6xl mx-auto px-4">
+          <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <span class="w-10 h-10 bg-amber-500/10 rounded-lg flex items-center justify-center">
+              {brand === 'Nike' && '✓'}
+              {brand === 'Adidas' && '⚡'}
+              {brand !== 'Nike' && brand !== 'Adidas' && '◆'}
+            </span>
+            {brand}
+            <span class="text-zinc-500 text-lg font-normal">({groupedCodes[brand].length} codes)</span>
+          </h2>
+          
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {groupedCodes[brand].map(code => (
+              <div class="bg-[#111111] rounded-xl border border-white/10 p-5 hover:border-amber-500/30 transition-all">
+                <div class="flex justify-between items-start mb-3">
+                  <span class="font-mono text-amber-400 text-lg">{code.data.code}</span>
+                  {code.data.verified && (
+                    <span class="px-2 py-0.5 bg-green-500/10 text-green-400 text-xs rounded-full">
+                      Verified
+                    </span>
+                  )}
+                </div>
+                <h3 class="text-white font-semibold mb-1">
+                  {code.data.team}
+                </h3>
+                <p class="text-zinc-400 text-sm mb-3">
+                  {code.data.season} {code.data.type}
+                </p>
+                {code.data.valueRange && (
+                  <p class="text-zinc-500 text-sm">
+                    Est. value: £{code.data.valueRange.low}-{code.data.valueRange.high}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+    
+    <!-- Empty State -->
+    {codes.length === 0 && (
+      <section class="py-24 text-center">
+        <p class="text-zinc-400 text-lg">No codes in database yet. Check back soon!</p>
+      </section>
+    )}
+    
+    <!-- Contribute CTA -->
+    <section class="py-16">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-2xl font-bold text-white mb-4">
+          Help us grow the database
+        </h2>
+        <p class="text-zinc-400 mb-6">
+          Found a verified code that's not listed? Let us know and we'll add it.
+        </p>
+        <a 
+          href="mailto:hello@kitticker.com?subject=Code Submission"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 text-white font-medium rounded-full border border-white/10 hover:bg-white/10 transition-all"
+        >
+          Submit a Code
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>

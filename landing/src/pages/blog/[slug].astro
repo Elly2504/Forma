@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await guide.render();
+
+// Calculate reading time (rough estimate: 200 words per minute)
+const wordCount = guide.body.split(/\s+/).length;
+const readingTime = Math.ceil(wordCount / 200);
+---
+
+<Header />
+
+<BlogLayout frontmatter={{
+  ...guide.data,
+  readingTime: guide.data.readingTime || readingTime,
+}}>
+  <Content />
+</BlogLayout>
+
+<Footer />

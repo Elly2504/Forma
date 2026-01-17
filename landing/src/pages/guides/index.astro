@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCodeChecker from '../../components/ProductCodeChecker.astro';
+import { getCollection } from 'astro:content';
+
+const guides = await getCollection('guides');
+
+// Sort by publish date (newest first)
+const sortedGuides = guides.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+
+// Brand guides
+const brandGuides = sortedGuides.filter(g => g.data.category === 'brand');
+const educationalGuides = sortedGuides.filter(g => g.data.category !== 'brand');
+
+// Brand colors
+const brandColors: Record<string, { bg: string; border: string; text: string }> = {
+  nike: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400' },
+  adidas: { bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400' },
+  puma: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-400' },
+  umbro: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400' },
+};
+---
+
+<BaseLayout 
+  title="Authentication Guides | KitTicker"
+  description="Comprehensive guides to authenticate Nike, Adidas, Puma, and Umbro football kits. Learn to spot fakes and verify product codes."
+>
+  <main class="min-h-screen bg-[#0a0a0a]">
+    <!-- Hero Section -->
+    <section class="pt-12 pb-8 sm:pt-16 sm:pb-12 border-b border-white/10">
+      <div class="max-w-7xl mx-auto px-4">
+        <a href="/" class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors text-sm mb-6">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Home
+        </a>
+        
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+          Authentication Guides
+        </h1>
+        <p class="text-lg text-zinc-400 max-w-2xl">
+          Everything you need to verify football shirt authenticity. From product codes to stitching details, learn to spot fakes before you buy.
+        </p>
+      </div>
+    </section>
+
+    <!-- Brand Guides -->
+    <section class="py-12 sm:py-16">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 flex items-center gap-3">
+          <span class="w-1 h-6 bg-amber-400 rounded-full"></span>
+          Brand Guides
+        </h2>
+        
+        <div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {brandGuides.map((guide) => {
+            const brand = guide.data.brand?.toLowerCase() || 'default';
+            const colors = brandColors[brand] || { bg: 'bg-zinc-500/10', border: 'border-zinc-500/30', text: 'text-zinc-400' };
+            
+            return (
+              <a 
+                href={`/guides/${guide.slug}`}
+                class={`group block p-5 sm:p-6 rounded-xl ${colors.bg} border ${colors.border} hover:border-opacity-60 transition-all hover:-translate-y-1`}
+              >
+                <div class="flex items-center gap-3 mb-3">
+                  <span class={`text-2xl sm:text-3xl font-bold ${colors.text}`}>
+                    {guide.data.brand}
+                  </span>
+                </div>
+                <h3 class="text-white font-semibold mb-2 group-hover:text-amber-400 transition-colors line-clamp-2">
+                  {guide.data.title}
+                </h3>
+                <p class="text-sm text-zinc-500 line-clamp-2">
+                  {guide.data.description}
+                </p>
+                
+                <div class="mt-4 flex items-center gap-2 text-sm text-zinc-500">
+                  {guide.data.readingTime && (
+                    <span>{guide.data.readingTime} min read</span>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+          
+          {/* Coming Soon Cards */}
+          {['Kappa', 'Macron'].map((brand) => (
+            <div class="p-5 sm:p-6 rounded-xl bg-zinc-800/30 border border-zinc-700/30 opacity-60">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl sm:text-3xl font-bold text-zinc-500">
+                  {brand}
+                </span>
+              </div>
+              <h3 class="text-zinc-400 font-semibold mb-2">
+                Coming Soon
+              </h3>
+              <p class="text-sm text-zinc-600">
+                We're working on this guide. Check back soon!
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational Guides -->
+    <section class="py-12 sm:py-16 bg-zinc-900/30">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 flex items-center gap-3">
+          <span class="w-1 h-6 bg-amber-400 rounded-full"></span>
+          Learn the Basics
+        </h2>
+        
+        <div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {educationalGuides.map((guide) => (
+            <a 
+              href={`/guides/${guide.slug}`}
+              class="group block p-5 sm:p-6 rounded-xl bg-zinc-800/30 border border-white/5 hover:border-amber-500/30 transition-all hover:-translate-y-1"
+            >
+              <span class="inline-block px-2 py-1 text-xs font-medium bg-amber-500/10 text-amber-400 rounded-full mb-3">
+                {guide.data.category === 'tutorial' ? 'Tutorial' : 'Explainer'}
+              </span>
+              <h3 class="text-white font-semibold mb-2 group-hover:text-amber-400 transition-colors line-clamp-2">
+                {guide.data.title}
+              </h3>
+              <p class="text-sm text-zinc-500 line-clamp-2">
+                {guide.data.description}
+              </p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section with Product Code Checker -->
+    <section class="py-12 sm:py-16">
+      <div class="max-w-2xl mx-auto px-4">
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">
+          Quick Code Check
+        </h2>
+        <ProductCodeChecker variant="full" />
+        
+        <div class="mt-8 text-center">
+          <a 
+            href="/codes"
+            class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors"
+          >
+            Browse full code database
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

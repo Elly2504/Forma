@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = "Terms of Service | KitTicker";
+const description = "KitTicker's terms of service and AI valuation disclaimer.";
+---
+
+<BaseLayout title={title} description={description} canonicalUrl="https://kitticker.com/terms">
+  <Header />
+  
+  <main class="min-h-screen bg-[#0a0a0a] pt-24 pb-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="text-4xl font-bold text-white mb-8">Terms of Service</h1>
+      
+      <p class="text-zinc-400 mb-8">Last updated: January 15, 2026</p>
+      
+      <div class="prose prose-invert prose-lg max-w-none
+        prose-headings:text-white prose-headings:font-bold
+        prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+        prose-p:text-zinc-300 prose-p:leading-relaxed
+        prose-li:text-zinc-300
+        prose-a:text-amber-400 hover:prose-a:underline
+      ">
+        <!-- AI DISCLAIMER - CRITICAL -->
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 mb-10">
+          <h2 class="text-amber-400 mt-0 mb-4">⚠️ Important: AI Valuation Disclaimer</h2>
+          <p class="mb-0">
+            <strong>KitTicker provides AI-generated valuations that are estimates and opinions only, not professional appraisals or financial guarantees.</strong> Valuations are based on algorithmic analysis and market data at the time of assessment. Actual sale prices may vary significantly. KitTicker, its affiliates, and partners accept no liability for financial decisions made based on our valuations. For high-value transactions, we recommend consulting with professional authenticators and appraisers.
+          </p>
+        </div>
+        
+        <h2>1. Acceptance of Terms</h2>
+        <p>
+          By accessing or using KitTicker ("Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.
+        </p>
+        
+        <h2>2. Description of Service</h2>
+        <p>
+          KitTicker is an AI-powered platform that provides:
+        </p>
+        <ul>
+          <li>Condition analysis of vintage football shirts based on uploaded photos</li>
+          <li>Estimated market valuations based on current market data</li>
+          <li>Product code verification assistance</li>
+          <li>Collection management tools</li>
+        </ul>
+        
+        <h2>3. Limitation of Liability</h2>
+        <p>
+          <strong>AI valuations are not guarantees.</strong> The Service provides estimates based on available data and AI analysis. We do not guarantee:
+        </p>
+        <ul>
+          <li>The accuracy of any valuation</li>
+          <li>That a shirt will sell for the estimated price</li>
+          <li>The authenticity of any item</li>
+          <li>The completeness of our product code database</li>
+        </ul>
+        <p>
+          To the maximum extent permitted by law, KitTicker shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service.
+        </p>
+        
+        <h2>4. User Responsibilities</h2>
+        <p>You agree to:</p>
+        <ul>
+          <li>Provide accurate photos for valuation</li>
+          <li>Not use the Service for fraudulent purposes</li>
+          <li>Not attempt to manipulate or deceive the AI system</li>
+          <li>Not upload images you do not have rights to</li>
+          <li>Maintain the security of your account</li>
+        </ul>
+        
+        <h2>5. Intellectual Property</h2>
+        <p>
+          All content, branding, and technology of KitTicker are owned by us or our licensors. You retain ownership of photos you upload, but grant us a license to process them for providing the Service.
+        </p>
+        
+        <h2>6. Subscriptions and Payments</h2>
+        <p>
+          Paid subscriptions are billed monthly or annually via Lemon Squeezy. Refunds are handled according to our refund policy. Credits are non-refundable and expire at the end of each billing period unless otherwise stated.
+        </p>
+        
+        <h2>7. Account Termination</h2>
+        <p>
+          We may suspend or terminate your account if you violate these Terms. You may delete your account at any time through your account settings or by contacting support.
+        </p>
+        
+        <h2>8. Modifications to Service</h2>
+        <p>
+          We reserve the right to modify or discontinue the Service at any time. We will provide reasonable notice for significant changes.
+        </p>
+        
+        <h2>9. Governing Law</h2>
+        <p>
+          These Terms are governed by the laws of [Jurisdiction]. Any disputes shall be resolved in the courts of [Jurisdiction].
+        </p>
+        
+        <h2>10. Contact</h2>
+        <p>
+          For questions about these Terms, contact us at:<br>
+          Email: <a href="mailto:legal@kitticker.com">legal@kitticker.com</a>
+        </p>
+      </div>
+    </div>
+  </main>
+  
+  <Footer />
+</BaseLayout>

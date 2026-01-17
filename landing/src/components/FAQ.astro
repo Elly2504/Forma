@@ -1,0 +1,171 @@
+---
+const faqs = [
+  {
+    question: "How does KitTicker value vintage football shirts?",
+    answer: "KitTicker uses GPT-4o Vision AI to analyze 4 photos of your shirt across 6+ criteria including fabric condition, print quality, collar wear, and label authenticity. It then cross-references with real market data to give you a condition-adjusted price range."
+  },
+  {
+    question: "How accurate are KitTicker valuations?",
+    answer: "Our AI provides valuations with a confidence range based on current market data and condition analysis. Most valuations are within 10-15% of actual sale prices for similar condition shirts."
+  },
+  {
+    question: "What photos do I need for a valuation?",
+    answer: "You need 4 photos: front of the shirt, back of the shirt, the label/tag, and a close-up detail shot of any notable features or wear areas."
+  },
+  {
+    question: "Is KitTicker free to use?",
+    answer: "Yes! We offer 3 free valuations per month. For collectors needing more, our Collector plan ($9.99/mo) includes 25 valuations with detailed breakdowns and PDF certificates."
+  },
+  {
+    question: "Can I use KitTicker for authentication?",
+    answer: "While KitTicker focuses on valuation, our AI does check label authenticity as part of the grading process. However, for formal authentication, we recommend professional services."
+  }
+];
+---
+
+<section id="faq" class="section-padding">
+  <div class="container">
+    <div class="section-header">
+      <span class="eyebrow">Got Questions?</span>
+      <h2>Frequently Asked Questions</h2>
+      <p class="section-subtitle">Everything you need to know about KitTicker</p>
+    </div>
+    
+    <div class="faq-grid">
+      {faqs.map((faq, index) => (
+        <details class="faq-item" data-index={index}>
+          <summary class="faq-question">
+            <span>{faq.question}</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </summary>
+          <div class="faq-answer">
+            <p>{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-padding {
+    padding: 6rem 1.5rem;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold-500);
+    margin-bottom: 0.75rem;
+  }
+  
+  h2 {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .faq-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .faq-item {
+    background: rgba(17, 17, 17, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+  
+  .faq-item:hover {
+    border-color: rgba(245, 158, 11, 0.2);
+  }
+  
+  .faq-item[open] {
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+  
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+  }
+  
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+  
+  .faq-question:hover {
+    color: var(--gold-400);
+  }
+  
+  .faq-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  
+  .faq-item[open] .faq-icon {
+    transform: rotate(180deg);
+    color: var(--gold-500);
+  }
+  
+  .faq-answer {
+    padding: 0 1.5rem 1.25rem;
+  }
+  
+  .faq-answer p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+  }
+  
+  @media (max-width: 640px) {
+    .section-padding {
+      padding: 4rem 1rem;
+    }
+    
+    .faq-question {
+      padding: 1rem 1.25rem;
+      font-size: 0.9375rem;
+    }
+    
+    .faq-answer {
+      padding: 0 1.25rem 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,202 @@
+---
+interface Props {
+  variant?: 'full' | 'compact';
+}
+
+const { variant = 'full' } = Astro.props;
+---
+
+<div class={`code-checker ${variant === 'compact' ? 'p-4' : 'p-6 sm:p-8'} bg-gradient-to-br from-zinc-900 to-zinc-900/50 rounded-2xl border border-white/10`}>
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+      <svg class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+    <div>
+      <h3 class="font-semibold text-white text-lg">Product Code Checker</h3>
+      <p class="text-sm text-zinc-500">Validate Nike, Adidas, or Puma codes</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <!-- Input -->
+    <div class="relative">
+      <input 
+        type="text" 
+        id="product-code-input"
+        placeholder="Enter code (e.g., 638920-013)"
+        class="w-full px-4 py-3 bg-zinc-800/50 border border-white/10 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/25 transition-all font-mono text-lg"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button 
+        id="check-code-btn"
+        class="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-lg transition-colors text-sm"
+      >
+        Check
+      </button>
+    </div>
+
+    <!-- Result Area -->
+    <div id="code-result" class="hidden">
+      <div id="result-content" class="p-4 rounded-xl border"></div>
+    </div>
+
+    <!-- Quick Examples -->
+    <div class="flex flex-wrap gap-2">
+      <span class="text-xs text-zinc-500">Try:</span>
+      <button class="example-code px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="638920-013">Nike</button>
+      <button class="example-code px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="IS7462">Adidas</button>
+      <button class="example-code px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="736251-01">Puma</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const input = document.getElementById('product-code-input') as HTMLInputElement;
+  const checkBtn = document.getElementById('check-code-btn');
+  const resultArea = document.getElementById('code-result');
+  const resultContent = document.getElementById('result-content');
+  const exampleBtns = document.querySelectorAll('.example-code');
+
+  // Brand detection patterns
+  const patterns = {
+    nike: {
+      regex: /^(\d{6})(-\d{3})?$/,
+      name: 'Nike',
+      color: '#F97316',
+      guide: '/guides/nike-authentication-guide'
+    },
+    adidas: {
+      regex: /^[A-Z]{1,2}\d{4,5}$/i,
+      name: 'Adidas',
+      color: '#3B82F6',
+      guide: '/guides/adidas-authentication-guide'
+    },
+    puma: {
+      regex: /^(\d{6})(-\d{2})?$/,
+      name: 'Puma',
+      color: '#10B981',
+      guide: '/guides/puma-authentication-guide'
+    }
+  };
+
+  function detectBrand(code: string): { brand: string; name: string; color: string; guide: string } | null {
+    const cleanCode = code.trim().toUpperCase();
+    
+    // Check Adidas first (letters + numbers)
+    if (patterns.adidas.regex.test(cleanCode)) {
+      return { brand: 'adidas', ...patterns.adidas };
+    }
+    
+    // Check Nike (6 digits + optional 3-digit color)
+    if (patterns.nike.regex.test(cleanCode)) {
+      return { brand: 'nike', ...patterns.nike };
+    }
+    
+    // Check Puma (6 digits + optional 2-digit variant)
+    if (patterns.puma.regex.test(cleanCode)) {
+      // Disambiguate: if has -XX (2 digits), it's Puma
+      if (cleanCode.includes('-') && cleanCode.split('-')[1]?.length === 2) {
+        return { brand: 'puma', ...patterns.puma };
+      }
+      // If no hyphen or 3-digit suffix, could be either - default to Nike for 6-digit
+      if (!cleanCode.includes('-')) {
+        return { brand: 'nike', ...patterns.nike };
+      }
+    }
+    
+    return null;
+  }
+
+  function showResult(code: string) {
+    const detected = detectBrand(code);
+    
+    if (!resultArea || !resultContent) return;
+    
+    resultArea.classList.remove('hidden');
+    
+    if (!code.trim()) {
+      resultContent.innerHTML = `
+        <div class="flex items-center gap-3 text-zinc-400">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Enter a product code to check</span>
+        </div>
+      `;
+      resultContent.className = 'p-4 rounded-xl border border-zinc-700 bg-zinc-800/30';
+      return;
+    }
+    
+    if (detected) {
+      resultContent.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background: ${detected.color}20">
+            <svg class="w-4 h-4" style="color: ${detected.color}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold text-white">Valid ${detected.name} Format</p>
+            <p class="text-sm text-zinc-400 mt-1">
+              <code class="px-2 py-0.5 bg-zinc-800 rounded font-mono">${code.trim().toUpperCase()}</code> 
+              matches ${detected.name} product code pattern.
+            </p>
+            <a href="${detected.guide}" class="inline-flex items-center gap-1 text-sm mt-2 hover:underline" style="color: ${detected.color}">
+              View ${detected.name} authentication guide
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      `;
+      resultContent.className = 'p-4 rounded-xl border bg-zinc-800/30';
+      resultContent.style.borderColor = detected.color + '40';
+    } else {
+      resultContent.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold text-white">Unrecognized Format</p>
+            <p class="text-sm text-zinc-400 mt-1">
+              <code class="px-2 py-0.5 bg-zinc-800 rounded font-mono">${code.trim()}</code> 
+              doesn't match known Nike, Adidas, or Puma patterns.
+            </p>
+            <p class="text-xs text-zinc-500 mt-2">
+              This could be a fake code, a typo, or a brand we don't support yet.
+            </p>
+          </div>
+        </div>
+      `;
+      resultContent.className = 'p-4 rounded-xl border border-red-500/20 bg-zinc-800/30';
+    }
+  }
+
+  // Event listeners
+  checkBtn?.addEventListener('click', () => {
+    showResult(input?.value || '');
+  });
+
+  input?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      showResult(input.value);
+    }
+  });
+
+  exampleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.getAttribute('data-code');
+      if (input && code) {
+        input.value = code;
+        showResult(code);
+      }
+    });
+  });
+</script>

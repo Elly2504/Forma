@@ -1,5 +1,5 @@
 ---
-// Direct conversion CTA - no waitlist
+// Direct conversion CTA - links to pricing section
 ---
 
 <section class="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden">
@@ -27,10 +27,10 @@
         Finally, a <strong class="text-white">Kelley Blue Book</strong> for your collection.
       </p>
       
-      <!-- CTA - Direct conversion -->
+      <!-- CTA - Direct to pricing -->
       <div class="animate-fade-in flex flex-col sm:flex-row items-center justify-center gap-4" style="animation-delay: 0.3s">
-        <a href="/app/signup" class="btn-primary text-lg px-8 py-4">
-          Try Free — No Credit Card
+        <a href="#pricing" class="btn-primary text-lg px-8 py-4">
+          Try Free - No Credit Card
         </a>
         <span class="text-[var(--text-muted)] text-sm">3 free valuations/month</span>
       </div>
@@ -66,12 +66,12 @@
                   <div class="text-center">
                     <div class="text-6xl mb-2">👕</div>
                     <p class="text-[var(--text-muted)] text-sm">Arsenal 1991 Away</p>
-                    <p class="text-[var(--text-muted)] text-xs">JVC Sponsor • Adidas</p>
+                    <p class="text-[var(--text-muted)] text-xs">JVC Sponsor - Adidas</p>
                   </div>
                 </div>
                 <div class="grid grid-cols-4 gap-2">
                   {['Front', 'Back', 'Label', 'Detail'].map((label) => (
-                    <div class="aspect-square bg-[var(--bg-card)] rounded-lg flex items-center justify-center">
+                    <div class="aspect-square bg-[var(--bg-card)] rounded-lg flex items-center justify-center cursor-pointer hover:bg-[var(--bg-elevated)] transition-colors">
                       <span class="text-[var(--text-muted)] text-xs">{label}</span>
                     </div>
                   ))}
@@ -83,7 +83,7 @@
                 <div class="text-center md:text-left">
                   <p class="text-[var(--text-muted)] text-sm">Estimated Value</p>
                   <p class="text-5xl font-bold text-gradient">£185 - £220</p>
-                  <p class="text-green-400 text-sm mt-1">↑ 12% in last 90 days</p>
+                  <p class="text-green-400 text-sm mt-1">+12% in last 90 days</p>
                 </div>
                 
                 <div class="space-y-3">
@@ -118,7 +118,7 @@
                   </div>
                 </div>
                 
-                <button class="btn-primary w-full">Generate Certificate</button>
+                <a href="#pricing" class="btn-primary w-full block text-center">Get Your Valuation</a>
               </div>
             </div>
           </div>

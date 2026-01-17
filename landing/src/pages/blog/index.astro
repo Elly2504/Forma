@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const guides = await getCollection('guides');
+const sortedGuides = guides.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+
+const formatDate = (date: Date) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+// Icon mappings for tags
+const tagIcons: Record<string, string> = {
+  'Nike': '✓',
+  'Adidas': '⚡',
+  'Authentication': '🔍',
+  'Guide': '📖',
+  'Product Codes': '🏷️'
+};
+---
+
+<BaseLayout 
+  title="Blog & Guides | KitTicker"
+  description="Expert guides on vintage football shirt valuation, authentication, and product codes. Learn to spot fakes and price your collection accurately."
+  canonicalUrl="https://kitticker.com/blog"
+>
+  <Header />
+  
+  <main class="min-h-screen bg-[#0a0a0a] pt-24">
+    <!-- Hero -->
+    <section class="py-16 border-b border-white/10">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <span class="inline-block px-4 py-1.5 bg-amber-500/10 text-amber-400 rounded-full text-sm font-medium mb-6">
+          Knowledge Base
+        </span>
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+          Expert <span class="bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">Guides</span>
+        </h1>
+        <p class="text-xl text-zinc-400 max-w-2xl mx-auto">
+          Everything you need to know about vintage football shirt authentication, valuation, and product codes.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Featured Guide -->
+    {sortedGuides.filter(g => g.data.featured).slice(0, 1).map((guide) => (
+      <section class="py-12 border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-4">
+          <span class="text-amber-400 text-sm font-medium mb-4 block">Featured Guide</span>
+          <a href={`/blog/${guide.slug}`} class="group block">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+              <!-- Placeholder Image Card -->
+              <div class="rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-amber-500/5 to-transparent aspect-video flex items-center justify-center">
+                <div class="text-center p-8">
+                  <div class="w-20 h-20 mx-auto mb-4 bg-amber-500/10 rounded-2xl flex items-center justify-center">
+                    <svg class="w-10 h-10 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <p class="text-amber-400 font-medium">{guide.data.readingTime} min read</p>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {guide.data.tags?.map((tag: string) => (
+                    <span class="px-3 py-1 text-xs font-medium bg-amber-500/10 text-amber-400 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-4 group-hover:text-amber-400 transition-colors">
+                  {guide.data.title}
+                </h2>
+                <p class="text-zinc-400 mb-4 text-lg">
+                  {guide.data.description}
+                </p>
+                <div class="flex items-center gap-4 text-sm text-zinc-500">
+                  <time datetime={guide.data.publishDate.toISOString()}>
+                    {formatDate(guide.data.publishDate)}
+                  </time>
+                  <span>•</span>
+                  <span>{guide.data.readingTime} min read</span>
+                </div>
+                
+                <div class="mt-6 inline-flex items-center gap-2 text-amber-400 font-medium group-hover:gap-3 transition-all">
+                  Read Guide
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+    ))}
+    
+    <!-- All Guides Grid -->
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-2xl font-bold text-white mb-8">All Guides</h2>
+        
+        {sortedGuides.length === 0 ? (
+          <div class="text-center py-16">
+            <p class="text-zinc-400 text-lg">No guides yet. Check back soon!</p>
+          </div>
+        ) : (
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedGuides.map((guide) => (
+              <a 
+                href={`/blog/${guide.slug}`}
+                class="group block bg-[#111111] rounded-2xl border border-white/10 overflow-hidden hover:border-amber-500/30 transition-all hover:shadow-lg hover:shadow-amber-500/5"
+              >
+                <!-- Card Header with Icon -->
+                <div class="aspect-[16/9] bg-gradient-to-br from-amber-500/5 to-transparent flex items-center justify-center border-b border-white/5">
+                  <div class="w-16 h-16 bg-amber-500/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                </div>
+                
+                <div class="p-6">
+                  <div class="flex flex-wrap gap-2 mb-3">
+                    {guide.data.tags?.slice(0, 2).map((tag: string) => (
+                      <span class="px-2 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-400 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <h3 class="text-lg font-semibold text-white mb-2 group-hover:text-amber-400 transition-colors line-clamp-2">
+                    {guide.data.title}
+                  </h3>
+                  <p class="text-sm text-zinc-400 mb-4 line-clamp-2">
+                    {guide.data.description}
+                  </p>
+                  <div class="flex items-center justify-between text-xs text-zinc-500">
+                    <time datetime={guide.data.publishDate.toISOString()}>
+                      {formatDate(guide.data.publishDate)}
+                    </time>
+                    {guide.data.readingTime && (
+                      <span>{guide.data.readingTime} min read</span>
+                    )}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- Browse Codes CTA -->
+    <section class="py-16 border-t border-white/10">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">
+          Looking for product codes?
+        </h2>
+        <p class="text-zinc-400 mb-8">
+          Browse our verified database of football shirt product codes.
+        </p>
+        <a 
+          href="/codes"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-400 to-amber-600 text-black font-semibold rounded-full hover:shadow-lg hover:shadow-amber-500/25 transition-all"
+        >
+          Browse Code Database
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>

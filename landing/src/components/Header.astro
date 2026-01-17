@@ -1,15 +1,18 @@
 ---
 const navLinks = [
-  { href: "#how-it-works", label: "How It Works" },
-  { href: "#features", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
+  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#features", label: "Features" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/blog", label: "Blog" },
 ];
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-[var(--bg-primary)]/80 backdrop-blur-xl border-b border-[var(--border-subtle)]">
   <nav class="container flex items-center justify-between h-16">
     <a href="/" class="flex items-center gap-2">
-      <span class="text-2xl">⚽</span>
+      <svg class="w-6 h-6 text-amber-400" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="12" r="10" />
+      </svg>
       <span class="text-xl font-bold text-gradient">KitTicker</span>
     </a>
     
@@ -24,7 +27,7 @@ const navLinks = [
       ))}
     </div>
     
-    <a href="/app/signup" class="btn-primary text-sm py-2 px-4">
+    <a href="/#pricing" class="btn-primary text-sm py-2 px-4">
       Try Free
     </a>
   </nav>

@@ -1,0 +1,11 @@
+# KitTicker robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://kitticker.com/sitemap-index.xml
+
+# Disallow admin/api routes (when app is deployed)
+User-agent: *
+Disallow: /api/
+Disallow: /dashboard/

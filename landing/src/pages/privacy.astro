@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = "Privacy Policy | KitTicker";
+const description = "KitTicker's privacy policy. Learn how we collect, use, and protect your data.";
+---
+
+<BaseLayout title={title} description={description} canonicalUrl="https://kitticker.com/privacy">
+  <Header />
+  
+  <main class="min-h-screen bg-[#0a0a0a] pt-24 pb-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="text-4xl font-bold text-white mb-8">Privacy Policy</h1>
+      
+      <p class="text-zinc-400 mb-8">Last updated: January 15, 2026</p>
+      
+      <div class="prose prose-invert prose-lg max-w-none
+        prose-headings:text-white prose-headings:font-bold
+        prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+        prose-p:text-zinc-300 prose-p:leading-relaxed
+        prose-li:text-zinc-300
+        prose-a:text-amber-400 hover:prose-a:underline
+      ">
+        <h2>1. Introduction</h2>
+        <p>
+          KitTicker ("we," "our," or "us") respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our AI-powered vintage football shirt valuation service.
+        </p>
+        
+        <h2>2. Information We Collect</h2>
+        <p><strong>Account Information:</strong></p>
+        <ul>
+          <li>Email address</li>
+          <li>Name (optional)</li>
+          <li>Password (encrypted)</li>
+        </ul>
+        
+        <p><strong>Usage Data:</strong></p>
+        <ul>
+          <li>Photos you upload for valuation</li>
+          <li>Valuation history</li>
+          <li>Browser type and device information</li>
+          <li>IP address (anonymized)</li>
+        </ul>
+        
+        <h2>3. How We Use Your Information</h2>
+        <p>We use your information to:</p>
+        <ul>
+          <li>Provide AI-powered shirt valuations</li>
+          <li>Improve our AI models and accuracy</li>
+          <li>Send account-related communications</li>
+          <li>Process payments (handled by Lemon Squeezy)</li>
+          <li>Analyze usage patterns to improve our service</li>
+        </ul>
+        
+        <h2>4. AI Processing</h2>
+        <p>
+          Photos you upload are processed by our AI system (powered by OpenAI) to analyze shirt condition and generate valuations. We do not sell or share your photos with third parties. Images may be retained temporarily for processing and quality improvement.
+        </p>
+        
+        <h2>5. Data Sharing</h2>
+        <p>We share data only with:</p>
+        <ul>
+          <li><strong>Supabase:</strong> Database and authentication provider</li>
+          <li><strong>OpenAI:</strong> AI processing partner</li>
+          <li><strong>Lemon Squeezy:</strong> Payment processing</li>
+          <li><strong>Vercel:</strong> Hosting provider</li>
+        </ul>
+        <p>We never sell your personal data to third parties.</p>
+        
+        <h2>6. Data Retention</h2>
+        <p>
+          We retain your data for as long as your account is active. You can request deletion of your account and data at any time by contacting us.
+        </p>
+        
+        <h2>7. Your Rights (GDPR)</h2>
+        <p>If you are in the EU, you have the right to:</p>
+        <ul>
+          <li>Access your personal data</li>
+          <li>Correct inaccurate data</li>
+          <li>Request deletion of your data</li>
+          <li>Object to processing</li>
+          <li>Data portability</li>
+        </ul>
+        <p>Contact us at <a href="mailto:privacy@kitticker.com">privacy@kitticker.com</a> to exercise these rights.</p>
+        
+        <h2>8. Cookies</h2>
+        <p>
+          We use essential cookies for authentication and session management. We use privacy-focused analytics (Plausible) that does not use cookies or track individuals.
+        </p>
+        
+        <h2>9. Security</h2>
+        <p>
+          We implement industry-standard security measures including encryption, secure data storage, and regular security audits to protect your information.
+        </p>
+        
+        <h2>10. Changes to This Policy</h2>
+        <p>
+          We may update this policy from time to time. Significant changes will be communicated via email or in-app notification.
+        </p>
+        
+        <h2>11. Contact Us</h2>
+        <p>
+          For questions about this privacy policy, contact us at:<br>
+          Email: <a href="mailto:privacy@kitticker.com">privacy@kitticker.com</a>
+        </p>
+      </div>
+    </div>
+  </main>
+  
+  <Footer />
+</BaseLayout>

@@ -52,23 +52,23 @@ body {
 /* Gold glow effect */
 .gold-glow {
   box-shadow: 0 0 40px rgba(251, 191, 36, 0.15),
-              0 0 80px rgba(251, 191, 36, 0.08);
+    0 0 80px rgba(251, 191, 36, 0.08);
 }
 
 /* Glassmorphism card */
 .glass-card {
-  background: linear-gradient(135deg, 
-    rgba(26, 26, 26, 0.9),
-    rgba(20, 20, 20, 0.95));
+  background: linear-gradient(135deg,
+      rgba(26, 26, 26, 0.9),
+      rgba(20, 20, 20, 0.95));
   border: 1px solid var(--border-subtle);
   backdrop-filter: blur(20px);
   border-radius: 16px;
 }
 
 .glass-card-gold {
-  background: linear-gradient(135deg, 
-    rgba(26, 26, 26, 0.95),
-    rgba(20, 20, 20, 0.98));
+  background: linear-gradient(135deg,
+      rgba(26, 26, 26, 0.95),
+      rgba(20, 20, 20, 0.98));
   border: 1px solid var(--border-gold);
   backdrop-filter: blur(20px);
   border-radius: 16px;
@@ -112,13 +112,27 @@ body {
 
 /* Animations */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.2); }
-  50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.4); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(251, 191, 36, 0.4);
+  }
 }
 
 @keyframes fade-in-up {
@@ -126,6 +140,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -211,15 +226,49 @@ section {
 
 /* Grid pattern background */
 .bg-grid {
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
 /* Radial gradient overlay */
 .bg-radial-gold {
-  background: radial-gradient(ellipse at top center, 
-    rgba(251, 191, 36, 0.08) 0%, 
-    transparent 50%);
+  background: radial-gradient(ellipse at top center,
+      rgba(251, 191, 36, 0.08) 0%,
+      transparent 50%);
+}
+
+/* Prose table styles for MDX content */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.prose thead {
+  background: var(--bg-elevated);
+}
+
+.prose th {
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.prose td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.prose tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: none;
 }

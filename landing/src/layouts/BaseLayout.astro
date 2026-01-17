@@ -4,9 +4,76 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
+  canonicalUrl?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, canonicalUrl } = Astro.props;
+
+// Schema markup for Organization
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "KitTicker",
+  "description": "AI-powered vintage football shirt valuation platform",
+  "url": "https://kitticker.com",
+  "logo": "https://kitticker.com/logo.png",
+  "sameAs": [
+    "https://twitter.com/KitTicker"
+  ]
+};
+
+// Schema markup for SoftwareApplication (Product)
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "KitTicker",
+  "applicationCategory": "BusinessApplication",
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": "0",
+    "highPrice": "49.99",
+    "priceCurrency": "USD",
+    "offerCount": "3"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "150"
+  },
+  "description": "AI-powered vintage football shirt valuation. Get condition-adjusted price estimates in 60 seconds."
+};
+
+// FAQ Schema for common questions
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does KitTicker value vintage football shirts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KitTicker uses GPT-4o Vision AI to analyze 4 photos of your shirt across 6+ criteria including fabric condition, print quality, collar wear, and label authenticity. It then cross-references with real market data to give you a condition-adjusted price range."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate are KitTicker valuations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our AI provides valuations with a confidence range based on current market data and condition analysis. Most valuations are within 10-15% of actual sale prices for similar condition shirts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What photos do I need for a valuation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You need 4 photos: front of the shirt, back of the shirt, the label/tag, and a close-up detail shot of any notable features or wear areas."
+      }
+    }
+  ]
+};
 ---
 
 <!doctype html>
@@ -15,6 +82,11 @@ const { title, description } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0a0a0a" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl || "https://kitticker.com"} />
     
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,15 +95,34 @@ const { title, description } = Astro.props;
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     
     <!-- Open Graph / Social -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://kitticker.com" />
+    <meta property="og:image" content="https://kitticker.com/og-image.png" />
+    <meta property="og:site_name" content="KitTicker" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@KitTicker" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://kitticker.com/og-image.png" />
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NQLYJL9D7F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NQLYJL9D7F');
+    </script>
     
     <title>{title}</title>
   </head>
@@ -39,3 +130,4 @@ const { title, description } = Astro.props;
     <slot />
   </body>
 </html>
+

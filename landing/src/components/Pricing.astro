@@ -11,9 +11,10 @@ const tiers = [
       "General price range",
       "Watermarked reports"
     ],
-    cta: "Start Free",
-    href: "/app/signup",
-    featured: false
+    cta: "Coming Soon",
+    href: "#",
+    featured: false,
+    disabled: true
   },
   {
     name: "Collector",
@@ -28,9 +29,10 @@ const tiers = [
       "Price trend tracking",
       "Priority AI processing"
     ],
-    cta: "Get Collector",
-    href: "/app/signup?plan=collector",
-    featured: true
+    cta: "Coming Soon",
+    href: "#",
+    featured: true,
+    disabled: true
   },
   {
     name: "Dealer",
@@ -45,14 +47,15 @@ const tiers = [
       "White-label certificates",
       "Dedicated support"
     ],
-    cta: "Get Dealer",
-    href: "/app/signup?plan=dealer",
-    featured: false
+    cta: "Coming Soon",
+    href: "#",
+    featured: false,
+    disabled: true
   }
 ];
 ---
 
-<section id="pricing" class="relative">
+<section id="pricing" class="relative py-24">
   <div class="container">
     <div class="text-center mb-16">
       <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">Pricing</span>
@@ -64,9 +67,15 @@ const tiers = [
       </p>
     </div>
     
+    <!-- Early Access Banner -->
+    <div class="max-w-2xl mx-auto mb-12 p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 to-transparent border border-amber-500/20 text-center">
+      <p class="text-amber-400 font-semibold mb-2">Early Access Coming Soon</p>
+      <p class="text-zinc-400 text-sm">We're building something special. Check out our <a href="/blog" class="text-amber-400 underline">guides</a> while you wait.</p>
+    </div>
+    
     <div class="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
       {tiers.map((tier) => (
-        <div class={`glass-card p-8 relative ${tier.featured ? 'border-[var(--gold-500)] gold-glow' : ''}`}>
+        <div class={`glass-card p-8 relative ${tier.featured ? 'border-[var(--gold-500)] gold-glow' : ''} ${tier.disabled ? 'opacity-75' : ''}`}>
           {tier.featured && (
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--gold-500)] text-black text-xs font-bold py-1 px-4 rounded-full">
               POPULAR
@@ -94,9 +103,16 @@ const tiers = [
             ))}
           </ul>
           
-          <a href={tier.href} class={tier.featured ? 'btn-primary w-full block text-center' : 'btn-secondary w-full block text-center'}>
+          <button 
+            disabled={tier.disabled}
+            class={`w-full py-3 px-6 rounded-full font-semibold transition-all ${
+              tier.featured 
+                ? 'bg-gradient-to-r from-amber-400 to-amber-600 text-black cursor-not-allowed opacity-60' 
+                : 'bg-white/5 text-white border border-white/10 cursor-not-allowed opacity-60'
+            }`}
+          >
             {tier.cta}
-          </a>
+          </button>
         </div>
       ))}
     </div>
