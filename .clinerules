@@ -1,5 +1,10 @@
 # KitTicker Project Rules
 
+## Core Philosophy
+> "Do not be a black box; be a magnifying glass."
+
+**Content-First:** Build authority and trust before heavy tech investment.
+
 ## Tech Preferences
 - Use **Astro** for static/marketing pages
 - Use **Next.js 15** for app functionality
@@ -8,7 +13,7 @@
 - Dark theme with amber accents (`#F59E0B`)
 
 ## Naming Conventions
-- Components: `PascalCase` (e.g., `WaitlistForm.tsx`)
+- Components: `PascalCase` (e.g., `ValuationResult.tsx`)
 - Files: `kebab-case` (e.g., `how-it-works.astro`)
 - Variables: `camelCase` (e.g., `userCredits`)
 - Types/Interfaces: `PascalCase` (e.g., `Valuation`)
@@ -23,10 +28,22 @@
 ```
 
 ## Current Focus
-**Phase 1: MVP Launch**
-- Build and ship the core valuation feature
-- Direct conversion model (no waitlist)
-- Focus on signup → first valuation flow
+**Phase 1: Content Moat**
+- Build "Wikipedia of Product Codes"
+- Create SEO content (guides, tutorials)
+- Community engagement (Reddit, Twitter)
+- Deploy landing page
+
+## AI Output Requirements (Explainable AI)
+```typescript
+// REQUIRED: Every AI verdict must include evidence
+interface ValuationOutput {
+  verdict: 'authentic' | 'likely_authentic' | 'suspicious' | 'fake';
+  confidence: number;
+  evidence: Evidence[];  // MANDATORY - show reasoning
+  warnings?: Warning[];
+}
+```
 
 ## Commands
 | Command | Action |
@@ -40,6 +57,12 @@
 - No TypeScript `any` types
 - Prefer Server Components in Next.js
 - Keep components under 150 lines
+
+## Cost Engineering Rules
+1. Never send full image to premium API
+2. Pre-filter on device (TensorFlow.js)
+3. Only send cropped regions (product code) to GPT-4o
+4. Cache all verified codes (lookup = $0)
 
 ## Git Workflow
 - Main branch is production

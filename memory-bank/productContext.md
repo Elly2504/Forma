@@ -36,33 +36,66 @@ Sellers claim "near mint" but photos don't show the collar wear or print cracks.
 5. Optional: Generate shareable PDF certificate
 ```
 
+## The Trust Gap (Critical)
+
+> **Core Insight:** In a trust-based market, one bad verdict creates more noise than 100 correct ones.
+
+| Challenge | Solution |
+|-----------|----------|
+| Collectors reject "black box" AI | **Explainable AI** — Show evidence, not just verdict |
+| Human experts provide nuance | Tool must behave like "forensic scientist" |
+| 1 false positive = community rejection | Start with Product Code (high accuracy) |
+
+**Output Philosophy:**
+```
+❌ Bad: "98% Authentic"
+✅ Good: "Internal tag code matches Adidas DB for 2022 Real Madrid Away Kit.
+         Logo stitching density: 12.4/cm (reference: 12-13/cm)"
+```
+
+## Market Segmentation
+
+| Segment | Description | Tech Tolerance | Priority |
+|---------|-------------|----------------|----------|
+| **Purist Collectors** | Own 10-50+ shirts, deep knowledge | Zero error tolerance | High (gatekeepers) |
+| **Blokecore Fashion** | TikTok trend, aesthetic focus | Want fast binary answers | Volume opportunity |
+| **Resellers** | Buy/sell on eBay, Depop | Need accurate pricing | Revenue drivers |
+
+> **Strategy:** Win Purist trust first → They validate for Fashion segment.
+
 ## Competitive Landscape
 
-| Competitor | What They Do | Gap |
-|------------|--------------|-----|
-| **KitLegit** | Authentication only | No valuation, no condition grading |
+| Competitor | Model | Gap / Lesson |
+|------------|-------|--------------|
+| **KitLegit** | AI Wrapper | Authentication only, no valuation; early Reddit backlash |
+| **Legit Check By Ch** | Human-Hybrid + Content | 1M+ words content = SEO moat; THIS IS THE PATH |
+| **CollX/Ludex** | Scanner | Works for cards; shirts are too variable |
+| **CheckCheck** | Credit System | Per-scan pricing aligns cost with revenue |
 | **Terapeak** | eBay analytics | No condition analysis, generic data |
-| **Price guides** | Static PDFs | Outdated, no condition adjustment |
-| **Facebook groups** | Crowdsourced opinions | Inconsistent, slow, biased |
+| **Facebook groups** | Crowdsourced | Inconsistent, slow, biased |
+
+**Key Lesson:** Content-first, tech-second. Build authority before asking for money.
 
 ## Why Now?
 - GPT-4o Vision API is affordable enough for consumer use
 - Vintage football shirt market exploding (£2B+ annually)
 - No incumbent has solved condition + valuation together
+- "Blokecore" trend driving new collectors
 
-## Revenue Projections
-| Milestone | Signups | Conversion | Paying Users | Est. MRR |
-|-----------|---------|------------|--------------|----------|
-| Week 2 | 200 | 10% | 20 | $100-150 |
-| Month 1 | 500 | 12% | 60 | $400-500 |
-| Month 3 | 1,500 | 15% | 225 | $1,500+ |
+## Valuation Data Strategy
 
-**Breakdown assumption:** 70% Free, 25% Collector ($9.99), 5% Dealer ($49.99)
+| Type | Use | Warning |
+|------|-----|---------|
+| **Sold Listings** | Primary valuation source | Must separate from Active |
+| **Active Listings** | Market sentiment only | Creates unrealistic expectations |
+
+> **Critical:** Never show "Listed Price" as value. Only "Sold Price" = real market value.
 
 ## Churn Risk & Mitigation
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| One-time use (get valuation, leave) | High | Collection tracking, price alerts |
-| AI accuracy skepticism | Medium | Show confidence scores, allow feedback |
+| One-time use | High | Collection tracking, price alerts |
+| AI accuracy skepticism | High | Show evidence, allow feedback |
 | Free tier abuse | Low | 3/mo limit, watermarks, no certificates |
 | Competitor copying | Medium | Network effects, historical data moat |
+| False positives | Critical | Start with Product Code verification |

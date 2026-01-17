@@ -15,11 +15,27 @@ const { variant = 'full' } = Astro.props;
     </div>
     <div>
       <h3 class="font-semibold text-white text-lg">Product Code Checker</h3>
-      <p class="text-sm text-zinc-500">Validate Nike, Adidas, or Puma codes</p>
+      <p class="text-sm text-zinc-500">Validate codes from our database of verified kits</p>
     </div>
   </div>
 
   <div class="space-y-4">
+    <!-- Brand Selector -->
+    <div class="flex gap-2">
+      <button class="brand-btn px-3 py-2 rounded-lg border border-white/10 bg-zinc-800/50 text-zinc-400 text-sm font-medium transition-all hover:border-white/20 data-[active=true]:border-amber-500/50 data-[active=true]:bg-amber-500/10 data-[active=true]:text-amber-400" data-brand="all" data-active="true">
+        All Brands
+      </button>
+      <button class="brand-btn px-3 py-2 rounded-lg border border-white/10 bg-zinc-800/50 text-zinc-400 text-sm font-medium transition-all hover:border-white/20 data-[active=true]:border-orange-500/50 data-[active=true]:bg-orange-500/10 data-[active=true]:text-orange-400" data-brand="Nike">
+        Nike
+      </button>
+      <button class="brand-btn px-3 py-2 rounded-lg border border-white/10 bg-zinc-800/50 text-zinc-400 text-sm font-medium transition-all hover:border-white/20 data-[active=true]:border-blue-500/50 data-[active=true]:bg-blue-500/10 data-[active=true]:text-blue-400" data-brand="Adidas">
+        Adidas
+      </button>
+      <button class="brand-btn px-3 py-2 rounded-lg border border-white/10 bg-zinc-800/50 text-zinc-400 text-sm font-medium transition-all hover:border-white/20 data-[active=true]:border-green-500/50 data-[active=true]:bg-green-500/10 data-[active=true]:text-green-400" data-brand="Puma">
+        Puma
+      </button>
+    </div>
+
     <!-- Input -->
     <div class="relative">
       <input 
@@ -32,10 +48,21 @@ const { variant = 'full' } = Astro.props;
       />
       <button 
         id="check-code-btn"
-        class="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-lg transition-colors text-sm"
+        class="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-lg transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Check
       </button>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="hidden">
+      <div class="flex items-center gap-3 text-zinc-400 p-4">
+        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Searching database...</span>
+      </div>
     </div>
 
     <!-- Result Area -->
@@ -49,75 +76,131 @@ const { variant = 'full' } = Astro.props;
       <button class="example-code px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="638920-013">Nike</button>
       <button class="example-code px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="IS7462">Adidas</button>
       <button class="example-code px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="736251-01">Puma</button>
+      <button class="example-code px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="CW1526">Fake Code</button>
+    </div>
+
+    <!-- Recently Checked -->
+    <div id="recently-checked" class="hidden pt-4 border-t border-white/5">
+      <p class="text-xs text-zinc-500 mb-2">Recently verified kits:</p>
+      <div id="recent-codes" class="flex flex-wrap gap-2"></div>
     </div>
   </div>
 </div>
 
 <script>
+  import { createClient } from '@supabase/supabase-js';
+  
+  // Initialize Supabase client
+  const supabaseUrl = 'https://sjltydrpwavzrrmoaivt.supabase.co';
+  const supabaseAnonKey = 'sb_publishable_Opl1yKqUYnrsHFdW5_ONaA_KVlHKYDf';
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+  // DOM elements
   const input = document.getElementById('product-code-input') as HTMLInputElement;
-  const checkBtn = document.getElementById('check-code-btn');
+  const checkBtn = document.getElementById('check-code-btn') as HTMLButtonElement;
   const resultArea = document.getElementById('code-result');
   const resultContent = document.getElementById('result-content');
+  const loadingState = document.getElementById('loading-state');
   const exampleBtns = document.querySelectorAll('.example-code');
+  const brandBtns = document.querySelectorAll('.brand-btn');
+  const recentlyChecked = document.getElementById('recently-checked');
+  const recentCodes = document.getElementById('recent-codes');
 
-  // Brand detection patterns
-  const patterns = {
-    nike: {
-      regex: /^(\d{6})(-\d{3})?$/,
-      name: 'Nike',
-      color: '#F97316',
-      guide: '/guides/nike-authentication-guide'
-    },
-    adidas: {
-      regex: /^[A-Z]{1,2}\d{4,5}$/i,
-      name: 'Adidas',
-      color: '#3B82F6',
-      guide: '/guides/adidas-authentication-guide'
-    },
-    puma: {
-      regex: /^(\d{6})(-\d{2})?$/,
-      name: 'Puma',
-      color: '#10B981',
-      guide: '/guides/puma-authentication-guide'
-    }
+  let selectedBrand = 'all';
+
+  // Brand colors
+  const brandColors: Record<string, string> = {
+    'Nike': '#F97316',
+    'Adidas': '#3B82F6',
+    'Puma': '#10B981',
+    'Umbro': '#8B5CF6'
   };
 
-  function detectBrand(code: string): { brand: string; name: string; color: string; guide: string } | null {
-    const cleanCode = code.trim().toUpperCase();
+  // Brand selection
+  brandBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      brandBtns.forEach(b => b.setAttribute('data-active', 'false'));
+      btn.setAttribute('data-active', 'true');
+      selectedBrand = btn.getAttribute('data-brand') || 'all';
+      
+      // Update placeholder
+      const placeholders: Record<string, string> = {
+        'all': 'Enter code (e.g., 638920-013)',
+        'Nike': 'Nike code (e.g., 638920-013)',
+        'Adidas': 'Adidas code (e.g., IS7462)',
+        'Puma': 'Puma code (e.g., 736251-01)'
+      };
+      input.placeholder = placeholders[selectedBrand] || placeholders['all'];
+    });
+  });
+
+  // Lookup function using Supabase
+  async function lookupCode(code: string) {
+    const normalizedCode = code.trim().toUpperCase();
     
-    // Check Adidas first (letters + numbers)
-    if (patterns.adidas.regex.test(cleanCode)) {
-      return { brand: 'adidas', ...patterns.adidas };
+    let query = supabase
+      .from('product_codes')
+      .select('*')
+      .ilike('code', normalizedCode);
+    
+    if (selectedBrand !== 'all') {
+      query = query.eq('brand', selectedBrand);
     }
     
-    // Check Nike (6 digits + optional 3-digit color)
-    if (patterns.nike.regex.test(cleanCode)) {
-      return { brand: 'nike', ...patterns.nike };
+    const { data, error } = await query.single();
+    
+    if (error || !data) {
+      return null;
     }
     
-    // Check Puma (6 digits + optional 2-digit variant)
-    if (patterns.puma.regex.test(cleanCode)) {
-      // Disambiguate: if has -XX (2 digits), it's Puma
-      if (cleanCode.includes('-') && cleanCode.split('-')[1]?.length === 2) {
-        return { brand: 'puma', ...patterns.puma };
-      }
-      // If no hyphen or 3-digit suffix, could be either - default to Nike for 6-digit
-      if (!cleanCode.includes('-')) {
-        return { brand: 'nike', ...patterns.nike };
-      }
-    }
+    // Increment lookup count (fire and forget)
+    supabase
+      .from('product_codes')
+      .update({ lookup_count: (data.lookup_count || 0) + 1 })
+      .eq('id', data.id)
+      .then(() => {});
     
-    return null;
+    return data;
   }
 
-  function showResult(code: string) {
-    const detected = detectBrand(code);
+  // Load recently checked
+  async function loadRecentlyChecked() {
+    const { data, error } = await supabase
+      .from('product_codes')
+      .select('*')
+      .order('lookup_count', { ascending: false })
+      .limit(5);
     
-    if (!resultArea || !resultContent) return;
+    if (error || !data || data.length === 0) {
+      return;
+    }
     
-    resultArea.classList.remove('hidden');
+    if (recentlyChecked && recentCodes) {
+      recentlyChecked.classList.remove('hidden');
+      recentCodes.innerHTML = data.map(kit => `
+        <button class="recent-kit px-2 py-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded transition-colors" data-code="${kit.code}">
+          ${kit.team || kit.brand} ${kit.season || ''}
+        </button>
+      `).join('');
+      
+      // Add click handlers
+      document.querySelectorAll('.recent-kit').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const code = btn.getAttribute('data-code');
+          if (code && input) {
+            input.value = code;
+            showResult(code);
+          }
+        });
+      });
+    }
+  }
+
+  async function showResult(code: string) {
+    if (!resultArea || !resultContent || !loadingState) return;
     
     if (!code.trim()) {
+      resultArea.classList.remove('hidden');
       resultContent.innerHTML = `
         <div class="flex items-center gap-3 text-zinc-400">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -130,49 +213,128 @@ const { variant = 'full' } = Astro.props;
       return;
     }
     
-    if (detected) {
-      resultContent.innerHTML = `
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background: ${detected.color}20">
-            <svg class="w-4 h-4" style="color: ${detected.color}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <div>
-            <p class="font-semibold text-white">Valid ${detected.name} Format</p>
-            <p class="text-sm text-zinc-400 mt-1">
-              <code class="px-2 py-0.5 bg-zinc-800 rounded font-mono">${code.trim().toUpperCase()}</code> 
-              matches ${detected.name} product code pattern.
-            </p>
-            <a href="${detected.guide}" class="inline-flex items-center gap-1 text-sm mt-2 hover:underline" style="color: ${detected.color}">
-              View ${detected.name} authentication guide
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    // Show loading
+    resultArea.classList.add('hidden');
+    loadingState.classList.remove('hidden');
+    checkBtn.disabled = true;
+    
+    try {
+      const kit = await lookupCode(code);
+      
+      loadingState.classList.add('hidden');
+      resultArea.classList.remove('hidden');
+      checkBtn.disabled = false;
+      
+      if (kit) {
+        const color = brandColors[kit.brand] || '#F59E0B';
+        const isFake = kit.team?.includes('FAKE') || kit.kit_type === 'FAKE';
+        
+        if (isFake) {
+          resultContent.innerHTML = `
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 text-xs font-semibold bg-red-500/20 text-red-400 rounded">⚠️ KNOWN FAKE</span>
+                </div>
+                <p class="font-semibold text-white mt-2">Warning: Counterfeit Code Detected</p>
+                <p class="text-sm text-zinc-400 mt-1">
+                  <code class="px-2 py-0.5 bg-zinc-800 rounded font-mono">${code.trim().toUpperCase()}</code> 
+                  is a known counterfeit product code commonly used on fake ${kit.brand} shirts.
+                </p>
+                <a href="/guides/${kit.brand.toLowerCase()}-authentication-guide" class="inline-flex items-center gap-1 text-sm mt-3 text-red-400 hover:underline">
+                  Learn how to spot ${kit.brand} fakes
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          `;
+          resultContent.className = 'p-4 rounded-xl border border-red-500/30 bg-red-500/5';
+        } else {
+          resultContent.innerHTML = `
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: ${color}20">
+                <svg class="w-5 h-5" style="color: ${color}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 text-xs font-semibold rounded" style="background: ${color}20; color: ${color}">✓ VERIFIED</span>
+                  <span class="px-2 py-0.5 text-xs font-medium bg-zinc-800 text-zinc-400 rounded">${kit.brand}</span>
+                </div>
+                <p class="font-semibold text-white text-lg mt-2">${kit.team || 'Unknown Team'}</p>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  ${kit.season ? `<span class="px-2 py-1 text-xs bg-zinc-800 text-zinc-300 rounded">${kit.season}</span>` : ''}
+                  ${kit.kit_type ? `<span class="px-2 py-1 text-xs bg-zinc-800 text-zinc-300 rounded">${kit.kit_type}</span>` : ''}
+                </div>
+                <p class="text-sm text-zinc-400 mt-3">
+                  <code class="px-2 py-0.5 bg-zinc-800 rounded font-mono">${code.trim().toUpperCase()}</code> 
+                  matches our verified database.
+                </p>
+                <a href="/guides/${kit.brand.toLowerCase()}-authentication-guide" class="inline-flex items-center gap-1 text-sm mt-3 hover:underline" style="color: ${color}">
+                  View full ${kit.brand} authentication guide
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          `;
+          resultContent.className = 'p-4 rounded-xl border bg-zinc-800/30';
+          resultContent.style.borderColor = color + '40';
+        }
+      } else {
+        resultContent.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-            </a>
+            </div>
+            <div>
+              <p class="font-semibold text-white">Code Not Found</p>
+              <p class="text-sm text-zinc-400 mt-1">
+                <code class="px-2 py-0.5 bg-zinc-800 rounded font-mono">${code.trim().toUpperCase()}</code> 
+                is not in our database yet.
+              </p>
+              <p class="text-xs text-zinc-500 mt-2">
+                This doesn't necessarily mean it's fake. Our database is growing, and we may not have this code yet.
+              </p>
+              <div class="flex gap-2 mt-3">
+                <a href="/guides" class="inline-flex items-center gap-1 text-sm text-amber-400 hover:underline">
+                  Check authentication guides
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-      `;
-      resultContent.className = 'p-4 rounded-xl border bg-zinc-800/30';
-      resultContent.style.borderColor = detected.color + '40';
-    } else {
+        `;
+        resultContent.className = 'p-4 rounded-xl border border-yellow-500/20 bg-zinc-800/30';
+      }
+      
+      // Refresh recently checked
+      loadRecentlyChecked();
+      
+    } catch (error) {
+      loadingState.classList.add('hidden');
+      resultArea.classList.remove('hidden');
+      checkBtn.disabled = false;
+      
       resultContent.innerHTML = `
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-          </div>
-          <div>
-            <p class="font-semibold text-white">Unrecognized Format</p>
-            <p class="text-sm text-zinc-400 mt-1">
-              <code class="px-2 py-0.5 bg-zinc-800 rounded font-mono">${code.trim()}</code> 
-              doesn't match known Nike, Adidas, or Puma patterns.
-            </p>
-            <p class="text-xs text-zinc-500 mt-2">
-              This could be a fake code, a typo, or a brand we don't support yet.
-            </p>
-          </div>
+        <div class="flex items-center gap-3 text-red-400">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Error connecting to database. Please try again.</span>
         </div>
       `;
       resultContent.className = 'p-4 rounded-xl border border-red-500/20 bg-zinc-800/30';
@@ -199,4 +361,7 @@ const { variant = 'full' } = Astro.props;
       }
     });
   });
+
+  // Load recently checked on page load
+  loadRecentlyChecked();
 </script>

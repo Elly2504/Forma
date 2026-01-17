@@ -15,7 +15,32 @@ Marketing (Astro) ←→ App (Next.js)
 - Clean separation of concerns
 - Independent deploy cycles
 
-### 2. Hybrid Pricing Model
+### 2. Explainable AI (Trust Pattern)
+
+> **Core Principle:** "Do not be a black box; be a magnifying glass."
+
+```typescript
+// Bad Output
+{ authentic: true, confidence: 0.98 }
+
+// Good Output (Explainable)
+{
+  verdict: 'likely_authentic',
+  confidence: 0.92,
+  evidence: [
+    { type: 'product_code', value: '847284-010', match: 'Nike 2016 PSG Home' },
+    { type: 'logo_stitching', density: 12.4, reference: '12-13 stitches/cm' },
+    { type: 'label_format', matches: true, era: '2015-2018' }
+  ],
+  warnings: [
+    { type: 'fabric_wear', note: 'Minor pilling detected on collar' }
+  ]
+}
+```
+
+**Implementation:** Every AI decision must include evidence array.
+
+### 3. Hybrid Pricing Model (Credit System)
 ```
 Subscription (base access) + Credits (usage-based)
 ```
@@ -24,7 +49,7 @@ Subscription (base access) + Credits (usage-based)
 - Subscription tiers gate feature access
 - Each valuation consumes 1 credit
 - Overage charged at $0.30/credit
-- Prevents AI cost blowout
+- **Aligns API cost with revenue** (CheckCheck model)
 
 **Implementation:**
 ```typescript
@@ -36,7 +61,33 @@ interface User {
 }
 ```
 
-### 3. Token Tracking for AI Costs
+### 4. 4-Step Cost Optimization Pipeline
+
+```
+User Photo
+    ↓
+[Step 1: On-Device] TensorFlow.js
+  - Is this a shirt? Is image clear?
+  - Cost: $0
+  - Reject 30% bad uploads
+    ↓
+[Step 2: Cheap Classification] Self-hosted YOLOv8
+  - Brand detection, team guess
+  - Cost: ~$0.001
+    ↓
+[Step 3: Premium API] GPT-4o Vision
+  - Product code OCR ONLY (cropped region)
+  - Cost: ~$0.01 (vs $0.05 full image)
+    ↓
+[Step 4: Cache Lookup] PostgreSQL
+  - Code 847284-010 → "2016 PSG Home"
+  - Cost: $0
+  - Future lookups skip Step 3
+```
+
+**Savings:** 70% cost reduction vs naive API calls.
+
+### 5. Token Tracking for AI Costs
 Every GPT-4o call is tracked:
 ```typescript
 interface ValuationLog {
@@ -45,6 +96,7 @@ interface ValuationLog {
   outputTokens: number;
   estimatedCost: number;
   timestamp: Date;
+  cached: boolean;  // If cached, cost = 0
 }
 ```
 
@@ -53,7 +105,23 @@ interface ValuationLog {
 - Alert at 80% usage
 - Graceful degradation (not hard failure)
 
-### 4. Design System Tokens
+### 6. Product Code Cache (Data Moat)
+```typescript
+interface ProductCodeCache {
+  code: string;           // Primary key
+  brand: string;
+  team: string;
+  year: number;
+  type: 'Home' | 'Away' | 'Third' | 'GK';
+  verified: boolean;
+  verifiedBy: 'community' | 'official' | 'ai';
+  lookupCount: number;    // Track popularity
+}
+```
+
+**Moat:** Every verified code becomes free forever.
+
+### 7. Design System Tokens
 
 **Color Palette (Dark Theme):**
 ```css
@@ -67,55 +135,7 @@ interface ValuationLog {
 --text-muted: #71717a;
 ```
 
-**Gradients:**
-```css
---gold-gradient: linear-gradient(135deg, #fbbf24, #d97706);
-```
-
-### 5. Component Patterns
-
-**Glass Cards:**
-```css
-.glass-card {
-  background: rgba(17, 17, 17, 0.8);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(245, 158, 11, 0.1);
-  border-radius: 16px;
-}
-```
-
-**Responsive Breakpoints:**
-```css
-sm: 640px   /* Mobile landscape */
-md: 768px   /* Tablet */
-lg: 1024px  /* Desktop */
-xl: 1280px  /* Large desktop */
-```
-
-**Grid Pattern:**
-- Mobile: 1 column
-- Tablet (768px): 2 columns for features, stack for pricing
-- Desktop (1024px+): 3 columns
-
-### 6. Data Flow (Future MVP)
-
-```
-User uploads photos
-       ↓
-Supabase Storage (presigned URLs)
-       ↓
-Next.js API Route
-       ↓
-GPT-4o Vision API
-       ↓
-Parse response → Store in DB
-       ↓
-Return valuation to user
-       ↓
-Decrement user credits
-```
-
-### 7. Error Handling Pattern
+### 8. Error Handling Pattern
 ```typescript
 // API responses
 type ApiResponse<T> = 
@@ -128,15 +148,15 @@ if (!response.success) {
 }
 ```
 
-### 8. File Naming Conventions
+### 9. File Naming Conventions
 | Type | Convention | Example |
 |------|------------|---------|
-| Components | PascalCase | `WaitlistForm.tsx` |
+| Components | PascalCase | `ValuationResult.tsx` |
 | Pages | kebab-case | `how-it-works.astro` |
 | Utilities | camelCase | `formatCurrency.ts` |
 | Types | PascalCase | `Valuation.ts` |
 
-### 9. Security Patterns
+### 10. Security Patterns
 ```typescript
 // Rate limiting
 const RATE_LIMITS = {
@@ -149,23 +169,18 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;  // 5MB
 ```
 
-**Rules:**
-- API keys: Server-side only, never in client bundle
-- User input: Always validate/sanitize
-- File uploads: Validate type, size, scan for malware
-- Auth: Require for all mutations
-
-### 10. Testing Strategy
-| Layer | Tool | Coverage Target |
-|-------|------|-----------------|
-| Unit | Vitest | 80% |
-| Integration | Vitest + MSW | Key flows |
-| E2E | Playwright | Critical paths |
-| Visual | Percy (optional) | UI regressions |
-
-```bash
-# Commands
-npm run test          # Unit tests
-npm run test:e2e      # Playwright
-npm run test:coverage # With coverage
+### 11. Content-First Marketing Pattern
 ```
+Phase 1: Build content (guides, product code database)
+    ↓
+Phase 2: SEO traffic + community trust
+    ↓
+Phase 3: Introduce tool as "helper" not "replacement"
+    ↓
+Phase 4: Monetize trusted user base
+```
+
+**Community Engagement:**
+- Don't sell, help
+- Post evidence in "Legit Check" threads
+- Tool generates shareable reports → viral loop
