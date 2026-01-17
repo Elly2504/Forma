@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
+import ProductCodeChecker from '../components/ProductCodeChecker.astro';
 import ProblemSection from '../components/ProblemSection.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import Features from '../components/Features.astro';
@@ -19,6 +20,21 @@ const description = "Know your vintage football shirt's true value in 60 seconds
   
   <main>
     <Hero />
+    
+    <!-- Product Code Checker Section -->
+    <section class="py-16 sm:py-24 px-4 bg-zinc-950/50">
+      <div class="max-w-2xl mx-auto">
+        <div class="text-center mb-8">
+          <span class="text-amber-400 text-sm font-semibold tracking-wider uppercase">Free Tool</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mt-2">Check Your Kit Instantly</h2>
+          <p class="text-zinc-400 mt-3 max-w-lg mx-auto">
+            Enter a product code to verify it against our database of authenticated football shirts.
+          </p>
+        </div>
+        <ProductCodeChecker />
+      </div>
+    </section>
+    
     <ProblemSection />
     <HowItWorks />
     <Features />
@@ -29,3 +45,4 @@ const description = "Know your vintage football shirt's true value in 60 seconds
   
   <Footer />
 </BaseLayout>
+
