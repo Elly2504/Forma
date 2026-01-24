@@ -1,8 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-import BlogLayout from '../../layouts/BlogLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
 
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
@@ -13,20 +10,7 @@ export async function getStaticPaths() {
 }
 
 const { guide } = Astro.props;
-const { Content } = await guide.render();
 
-// Calculate reading time (rough estimate: 200 words per minute)
-const wordCount = guide.body.split(/\s+/).length;
-const readingTime = Math.ceil(wordCount / 200);
+// 301 Redirect to /guides/[slug] - fixes duplicate content issue
+return Astro.redirect(`/guides/${guide.slug}/`, 301);
 ---
-
-<Header />
-
-<BlogLayout frontmatter={{
-  ...guide.data,
-  readingTime: guide.data.readingTime || readingTime,
-}}>
-  <Content />
-</BlogLayout>
-
-<Footer />
