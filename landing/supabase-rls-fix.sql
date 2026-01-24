@@ -4,43 +4,37 @@
 -- ============================================
 
 -- ============================================
--- 1. CRITICAL: API Keys (PRIVATE - No public access)
+-- 1. CRITICAL: API Keys (PRIVATE - service role only)
 -- ============================================
 ALTER TABLE public.api_keys ENABLE ROW LEVEL SECURITY;
 
--- Only service role can access api_keys (no anon access)
 CREATE POLICY "api_keys_service_only" ON public.api_keys
   FOR ALL USING (auth.role() = 'service_role');
 
 -- ============================================
--- 2. API Usage Logs (Private - user's own logs only)
+-- 2. API Usage Logs (service role only for writes, public read)
 -- ============================================
 ALTER TABLE public.api_usage_logs ENABLE ROW LEVEL SECURITY;
 
--- Users can only see their own usage logs
-CREATE POLICY "api_usage_logs_own_only" ON public.api_usage_logs
-  FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "api_usage_logs_public_read" ON public.api_usage_logs
+  FOR SELECT USING (true);
 
--- Service role can insert logs
-CREATE POLICY "api_usage_logs_service_insert" ON public.api_usage_logs
+CREATE POLICY "api_usage_logs_service_write" ON public.api_usage_logs
   FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
 -- ============================================
--- 3. Digital Passports (Private - owner only)
+-- 3. Digital Passports (service role manages, public read)
 -- ============================================
 ALTER TABLE public.digital_passports ENABLE ROW LEVEL SECURITY;
 
--- Users can only see their own passports
-CREATE POLICY "digital_passports_own_only" ON public.digital_passports
-  FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "digital_passports_public_read" ON public.digital_passports
+  FOR SELECT USING (true);
 
--- Users can create their own passports
-CREATE POLICY "digital_passports_own_insert" ON public.digital_passports
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "digital_passports_service_write" ON public.digital_passports
+  FOR ALL USING (auth.role() = 'service_role');
 
 -- ============================================
 -- 4-16. Reference Tables (PUBLIC READ-ONLY)
--- These are lookup/reference tables - anyone can read
 -- ============================================
 
 -- code_format_patterns
