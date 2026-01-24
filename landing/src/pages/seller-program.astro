@@ -1,0 +1,262 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = "Seller Certification Program | KitTicker";
+const description = "Become a KitTicker Certified Seller. Get trust badges, API access, and priority support to boost your vintage football shirt sales.";
+
+const tiers = [
+  {
+    name: "Verified Seller",
+    price: "Free",
+    description: "For individual sellers starting out",
+    features: [
+      "Verified Seller badge",
+      "100 API lookups/month",
+      "Email support",
+      "Access to product code database"
+    ],
+    cta: "Apply Now",
+    highlighted: false
+  },
+  {
+    name: "Pro Seller",
+    price: "$49/mo",
+    description: "For professional resellers",
+    features: [
+      "Pro Seller badge",
+      "5,000 API lookups/month",
+      "Priority email support",
+      "Batch verification tool",
+      "Pricing data access",
+      "Featured in directory"
+    ],
+    cta: "Apply Now",
+    highlighted: true
+  },
+  {
+    name: "Elite Partner",
+    price: "Custom",
+    description: "For high-volume retailers",
+    features: [
+      "Elite Partner badge",
+      "Unlimited API lookups",
+      "Dedicated account manager",
+      "DPP generation included",
+      "White-label certificates",
+      "Custom integration support",
+      "SLA guarantee"
+    ],
+    cta: "Contact Sales",
+    highlighted: false
+  }
+];
+
+const benefits = [
+  {
+    icon: "🛡️",
+    title: "Trust Badges",
+    description: "Display 'KitTicker Certified' on your listings. Buyers trust verified sellers."
+  },
+  {
+    icon: "⚡",
+    title: "Instant Verification",
+    description: "API access to verify products before listing. No more guesswork."
+  },
+  {
+    icon: "📊",
+    title: "Market Data",
+    description: "Access pricing estimates and market trends to price competitively."
+  },
+  {
+    icon: "📜",
+    title: "Digital Certificates",
+    description: "Generate shareable proof of authenticity for each item you sell."
+  },
+  {
+    icon: "🎯",
+    title: "Increased Sales",
+    description: "Certified sellers report 23% higher conversion rates on verified items."
+  },
+  {
+    icon: "🤝",
+    title: "Community",
+    description: "Join a network of trusted vintage football shirt sellers worldwide."
+  }
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  
+  <main>
+    <!-- Hero -->
+    <section class="relative pt-32 pb-16 px-4">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[var(--gold-500)] rounded-full blur-[200px] opacity-10"></div>
+      
+      <div class="container relative max-w-4xl mx-auto text-center">
+        <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">Seller Program</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mt-4 mb-6">
+          Become a <span class="text-gradient">Certified Seller</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-8">
+          Join the network of trusted vintage football shirt sellers. 
+          Get verified, build trust, and sell more.
+        </p>
+        
+        <!-- Trust badges preview -->
+        <div class="flex items-center justify-center gap-4 flex-wrap">
+          <div class="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-2 text-sm">
+            <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-green-400 font-medium">Verified Seller</span>
+          </div>
+          <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-2 text-sm">
+            <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span class="text-amber-400 font-medium">Pro Seller</span>
+          </div>
+          <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/30 rounded-full px-4 py-2 text-sm">
+            <svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm2.5 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm6.207.293a1 1 0 00-1.414 0l-6 6a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414zM12.5 10a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-purple-400 font-medium">Elite Partner</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="py-16 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Why Get Certified?</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Stand out in a crowded marketplace. Verified sellers earn more trust.
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {benefits.map((benefit) => (
+            <div class="glass-card p-6">
+              <div class="text-4xl mb-4">{benefit.icon}</div>
+              <h3 class="text-xl font-semibold mb-2">{benefit.title}</h3>
+              <p class="text-[var(--text-secondary)]">{benefit.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Tiers -->
+    <section class="py-16 px-4 bg-zinc-900/50">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Choose Your Level</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Start free and upgrade as you grow.
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+          {tiers.map((tier) => (
+            <div class={`glass-card p-8 relative ${tier.highlighted ? 'border-[var(--gold-500)] border-2' : ''}`}>
+              {tier.highlighted && (
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--gold-500)] text-black text-xs font-bold px-3 py-1 rounded-full">
+                  MOST POPULAR
+                </div>
+              )}
+              <div class="text-center mb-6">
+                <h3 class="text-xl font-bold mb-2">{tier.name}</h3>
+                <div class="text-4xl font-bold text-gradient mb-2">{tier.price}</div>
+                <p class="text-[var(--text-secondary)] text-sm">{tier.description}</p>
+              </div>
+              
+              <ul class="space-y-3 mb-8">
+                {tier.features.map((feature) => (
+                  <li class="flex items-start gap-2 text-[var(--text-secondary)]">
+                    <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              
+              <a 
+                href={tier.name === "Elite Partner" ? "mailto:partners@kitticker.com" : "#apply"} 
+                class={`block text-center py-3 px-6 rounded-lg font-semibold transition-colors ${tier.highlighted ? 'btn-primary' : 'bg-zinc-800 hover:bg-zinc-700 text-white'}`}
+              >
+                {tier.cta}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Application Form -->
+    <section id="apply" class="py-16 px-4">
+      <div class="container max-w-2xl mx-auto">
+        <div class="glass-card-gold p-12 text-center">
+          <h2 class="text-3xl font-bold mb-4">Apply for Certification</h2>
+          <p class="text-[var(--text-secondary)] mb-8">
+            Tell us about your business. We'll review your application within 48 hours.
+          </p>
+          
+          <form class="space-y-4 text-left">
+            <div>
+              <label class="block text-sm font-medium mb-2">Business Name</label>
+              <input 
+                type="text" 
+                class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:border-[var(--gold-500)] focus:outline-none"
+                placeholder="Your shop or business name"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Email</label>
+              <input 
+                type="email" 
+                class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:border-[var(--gold-500)] focus:outline-none"
+                placeholder="you@example.com"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Where do you sell?</label>
+              <select class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:border-[var(--gold-500)] focus:outline-none">
+                <option value="">Select platform(s)</option>
+                <option value="ebay">eBay</option>
+                <option value="depop">Depop</option>
+                <option value="vinted">Vinted</option>
+                <option value="website">Own Website</option>
+                <option value="multiple">Multiple Platforms</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Monthly Sales Volume</label>
+              <select class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:border-[var(--gold-500)] focus:outline-none">
+                <option value="">Select range</option>
+                <option value="1-10">1-10 items</option>
+                <option value="11-50">11-50 items</option>
+                <option value="51-200">51-200 items</option>
+                <option value="200+">200+ items</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-primary w-full py-4 text-lg mt-6">
+              Submit Application
+            </button>
+          </form>
+          
+          <p class="text-[var(--text-muted)] text-sm mt-6">
+            By applying, you agree to our <a href="/terms" class="text-[var(--gold-500)] hover:underline">Terms of Service</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>

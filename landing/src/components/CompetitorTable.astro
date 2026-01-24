@@ -1,0 +1,294 @@
+---
+/**
+ * CompetitorTable Component
+ * 
+ * Comparison table showing KitTicker vs Black-box AI vs Manual Expert.
+ * Highlights KitTicker's advantages in each category.
+ */
+
+const competitors = [
+  { name: 'KitTicker', icon: '🏆', highlight: true },
+  { name: 'Black-box AI', icon: '🤖', highlight: false },
+  { name: 'Manual Expert', icon: '👤', highlight: false },
+];
+
+const categories = [
+  { 
+    label: 'Speed', 
+    values: ['< 1 second', '3-5 seconds', '1-24 hours'],
+    winner: 0
+  },
+  { 
+    label: 'Cost per Check', 
+    values: ['$0.002', '$0.05', '$5-15'],
+    winner: 0
+  },
+  { 
+    label: 'Accuracy', 
+    values: ['95%+', '~80%', '~95%'],
+    winner: 0
+  },
+  { 
+    label: 'Explainable', 
+    values: ['✓ Full breakdown', '✗ None', '✓ Verbal'],
+    winner: 0
+  },
+  { 
+    label: '11-Point Validation', 
+    values: ['✓', '✗', '⚠ Partial'],
+    winner: 0
+  },
+  { 
+    label: 'DPP Generation', 
+    values: ['✓', '✗', '✗'],
+    winner: 0
+  },
+  { 
+    label: 'API Available', 
+    values: ['✓ REST API', '⚠ Limited', '✗'],
+    winner: 0
+  },
+  { 
+    label: 'Scales to 1M+', 
+    values: ['✓', '✓', '✗'],
+    winner: 0
+  },
+];
+---
+
+<div class="competitor-table-container">
+  <div class="table-header">
+    <h3 class="table-title">Why Choose KitTicker?</h3>
+    <p class="table-subtitle">See how we compare to traditional methods</p>
+  </div>
+
+  <div class="comparison-table">
+    <!-- Header Row -->
+    <div class="table-row table-row-header">
+      <div class="table-cell cell-label"></div>
+      {competitors.map((comp) => (
+        <div class={`table-cell cell-competitor ${comp.highlight ? 'cell-highlight' : ''}`}>
+          <span class="competitor-icon">{comp.icon}</span>
+          <span class="competitor-name">{comp.name}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Data Rows -->
+    {categories.map((cat, rowIndex) => (
+      <div class="table-row" style={`animation-delay: ${rowIndex * 0.1}s`}>
+        <div class="table-cell cell-label">{cat.label}</div>
+        {cat.values.map((val, colIndex) => (
+          <div class={`table-cell cell-value ${colIndex === 0 ? 'cell-winner' : ''} ${val.startsWith('✓') ? 'cell-pass' : val.startsWith('✗') ? 'cell-fail' : val.startsWith('⚠') ? 'cell-warning' : ''}`}>
+            {val}
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  <!-- Summary -->
+  <div class="table-summary">
+    <div class="summary-card">
+      <span class="summary-value">25x</span>
+      <span class="summary-label">Faster than AI</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-value">25x</span>
+      <span class="summary-label">Cheaper per check</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-value">100%</span>
+      <span class="summary-label">Explainable</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .competitor-table-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .table-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .table-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .table-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .comparison-table {
+    background: rgba(24, 24, 27, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 1.2fr repeat(3, 1fr);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    animation: rowFadeIn 0.4s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes rowFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .table-row:last-child {
+    border-bottom: none;
+  }
+
+  .table-row-header {
+    background: rgba(0, 0, 0, 0.3);
+    animation: none;
+    opacity: 1;
+  }
+
+  .table-cell {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  .cell-label {
+    justify-content: flex-start;
+    padding-left: 1.5rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .cell-competitor {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 1rem;
+  }
+
+  .cell-highlight {
+    background: linear-gradient(180deg, rgba(251, 191, 36, 0.1), transparent);
+    border-left: 2px solid var(--gold-500);
+    border-right: 2px solid var(--gold-500);
+  }
+
+  .cell-highlight .competitor-name {
+    color: var(--gold-400);
+    font-weight: 700;
+  }
+
+  .table-row-header .cell-highlight {
+    border-top: 2px solid var(--gold-500);
+  }
+
+  .table-row:last-child .cell-highlight {
+    border-bottom: 2px solid var(--gold-500);
+  }
+
+  .competitor-icon {
+    font-size: 1.5rem;
+  }
+
+  .competitor-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  .cell-value {
+    color: var(--text-secondary);
+  }
+
+  .cell-winner {
+    color: white;
+    font-weight: 600;
+  }
+
+  .cell-pass {
+    color: #10b981;
+  }
+
+  .cell-fail {
+    color: #ef4444;
+  }
+
+  .cell-warning {
+    color: #eab308;
+  }
+
+  /* Summary Cards */
+  .table-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .summary-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05));
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .summary-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--gold-400);
+  }
+
+  .summary-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .table-row {
+      grid-template-columns: 1fr;
+    }
+
+    .table-row-header {
+      display: none;
+    }
+
+    .table-cell {
+      padding: 0.75rem 1rem;
+    }
+
+    .cell-label {
+      background: rgba(0, 0, 0, 0.3);
+      font-weight: 700;
+      justify-content: center;
+    }
+
+    .cell-value::before {
+      content: attr(data-label);
+      font-weight: 600;
+      margin-right: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .table-summary {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

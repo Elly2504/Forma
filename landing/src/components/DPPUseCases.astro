@@ -1,0 +1,171 @@
+---
+/**
+ * DPPUseCases Component
+ * 
+ * Three use case cards for Retailers, Clubs, Marketplaces.
+ */
+
+const useCases = [
+  {
+    icon: "🏪",
+    title: "Vintage Retailers",
+    description: "Add verification certificates to every listing",
+    benefits: [
+      "Increase buyer confidence by 3x",
+      "Reduce returns and disputes",
+      "Premium positioning in market"
+    ],
+    color: "gold"
+  },
+  {
+    icon: "🏟️",
+    title: "Football Clubs",
+    description: "Authenticate official merchandise archives",
+    benefits: [
+      "Protect brand integrity",
+      "Combat counterfeit merchandise",
+      "Digital provenance for museum items"
+    ],
+    color: "purple"
+  },
+  {
+    icon: "📦",
+    title: "Marketplaces",
+    description: "Integrate DPP into your checkout flow",
+    benefits: [
+      "Trust signals at purchase",
+      "Reduce buyer/seller disputes",
+      "EU 2027 compliance ready"
+    ],
+    color: "cyan"
+  }
+];
+---
+
+<div class="dpp-use-cases">
+  <div class="cases-grid">
+    {useCases.map((useCase, index) => (
+      <div class={`case-card case-${useCase.color}`} style={`animation-delay: ${index * 0.1}s`}>
+        <div class="case-icon">{useCase.icon}</div>
+        <h3 class="case-title">{useCase.title}</h3>
+        <p class="case-description">{useCase.description}</p>
+        <ul class="case-benefits">
+          {useCase.benefits.map(benefit => (
+            <li>
+              <span class="benefit-check">✓</span>
+              <span>{benefit}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .dpp-use-cases {
+    padding: 1rem 0;
+  }
+
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .case-card {
+    background: linear-gradient(135deg, rgba(24, 24, 27, 0.8), rgba(20, 20, 20, 0.6));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    animation: caseReveal 0.5s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes caseReveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .case-card:hover {
+    transform: translateY(-6px);
+  }
+
+  .case-gold:hover {
+    border-color: rgba(251, 191, 36, 0.4);
+    box-shadow: 0 12px 40px rgba(251, 191, 36, 0.15);
+  }
+
+  .case-purple:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.15);
+  }
+
+  .case-cyan:hover {
+    border-color: rgba(6, 182, 212, 0.4);
+    box-shadow: 0 12px 40px rgba(6, 182, 212, 0.15);
+  }
+
+  .case-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .case-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .case-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .case-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .case-benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .benefit-check {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    border-radius: 50%;
+  }
+
+  .case-gold .benefit-check {
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--gold-400);
+  }
+
+  .case-purple .benefit-check {
+    background: rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+  }
+
+  .case-cyan .benefit-check {
+    background: rgba(6, 182, 212, 0.2);
+    color: #06b6d4;
+  }
+</style>

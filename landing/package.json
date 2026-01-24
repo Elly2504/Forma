@@ -12,6 +12,7 @@
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/react": "^4.4.2",
     "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/vercel": "^9.0.4",
     "@supabase/supabase-js": "^2.90.1",
     "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^19.2.8",
@@ -20,6 +21,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "remark-gfm": "^4.0.1",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "tesseract.js": "^5.1.0"
   }
 }

@@ -1,0 +1,241 @@
+---
+/**
+ * DPP (Digital Product Passport) Page
+ * 
+ * 7 Sections:
+ * 1. Hero - EU 2027 DPP Directive Ready
+ * 2. What is DPP - Three feature cards
+ * 3. How KitTicker Creates DPP - 4-step process
+ * 4. Live Certificate Demo - Interactive preview
+ * 5. Use Cases - Retailers, Clubs, Marketplaces
+ * 6. API Integration - Code example
+ * 7. B2B CTA
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import DPPProcessFlow from '../components/DPPProcessFlow.astro';
+import DPPCertificateDemo from '../components/DPPCertificateDemo.astro';
+import DPPUseCases from '../components/DPPUseCases.astro';
+import DPPIntegration from '../components/DPPIntegration.astro';
+
+const title = "Digital Product Passport | KitTicker - EU 2027 DPP Ready";
+const description = "Create blockchain-ready Digital Product Passports for vintage football shirts. EU 2027 DPP Directive compliant. Ownership transfer, QR verification, and full provenance chain.";
+
+const features = [
+  {
+    icon: "📜",
+    title: "Digital Identity",
+    description: "Unique UID per item with immutable verification record",
+    color: "purple"
+  },
+  {
+    icon: "🔗",
+    title: "Provenance Chain",
+    description: "Complete ownership transfer history with timestamps",
+    color: "cyan"
+  },
+  {
+    icon: "🇪🇺",
+    title: "EU 2027 Ready",
+    description: "Compliant with EU Digital Product Passport Directive",
+    color: "blue"
+  }
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  
+  <main>
+    <!-- Section 1: Hero -->
+    <section class="hero-section relative pt-32 pb-20 px-4 overflow-hidden">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-purple-500 rounded-full blur-[200px] opacity-10"></div>
+      <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[var(--gold-500)] rounded-full blur-[200px] opacity-5"></div>
+      
+      <div class="container relative max-w-4xl mx-auto text-center">
+        <!-- EU Badge -->
+        <div class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 rounded-full px-4 py-2 mb-6 animate-fade-in">
+          <span class="text-lg">🇪🇺</span>
+          <span class="text-blue-400 font-semibold text-sm">EU 2027 DPP Directive Ready</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 animate-fade-in" style="animation-delay: 0.1s">
+          Digital Identity for <br/>
+          <span class="text-gradient-purple">Vintage Football Shirts</span>
+        </h1>
+        
+        <p class="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-8 animate-fade-in" style="animation-delay: 0.2s">
+          Create blockchain-ready certificates with QR verification, ownership transfer, and complete provenance chain.
+          <strong class="text-white">One API call = verified digital passport.</strong>
+        </p>
+
+        <!-- Stats -->
+        <div class="flex flex-wrap items-center justify-center gap-6 mb-10 animate-fade-in" style="animation-delay: 0.3s">
+          <div class="text-center">
+            <span class="block text-3xl font-bold text-purple-400">100K+</span>
+            <span class="text-sm text-[var(--text-muted)]">Passports Generated</span>
+          </div>
+          <div class="w-px h-12 bg-zinc-700 hidden sm:block"></div>
+          <div class="text-center">
+            <span class="block text-3xl font-bold text-cyan-400">EU</span>
+            <span class="text-sm text-[var(--text-muted)]">2027 Compliant</span>
+          </div>
+          <div class="w-px h-12 bg-zinc-700 hidden sm:block"></div>
+          <div class="text-center">
+            <span class="block text-3xl font-bold text-green-400">< 1s</span>
+            <span class="text-sm text-[var(--text-muted)]">Generation Time</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style="animation-delay: 0.4s">
+          <a href="/#product-checker" class="btn-primary text-lg px-8 py-4">
+            Generate Your First DPP
+          </a>
+          <a href="/certificate/KT-2026-DEMO" class="text-purple-400 hover:text-purple-300 flex items-center gap-2 font-medium">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            View Sample Certificate
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: What is DPP -->
+    <section class="py-20 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">What is a Digital Product Passport?</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            A verified digital identity for physical products, mandated by the EU for textiles starting 2027
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
+            <div class={`feature-card-${feature.color} p-6 rounded-2xl animate-fade-in`} style={`animation-delay: ${0.1 * index}s`}>
+              <div class="text-4xl mb-4">{feature.icon}</div>
+              <h3 class="text-xl font-bold text-white mb-2">{feature.title}</h3>
+              <p class="text-[var(--text-secondary)]">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: How KitTicker Creates DPP -->
+    <section class="py-20 px-4 bg-gradient-to-b from-transparent to-zinc-900/30">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-purple-400 text-sm font-semibold uppercase tracking-wider">The Process</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">How We Create Your DPP</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Four automated steps transform your verified product into a shareable digital passport
+          </p>
+        </div>
+        <DPPProcessFlow />
+      </div>
+    </section>
+
+    <!-- Section 4: Live Certificate Demo -->
+    <section class="py-20 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Live Preview</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">Your Certificate Looks Like This</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Every DPP includes UID, QR code, verification evidence, and ownership information
+          </p>
+        </div>
+        <DPPCertificateDemo />
+      </div>
+    </section>
+
+    <!-- Section 5: Use Cases -->
+    <section class="py-20 px-4 bg-gradient-to-b from-zinc-900/30 to-transparent">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-gold-400 text-sm font-semibold uppercase tracking-wider" style="color: var(--gold-400)">Who Benefits</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">Built for Your Industry</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            From individual sellers to enterprise marketplaces, DPP adds value at every level
+          </p>
+        </div>
+        <DPPUseCases />
+      </div>
+    </section>
+
+    <!-- Section 6: API Integration -->
+    <section class="py-20 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-green-400 text-sm font-semibold uppercase tracking-wider">Integration</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">Simple API, Powerful Results</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Generate DPPs programmatically with a single REST API call
+          </p>
+        </div>
+        <DPPIntegration />
+      </div>
+    </section>
+
+    <!-- Section 7: B2B CTA -->
+    <section class="py-20 px-4">
+      <div class="container max-w-3xl mx-auto">
+        <div class="cta-card-purple p-8 sm:p-12 text-center rounded-2xl">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Ready to Issue Digital Passports?</h2>
+          <p class="text-[var(--text-secondary)] mb-8 max-w-xl mx-auto">
+            Join retailers already using KitTicker DPP to build trust and prepare for EU 2027.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <a href="/pricing" class="btn-primary text-lg px-8 py-4">
+              Get API Access
+            </a>
+            <a href="/docs" class="btn-secondary text-lg px-8 py-4">
+              View Documentation
+            </a>
+          </div>
+
+          <p class="text-[var(--text-muted)] text-sm">
+            Questions? <a href="mailto:hello@kitticker.com" class="text-purple-400 hover:underline">Contact our team</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<style>
+  .text-gradient-purple {
+    background: linear-gradient(135deg, #a855f7, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .feature-card-purple {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(168, 85, 247, 0.05));
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .feature-card-cyan {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+    border: 1px solid rgba(6, 182, 212, 0.3);
+  }
+
+  .feature-card-blue {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+
+  .cta-card-purple {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(168, 85, 247, 0.05));
+    border: 2px solid rgba(168, 85, 247, 0.3);
+  }
+</style>

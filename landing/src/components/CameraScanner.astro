@@ -1,0 +1,354 @@
+---
+/**
+ * CameraScanner Component - Manual Capture Mode
+ * 
+ * Clean, minimal design with manual capture only.
+ * No auto-scanning - user presses button to capture and scan.
+ */
+---
+
+<div class="camera-scanner p-5 bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-white/10">
+  <!-- Header -->
+  <div class="flex items-center gap-3 mb-5">
+    <div class="w-9 h-9 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+      <svg class="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    </div>
+    <div>
+      <h3 class="font-semibold text-white">Scan Product Label</h3>
+      <p class="text-xs text-zinc-500">Tap capture when label is in frame</p>
+    </div>
+  </div>
+
+  <!-- Camera Permission Request -->
+  <div id="camera-permission" class="text-center py-10">
+    <div class="w-16 h-16 mx-auto rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+      <svg class="w-8 h-8 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+      </svg>
+    </div>
+    <p class="text-zinc-400 text-sm mb-4">Camera access required</p>
+    <button
+      id="start-camera-btn"
+      class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-medium rounded-lg transition-colors text-sm"
+    >
+      Enable Camera
+    </button>
+  </div>
+
+  <!-- Camera View -->
+  <div id="camera-container" class="hidden">
+    <!-- Video -->
+    <div class="relative rounded-xl overflow-hidden bg-black aspect-[4/3]">
+      <video 
+        id="camera-video" 
+        autoplay 
+        playsinline 
+        muted
+        class="w-full h-full object-cover"
+      ></video>
+      
+      <!-- Simple Frame Guide -->
+      <div class="absolute inset-4 border-2 border-white/30 rounded-lg pointer-events-none">
+        <div class="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-cyan-400 -translate-x-0.5 -translate-y-0.5"></div>
+        <div class="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-cyan-400 translate-x-0.5 -translate-y-0.5"></div>
+        <div class="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-cyan-400 -translate-x-0.5 translate-y-0.5"></div>
+        <div class="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-cyan-400 translate-x-0.5 translate-y-0.5"></div>
+      </div>
+    </div>
+
+    <!-- Hidden Canvas -->
+    <canvas id="capture-canvas" class="hidden"></canvas>
+
+    <!-- Capture Button Only -->
+    <div class="flex justify-center mt-5">
+      <button
+        id="capture-btn"
+        class="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+      >
+        <div class="w-12 h-12 rounded-full border-4 border-zinc-900"></div>
+      </button>
+    </div>
+
+    <!-- Status -->
+    <p id="status-text" class="text-center text-sm text-zinc-500 mt-3">Position label in frame, then tap capture</p>
+
+    <!-- Close Button -->
+    <button
+      id="close-camera-btn"
+      class="w-full mt-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+    >
+      Close Camera
+    </button>
+  </div>
+
+  <!-- Processing State -->
+  <div id="processing-state" class="hidden text-center py-8">
+    <svg class="animate-spin w-8 h-8 text-cyan-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p id="processing-text" class="text-zinc-400 text-sm">Extracting code...</p>
+  </div>
+
+  <!-- Result -->
+  <div id="scan-result" class="hidden mt-4">
+    <div id="result-content"></div>
+  </div>
+</div>
+
+<script>
+  import { preprocessForOCR, extractProductCode } from '../lib/ocr';
+  import { verifyProductCode, type VerdictType } from '../lib/verifier';
+
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', init);
+  
+  // Also try immediate init if DOM already loaded
+  if (document.readyState !== 'loading') {
+    init();
+  }
+
+  function init() {
+    console.log('[CameraScanner] Initializing...');
+    
+    // DOM Elements
+    const permissionSection = document.getElementById('camera-permission');
+    const cameraContainer = document.getElementById('camera-container');
+    const startBtn = document.getElementById('start-camera-btn');
+    const captureBtn = document.getElementById('capture-btn');
+    const closeBtn = document.getElementById('close-camera-btn');
+    const video = document.getElementById('camera-video') as HTMLVideoElement;
+    const canvas = document.getElementById('capture-canvas') as HTMLCanvasElement;
+    const statusText = document.getElementById('status-text');
+    const processingState = document.getElementById('processing-state');
+    const processingText = document.getElementById('processing-text');
+    const scanResult = document.getElementById('scan-result');
+    const resultContent = document.getElementById('result-content');
+
+    if (!canvas) {
+      console.error('[CameraScanner] Canvas not found');
+      return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('[CameraScanner] Could not get 2D context');
+      return;
+    }
+
+    let currentStream: MediaStream | null = null;
+
+    // Start Camera
+    async function startCamera() {
+      console.log('[CameraScanner] Starting camera...');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          }
+        });
+        
+        currentStream = stream;
+        video.srcObject = stream;
+        console.log('[CameraScanner] Camera stream obtained');
+        
+        video.onloadedmetadata = () => {
+          console.log('[CameraScanner] Video metadata loaded');
+          permissionSection?.classList.add('hidden');
+          cameraContainer?.classList.remove('hidden');
+        };
+        
+      } catch (error) {
+        console.error('[CameraScanner] Camera error:', error);
+        alert('Could not access camera. Please check permissions.');
+      }
+    }
+
+    // Stop Camera
+    function stopCamera() {
+      console.log('[CameraScanner] Stopping camera...');
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+      }
+      video.srcObject = null;
+      cameraContainer?.classList.add('hidden');
+      permissionSection?.classList.remove('hidden');
+      scanResult?.classList.add('hidden');
+    }
+
+    // Capture and Process
+    async function captureAndProcess() {
+      console.log('[CameraScanner] Capture button clicked');
+      console.log('[CameraScanner] Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+      
+      if (!video.videoWidth || video.videoWidth === 0) {
+        console.error('[CameraScanner] Video not ready, dimensions are 0');
+        if (statusText) statusText.textContent = 'Camera not ready. Please wait...';
+        return;
+      }
+
+      // Show processing
+      cameraContainer?.classList.add('hidden');
+      processingState?.classList.remove('hidden');
+      if (processingText) processingText.textContent = 'Capturing image...';
+
+      // Capture frame
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      const imageData = canvas.toDataURL('image/png');
+      console.log('[CameraScanner] Frame captured, data length:', imageData.length);
+
+      try {
+        // Process OCR
+        if (processingText) processingText.textContent = 'Extracting code...';
+        console.log('[CameraScanner] Starting OCR preprocessing...');
+        const processed = await preprocessForOCR(imageData);
+        console.log('[CameraScanner] Preprocessing done, starting OCR...');
+        const result = await extractProductCode(processed);
+        console.log('[CameraScanner] OCR result:', result);
+
+        if (result.extractedCodes.length > 0) {
+          // Found code - verify it
+          if (processingText) processingText.textContent = 'Verifying...';
+          const code = result.extractedCodes[0];
+          console.log('[CameraScanner] Code found:', code);
+          await showVerificationResult(code);
+        } else {
+          // No code found
+          console.log('[CameraScanner] No code found in image');
+          showNoCodeFound();
+        }
+      } catch (error) {
+        console.error('[CameraScanner] Processing error:', error);
+        showError();
+      }
+    }
+
+    // Show Verification Result
+    async function showVerificationResult(code: { code: string; brand: string }) {
+      processingState?.classList.add('hidden');
+      scanResult?.classList.remove('hidden');
+
+      try {
+        console.log('[CameraScanner] Verifying code:', code.code);
+        const result = await verifyProductCode(code.code);
+        console.log('[CameraScanner] Verification result:', result);
+        const colors = getVerdictColors(result.verdict);
+
+        if (resultContent) {
+          resultContent.innerHTML = `
+            <div class="p-4 rounded-xl ${colors.bg} border ${colors.border}">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">${colors.icon}</span>
+                <div class="flex-1">
+                  <p class="font-semibold ${colors.text}">${getVerdictLabel(result.verdict)}</p>
+                  <code class="text-xs text-zinc-400">${code.code}</code>
+                </div>
+                <span class="text-xl font-bold ${colors.text}">${result.confidenceScore}%</span>
+              </div>
+              ${result.matchedProduct ? `
+                <p class="text-sm text-zinc-300">${result.matchedProduct.team} • ${result.matchedProduct.brand} • ${result.matchedProduct.season || ''}</p>
+              ` : ''}
+              <button id="scan-again-btn" class="w-full mt-3 py-2 text-sm text-cyan-400 hover:text-cyan-300">
+                Scan Another
+              </button>
+            </div>
+          `;
+
+          document.getElementById('scan-again-btn')?.addEventListener('click', () => {
+            scanResult?.classList.add('hidden');
+            cameraContainer?.classList.remove('hidden');
+          });
+        }
+      } catch (error) {
+        console.error('[CameraScanner] Verification error:', error);
+        showError();
+      }
+    }
+
+    // No Code Found
+    function showNoCodeFound() {
+      processingState?.classList.add('hidden');
+      scanResult?.classList.remove('hidden');
+
+      if (resultContent) {
+        resultContent.innerHTML = `
+          <div class="p-4 rounded-xl bg-zinc-800/50 border border-zinc-700 text-center">
+            <p class="text-zinc-400 mb-3">No product code found</p>
+            <p class="text-xs text-zinc-500 mb-4">Try capturing the label more closely</p>
+            <button id="try-again-btn" class="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-sm text-white">
+              Try Again
+            </button>
+          </div>
+        `;
+
+        document.getElementById('try-again-btn')?.addEventListener('click', () => {
+          scanResult?.classList.add('hidden');
+          cameraContainer?.classList.remove('hidden');
+        });
+      }
+    }
+
+    // Error
+    function showError() {
+      processingState?.classList.add('hidden');
+      scanResult?.classList.remove('hidden');
+
+      if (resultContent) {
+        resultContent.innerHTML = `
+          <div class="p-4 rounded-xl bg-red-900/20 border border-red-500/30 text-center">
+            <p class="text-red-400 mb-3">Error processing image</p>
+            <button id="retry-btn" class="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-sm text-white">
+              Retry
+            </button>
+          </div>
+        `;
+
+        document.getElementById('retry-btn')?.addEventListener('click', () => {
+          scanResult?.classList.add('hidden');
+          cameraContainer?.classList.remove('hidden');
+        });
+      }
+    }
+
+    // Helpers
+    function getVerdictColors(verdict: VerdictType) {
+      const map = {
+        highly_likely_authentic: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-400', icon: '✓' },
+        probably_authentic: { bg: 'bg-green-500/10', border: 'border-green-500/30', text: 'text-green-400', icon: '✓' },
+        uncertain: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-400', icon: '?' },
+        suspicious: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400', icon: '⚠' },
+        likely_fake: { bg: 'bg-red-500/10', border: 'border-red-500/30', text: 'text-red-400', icon: '✗' },
+        blacklisted: { bg: 'bg-red-600/20', border: 'border-red-600/50', text: 'text-red-500', icon: '⛔' },
+      };
+      return map[verdict];
+    }
+
+    function getVerdictLabel(verdict: VerdictType): string {
+      const map = {
+        highly_likely_authentic: 'Highly Likely Authentic',
+        probably_authentic: 'Probably Authentic',
+        uncertain: 'Uncertain',
+        suspicious: 'Suspicious',
+        likely_fake: 'Likely Fake',
+        blacklisted: 'Known Counterfeit',
+      };
+      return map[verdict];
+    }
+
+    // Event Listeners
+    console.log('[CameraScanner] Attaching event listeners...');
+    startBtn?.addEventListener('click', startCamera);
+    captureBtn?.addEventListener('click', captureAndProcess);
+    closeBtn?.addEventListener('click', stopCamera);
+    console.log('[CameraScanner] Ready');
+  }
+</script>
+

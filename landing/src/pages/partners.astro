@@ -1,0 +1,244 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = "For Clubs & Retailers | KitTicker Partner Program";
+const description = "Integrate KitTicker's authentication API into your platform. Reduce verification costs by 50% with automated product code validation.";
+
+const benefits = [
+  {
+    icon: "⚡",
+    title: "50% Faster Intake",
+    description: "Automate product verification. What took 5 minutes per item now takes seconds."
+  },
+  {
+    icon: "💰",
+    title: "Reduce OpEx",
+    description: "Cut manual authentication costs. One API call replaces hours of research."
+  },
+  {
+    icon: "🛡️",
+    title: "Trust Badges",
+    description: "Display 'Verified by KitTicker' on your listings. Increase buyer confidence."
+  },
+  {
+    icon: "📊",
+    title: "Data Access",
+    description: "Get pricing estimates, condition guidelines, and market trends via API."
+  },
+  {
+    icon: "📜",
+    title: "DPP Generation",
+    description: "Issue Digital Product Passports with QR codes. Ready for EU 2027 regulations."
+  },
+  {
+    icon: "🤝",
+    title: "Dedicated Support",
+    description: "Enterprise partners get priority support and custom integration assistance."
+  }
+];
+
+const useCases = [
+  {
+    title: "Specialist Retailers",
+    example: "Classic Football Shirts",
+    problem: "Manual intake verification is slow and costly",
+    solution: "API-based instant verification at scan time",
+    metric: "50% reduction in processing time"
+  },
+  {
+    title: "Circular Platforms",
+    example: "Birl, Trove, Reflaunt",
+    problem: "Can't verify authenticity instantly",
+    solution: "Real-time API validation on upload",
+    metric: "Automated authenticity check"
+  },
+  {
+    title: "Marketplaces",
+    example: "eBay, Vinted, Depop",
+    problem: "Low category trust, high returns",
+    solution: "Mandatory code check at listing",
+    metric: "Reduced fraud disputes"
+  },
+  {
+    title: "Football Clubs",
+    example: "West Ham, Arsenal, Liverpool",
+    problem: "Circularity programs need auth",
+    solution: "White-label DPP for trade-ins",
+    metric: "Fan trust & sustainability"
+  }
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  
+  <main>
+    <!-- Hero -->
+    <section class="relative pt-32 pb-16 px-4">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[var(--gold-500)] rounded-full blur-[200px] opacity-10"></div>
+      
+      <div class="container relative max-w-4xl mx-auto text-center">
+        <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">Partner Program</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mt-4 mb-6">
+          Integrate Authentication <br/>
+          <span class="text-gradient">Into Your Platform</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-8">
+          KitTicker provides the data infrastructure for vintage football shirt verification. 
+          We power your authentication so you can focus on sales.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="#contact" class="btn-primary text-lg px-8 py-4">Request Demo</a>
+          <a href="/docs" class="text-[var(--gold-500)] hover:text-[var(--gold-400)] font-medium flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            View API Docs
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-12 px-4">
+      <div class="container max-w-4xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-gradient">45K+</div>
+            <div class="text-[var(--text-secondary)] text-sm">Verified Codes</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-gradient">< 100ms</div>
+            <div class="text-[var(--text-secondary)] text-sm">API Response</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-gradient">5</div>
+            <div class="text-[var(--text-secondary)] text-sm">Signal Checks</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-gradient">99.9%</div>
+            <div class="text-[var(--text-secondary)] text-sm">Uptime SLA</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="py-16 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Why Partner With KitTicker?</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            We're not a consumer app. We're B2B infrastructure for authentication.
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {benefits.map((benefit) => (
+            <div class="glass-card p-6">
+              <div class="text-4xl mb-4">{benefit.icon}</div>
+              <h3 class="text-xl font-semibold mb-2">{benefit.title}</h3>
+              <p class="text-[var(--text-secondary)]">{benefit.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="py-16 px-4 bg-zinc-900/50">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Who We Work With</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            From specialist retailers to Premier League clubs, we power authentication.
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          {useCases.map((useCase) => (
+            <div class="glass-card p-8">
+              <div class="flex items-start gap-4">
+                <div class="flex-1">
+                  <div class="text-[var(--gold-500)] text-sm font-semibold mb-1">{useCase.title}</div>
+                  <h3 class="text-xl font-bold mb-2">e.g., {useCase.example}</h3>
+                  <div class="space-y-3 mt-4">
+                    <div class="flex items-start gap-2">
+                      <span class="text-red-400 text-sm">Problem:</span>
+                      <span class="text-[var(--text-secondary)] text-sm">{useCase.problem}</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-green-400 text-sm">Solution:</span>
+                      <span class="text-[var(--text-secondary)] text-sm">{useCase.solution}</span>
+                    </div>
+                    <div class="inline-flex items-center gap-1 bg-[var(--gold-500)]/10 border border-[var(--gold-500)]/30 rounded-full px-3 py-1 text-xs text-[var(--gold-500)]">
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                      {useCase.metric}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- API Preview -->
+    <section class="py-16 px-4">
+      <div class="container max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Simple API Integration</h2>
+          <p class="text-[var(--text-secondary)]">One endpoint. Instant verification.</p>
+        </div>
+        
+        <div class="glass-card p-6 overflow-hidden">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            <span class="ml-2 text-xs text-[var(--text-muted)]">Terminal</span>
+          </div>
+          <pre class="text-sm overflow-x-auto"><code class="text-green-400">curl -X GET "https://kitticker.com/api/v1/codes/lookup?code=CZ3984-100" \
+  -H "Authorization: Bearer kt_live_xxxx"</code></pre>
+          <pre class="text-sm overflow-x-auto mt-4"><code class="text-zinc-400">{`{
+  "success": true,
+  "data": {
+    "code": "CZ3984-100",
+    "brand": "Nike",
+    "team": "Manchester United",
+    "season": "2020/21",
+    "kit_type": "Home",
+    "confidence": 92,
+    "evidence": [...]
+  }
+}`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section id="contact" class="py-16 px-4">
+      <div class="container max-w-2xl mx-auto text-center">
+        <div class="glass-card-gold p-12">
+          <h2 class="text-3xl font-bold mb-4">Ready to Partner?</h2>
+          <p class="text-[var(--text-secondary)] mb-8">
+            Contact us for custom integration, enterprise pricing, and dedicated support.
+          </p>
+          <a href="mailto:partners@kitticker.com" class="btn-primary text-lg px-8 py-4">
+            Contact Sales
+          </a>
+          <p class="text-[var(--text-muted)] text-sm mt-4">
+            Or email us directly: partners@kitticker.com
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>

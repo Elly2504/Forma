@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+.output/
+
+# Vercel
+.vercel/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.clinerules

@@ -3,82 +3,132 @@
 ## Core Philosophy
 > "Do not be a black box; be a magnifying glass."
 
-**Content-First:** Build authority and trust before heavy tech investment.
-
-## Tech Preferences
-- Use **Astro** for static/marketing pages
-- Use **Next.js 15** for app functionality
-- Always use **TypeScript**
-- **Tailwind CSS** for styling
-- Dark theme with amber accents (`#F59E0B`)
-
-## Naming Conventions
-- Components: `PascalCase` (e.g., `ValuationResult.tsx`)
-- Files: `kebab-case` (e.g., `how-it-works.astro`)
-- Variables: `camelCase` (e.g., `userCredits`)
-- Types/Interfaces: `PascalCase` (e.g., `Valuation`)
-
-## Design Tokens
-```css
---gold-400: #fbbf24;
---gold-500: #f59e0b;
---gold-600: #d97706;
---bg-primary: #0a0a0a;
---bg-secondary: #111111;
-```
+**API-First:** We build data infrastructure. Every feature is an API endpoint first, UI second.
 
 ## Current Focus
-**Phase 1: Content Moat**
-- Build "Wikipedia of Product Codes"
-- Create SEO content (guides, tutorials)
-- Community engagement (Reddit, Twitter)
-- Deploy landing page
+**Phase 3: B2B API Platform** — Infrastructure complete. Focus: data collection, customer acquisition.
 
-## AI Output Requirements (Explainable AI)
+### Target Segments (from 2026-01-18 research)
+- Specialist Retailers (CFS) → Intake automation
+- Circular Platforms (Birl, Trove) → White-label API
+- Marketplaces (eBay, StockX) → Category trust
+- Brand Protection (Nike, Adidas) → Fake code intel
+
+---
+
+## Tech Stack
+| Layer | Technology |
+|-------|------------|
+| Marketing | **Astro 5** (static + SSR API) |
+| API | **Vercel Edge** (Astro adapter) |
+| Database | **Supabase (PostgreSQL)** |
+| Language | **TypeScript** (strict) |
+| Styling | **Tailwind CSS** |
+| Theme | Dark mode, amber accents (`#F59E0B`) |
+
+---
+
+## Architecture: Hybrid SSR
+
 ```typescript
-// REQUIRED: Every AI verdict must include evidence
-interface ValuationOutput {
-  verdict: 'authentic' | 'likely_authentic' | 'suspicious' | 'fake';
-  confidence: number;
-  evidence: Evidence[];  // MANDATORY - show reasoning
-  warnings?: Warning[];
+// astro.config.mjs
+output: 'server'
+adapter: vercel()
+
+// All API files:
+export const prerender = false;  // SSR at runtime
+```
+
+---
+
+## API Design Rules
+
+### Authentication
+```
+Authorization: Bearer kt_live_xxxxxxxxx
+```
+
+### Response Format
+```typescript
+// Success
+{
+  success: true,
+  request_id: string,
+  data: { ... }
+}
+
+// Error
+{
+  success: false,
+  error: string,
+  request_id: string
 }
 ```
+
+### Tier-Based Access
+| Tier | Features |
+|------|----------|
+| Free | Lookup only |
+| Starter | + Images, batch |
+| Business | + Pricing, DPP |
+| Enterprise | + SLA, custom |
+
+---
+
+## Naming Conventions
+| Type | Convention | Example |
+|------|------------|---------|
+| API Routes | kebab-case | `codes/lookup.ts` |
+| Lib files | kebab-case | `api-keys.ts` |
+| Components | PascalCase | `ProductCodeChecker.astro` |
+| Types | PascalCase | `ApiKey`, `ProductCode` |
+
+---
+
+## Key Files
+| Path | Purpose |
+|------|---------|
+| `src/lib/api-keys.ts` | API key management |
+| `src/lib/api-types.ts` | TypeScript interfaces |
+| `src/lib/dpp.ts` | Digital Product Passport |
+| `src/lib/verifier.ts` | Multi-signal auth |
+| `src/pages/api/v1/*` | SSR API endpoints |
+
+---
 
 ## Commands
 | Command | Action |
 |---------|--------|
-| "update memory bank" | Review and update all memory-bank/*.md files |
-| "what's next" | Check activeContext.md and progress.md |
-| "deploy" | Run `npm run build && vercel deploy` |
+| "update memory bank" | Update all memory-bank/*.md files |
+| "what's next" | Check activeContext.md |
+| "deploy" | `vercel --prod --yes` |
 
-## Code Quality
-- Run `npm run build` before committing
-- No TypeScript `any` types
-- Prefer Server Components in Next.js
-- Keep components under 150 lines
-
-## Cost Engineering Rules
-1. Never send full image to premium API
-2. Pre-filter on device (TensorFlow.js)
-3. Only send cropped regions (product code) to GPT-4o
-4. Cache all verified codes (lookup = $0)
-
-## Git Workflow
-- Main branch is production
-- Create feature branches for new work
-- Squash merge to main
+---
 
 ## Security Rules
-- Never commit API keys or secrets
-- Use `.env.local` for local secrets
-- Always validate user input server-side
-- Rate limit API endpoints
-- Sanitize file uploads (type, size)
+1. **Never store raw API keys** — SHA-256 hash only
+2. **Rate limit all endpoints** — Tier-based quotas
+3. **Log all requests** — `api_usage_logs` table
+4. **Validate all inputs** — Never trust user data
+5. **Use RLS** — Row Level Security on all tables
 
-## AI Assistant Usage
-- Read `memory-bank/` at session start
-- Check `activeContext.md` for current state
-- Update `progress.md` after completing tasks
-- Log decisions in `activeContext.md` Decision Log
-- Run "what's next" to understand priorities
+---
+
+## Development
+```bash
+# Local
+cd landing && npm run dev    # http://localhost:4321
+
+# Deploy
+cd landing && vercel --prod --yes
+```
+
+---
+
+## AI Assistant Instructions
+1. Read `memory-bank/` at session start
+2. Check `activeContext.md` for current state
+3. Update `progress.md` after completing tasks
+4. Log decisions in `activeContext.md`
+5. Always use TypeScript, never `any`
+6. Keep components under 150 lines

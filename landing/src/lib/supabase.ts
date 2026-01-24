@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || 'https://sjltydrpwavzrrmoaivt.supabase.co';
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_Opl1yKqUYnrsHFdW5_ONaA_KVlHKYDf';
+// Supabase configuration - hardcoded for client-side usage
+const supabaseUrl = 'https://sjltydrpwavzrrmoaivt.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqbHR5ZHJwd2F2enJybW9haXZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2NDQwMzEsImV4cCI6MjA4NDIyMDAzMX0.nPdmhcj3GsvQ8xtE4i2CMptWb9kxMy1NKYyI1M7oT9k';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+
 
 // Types for our database
 export interface ProductCode {
@@ -25,7 +28,7 @@ export async function lookupProductCode(code: string): Promise<ProductCode | nul
     const { data, error } = await supabase
         .from('product_codes')
         .select('*')
-        .ilike('code', normalizedCode)
+        .eq('code', normalizedCode)
         .single();
 
     if (error || !data) {

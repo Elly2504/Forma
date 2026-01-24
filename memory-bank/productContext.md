@@ -1,101 +1,161 @@
 # KitTicker - Product Context
 
-## The Problem
+> **The Authentication Economy:** Sports fandom, luxury collectibles, and sustainability mandates have converged to create a billion-dollar asset class requiring sophisticated verification infrastructure. As the market evolves from manual expert review to AI/code-based verification, datasets bridging physical inventory with digital identity become critical assets.
 
-### Pain Point 1: No Condition-Adjusted Pricing
-eBay "sold" listings show a 1996 Manchester United shirt sold for £50-£400. The range is useless because it doesn't account for:
-- Fabric wear (pilling, thinning)
-- Print condition (cracks, fading)
-- Collar/cuff condition
-- Label integrity
-- Overall authenticity
+---
 
-### Pain Point 2: Sellers Misprice
-Collectors either:
-- **Underprice** → Leave money on table (shirt worth £200 sold for £80)
-- **Overprice** → No sales, wasted time
+## The Core Problem
 
-### Pain Point 3: Buyers Can't Verify
-Sellers claim "near mint" but photos don't show the collar wear or print cracks. No standardized grading system exists.
+### Problem 1: Scattered, Unstructured Data
+Product codes for vintage football shirts exist, but:
+- No central, verified database
+- Information scattered across forums, Reddit, collector communities
+- Fakes use copied codes with wrong kit variants
+- No machine-readable format for integrations
 
-## The Solution
+### Problem 2: Analog Assets in a Digital Market
+Post-2027, new products will have Digital Product Passports (DPP) with blockchain-verified authenticity.
+Vintage items (1980-2026) have no digital identity → they become "second-class citizens" in regulated markets.
 
-**KitTicker**: Upload 4 photos → AI analyzes condition → Get adjusted valuation with confidence range.
+### Problem 3: Retailers Waste Time on Manual Research
+Every vintage seller must:
+- Manually look up product codes
+- Cross-reference forums for authenticity
+- Guess pricing from incomplete eBay data
+- Risk selling fakes unknowingly
 
-### User Flow
+---
+
+## The Solution: KitTicker Data Platform
+
+### What We Provide
+
+| Data Point | Description | Value |
+|------------|-------------|-------|
+| **Product Code Lookup** | Code → Brand, Team, Season, Kit Type | Core offering |
+| **Verified Images** | Reference photos for each code | Visual validation |
+| **Pricing Estimates** | Min/max based on condition | Seller guidance |
+| **Visual Attributes** | Primary color, pattern, material | Cross-validation |
+| **DPP Generation** | UID, QR code, ownership history | Future-proofing |
+
+### API Use Case: Seller Integration
+
 ```
-1. User uploads 4 photos (front, back, label, detail)
-2. AI Vision analyzes on 6+ criteria:
-   - Fabric quality (1-10)
-   - Print condition (1-10)
-   - Collar/cuff wear (1-10)
-   - Label authenticity
-   - Overall grade (A+ to F)
-3. System cross-references with market data
-4. Output: "£185-£220 based on A- condition"
-5. Optional: Generate shareable PDF certificate
-```
-
-## The Trust Gap (Critical)
-
-> **Core Insight:** In a trust-based market, one bad verdict creates more noise than 100 correct ones.
-
-| Challenge | Solution |
-|-----------|----------|
-| Collectors reject "black box" AI | **Explainable AI** — Show evidence, not just verdict |
-| Human experts provide nuance | Tool must behave like "forensic scientist" |
-| 1 false positive = community rejection | Start with Product Code (high accuracy) |
-
-**Output Philosophy:**
-```
-❌ Bad: "98% Authentic"
-✅ Good: "Internal tag code matches Adidas DB for 2022 Real Madrid Away Kit.
-         Logo stitching density: 12.4/cm (reference: 12-13/cm)"
+1. Seller enters product code on their website
+2. Website calls KitTicker API
+3. KitTicker returns: team, season, image, price range
+4. Seller's listing auto-populated
+5. Buyer sees "Verified by KitTicker" badge
 ```
 
-## Market Segmentation
+---
 
-| Segment | Description | Tech Tolerance | Priority |
-|---------|-------------|----------------|----------|
-| **Purist Collectors** | Own 10-50+ shirts, deep knowledge | Zero error tolerance | High (gatekeepers) |
-| **Blokecore Fashion** | TikTok trend, aesthetic focus | Want fast binary answers | Volume opportunity |
-| **Resellers** | Buy/sell on eBay, Depop | Need accurate pricing | Revenue drivers |
+## Data Defense: The Logical Layer
 
-> **Strategy:** Win Purist trust first → They validate for Fashion segment.
+> **Kitticker, kendisini veri öncelikli mimarisiyle farklılaştırır.**
 
-## Competitive Landscape
+### How Fakes Fail
 
-| Competitor | Model | Gap / Lesson |
-|------------|-------|--------------|
-| **KitLegit** | AI Wrapper | Authentication only, no valuation; early Reddit backlash |
-| **Legit Check By Ch** | Human-Hybrid + Content | 1M+ words content = SEO moat; THIS IS THE PATH |
-| **CollX/Ludex** | Scanner | Works for cards; shirts are too variable |
-| **CheckCheck** | Credit System | Per-scan pricing aligns cost with revenue |
-| **Terapeak** | eBay analytics | No condition analysis, generic data |
-| **Facebook groups** | Crowdsourced | Inconsistent, slow, biased |
+| Fake Pattern | KitTicker Detection |
+|--------------|---------------------|
+| Copied code on wrong kit variant | Cross-validation: code expects "red home" but visual is "white away" |
+| Generic swing tag codes (ADIDAS JSY) | Blacklist check: known fake patterns |
+| Non-existent codes | Format validation + DB miss = uncertainty |
 
-**Key Lesson:** Content-first, tech-second. Build authority before asking for money.
+### Speed & Cost Advantage
 
-## Why Now?
-- GPT-4o Vision API is affordable enough for consumer use
-- Vintage football shirt market exploding (£2B+ annually)
-- No incumbent has solved condition + valuation together
-- "Blokecore" trend driving new collectors
+| Method | Speed | Cost | Accuracy |
+|--------|-------|------|----------|
+| Visual AI (GPT-4o) | 3-5s | $0.05 | 80% |
+| Human Expert | 1-24h | $5-15 | 95% |
+| **KitTicker API** | **<100ms** | **$0.002** | **90%+** |
 
-## Valuation Data Strategy
+---
 
-| Type | Use | Warning |
-|------|-----|---------|
-| **Sold Listings** | Primary valuation source | Must separate from Active |
-| **Active Listings** | Market sentiment only | Creates unrealistic expectations |
+## Competitive Landscape (Revised)
 
-> **Critical:** Never show "Listed Price" as value. Only "Sold Price" = real market value.
+| Competitor | Model | KitTicker Advantage |
+|------------|-------|---------------------|
+| **KitLegit** | AI + Expert hybrid (consumer app) | B2B API-first; open database vs black-box; DPP ready |
+| **Legit Check By Ch** | Human + content | SEO moat only; no API, no scalability |
+| **Entrupy** | Hardware device | B2C focused; we're B2B infrastructure |
+| **kitcod.es** | Static code lookup | No API, no pricing, no DPP |
+| **Genuino** | Blockchain match-worn auth (Fiorentina) | Match-worn only; we cover all retail |
+| **Certilogo** | QR auth, eBay-owned (2023 acquisition) | Fashion-focused; we specialize in football |
 
-## Churn Risk & Mitigation
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| One-time use | High | Collection tracking, price alerts |
-| AI accuracy skepticism | High | Show evidence, allow feedback |
-| Free tier abuse | Low | 3/mo limit, watermarks, no certificates |
-| Competitor copying | Medium | Network effects, historical data moat |
-| False positives | Critical | Start with Product Code verification |
+**Our moat:** Data + API + DPP = infrastructure play, not point solution.
+
+### KitLegit Deep Dive (2026-01-18)
+
+| KitLegit Feature | Our Response |
+|------------------|--------------|
+| "35,000+ items authenticated" | Add social proof counter |
+| Checkflow (photo guides) | Build guided photo UI |
+| Seller Certification | `/seller-program` page |
+| Clubs page | `/partners` B2B page |
+| Mobile app (iOS/Android) | PWA or "Coming Soon" |
+| AI + Expert hybrid | Highlight Explainable AI |
+
+**Key insight:** KitLegit is consumer-focused. KitTicker's B2B API approach means we can be their data provider.
+
+> **Strategic Insight:** eBay acquired Certilogo for DPP infrastructure rather than building in-house.
+> This validates: (1) DPP as strategic direction, (2) KitTicker as potential acquisition target.
+
+### Market Landscape Taxonomy
+
+| Category | Players | Method | Tech | Goal |
+|----------|---------|--------|------|------|
+| Club/Retail | West Ham (Birl) | Physical intake | Reverse logistics | Circularity |
+| Marketplace | StockX, eBay | AI + Human hybrid | CV, Certilogo | Trust & speed |
+| **Data/Tool** | **KitTicker**, kitcod.es | Code matching | DB Query, OCR | Auth support |
+| High-end B2B | Sotheby's, Goldin | Photo-matching | Provenance archives | Valuation |
+| Brand | Stone Island, Nike | Digital twin/RFID | NFC, Blockchain, DPP | Brand protection |
+
+---
+
+## Market Opportunity
+
+- Vintage football shirt market: **£2B+ annually**
+- 60%+ transactions via eBay, Depop, Vinted
+- No programmatic verification available
+- **First-mover advantage** in structured data API
+
+### Case Study: Circular Trade Platforms
+
+**West Ham × Birl (2024):** Premier League's first integrated trade-in program.
+- Fans trade old shirts via club's official store for store credit
+- **Pain point:** Manual intake verification = high OpEx
+- **KitTicker opportunity:** API-based intake auth → OpEx ↓30-40%
+
+### Case Study: Serie A Vintage Market
+
+**Inter Milan × eBay:** Official vintage partnership for club-approved deadstock.
+**AC Milan × Socios.com:** NFT-based loyalty programs.
+
+- **Validation Gap:** "Original era" vs "modern re-issue" confusion
+- **Fiorentina × Genuino:** Blockchain match-worn auth (shows market hunger)
+- **KitTicker opportunity:** Era differentiation API field + DPP solves provenance
+
+---
+
+## Trust & Explainability
+
+> **"Do not be a black box; be a magnifying glass."**
+
+Every API response includes:
+- Evidence for each signal (code match, format, blacklist)
+- Confidence score with breakdown
+- Warnings if any signals conflict
+- Source of verification (community, official, AI)
+
+```json
+{
+  "verdict": "likely_authentic",
+  "confidence": 87,
+  "evidence": [
+    { "signal": "database_match", "passed": true, "details": "Code matches Nike PSG 2016/17 Third" },
+    { "signal": "format_validation", "passed": true, "details": "Format matches Nike legacy pattern" },
+    { "signal": "blacklist_check", "passed": true, "details": "Not on known fake list" }
+  ]
+}
+```

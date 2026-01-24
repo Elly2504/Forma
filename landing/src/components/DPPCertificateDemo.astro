@@ -1,0 +1,480 @@
+---
+/**
+ * DPPCertificateDemo Component
+ * 
+ * Interactive certificate preview with Man Utd example.
+ */
+---
+
+<div class="dpp-certificate-demo">
+  <div class="certificate-wrapper">
+    <!-- Certificate Card -->
+    <div class="certificate-card">
+      <!-- Header -->
+      <div class="cert-header">
+        <div class="cert-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <span class="logo-text">KitTicker</span>
+        </div>
+        <div class="cert-badge">
+          <span class="badge-pulse"></span>
+          Verified
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="cert-title">
+        <h3>Digital Product Passport</h3>
+        <p class="cert-subtitle">Certificate of Authenticity</p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="cert-body">
+        <!-- QR Code -->
+        <div class="qr-section">
+          <div class="qr-frame">
+            <div class="qr-pattern"></div>
+          </div>
+          <span class="qr-label">Scan to Verify</span>
+        </div>
+
+        <!-- Details -->
+        <div class="cert-details">
+          <div class="detail-row uid-row">
+            <span class="detail-label">UID</span>
+            <code class="uid-code">KT-2026-A7B3C1</code>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="detail-label">Product</span>
+              <span class="detail-value">Nike Man Utd 2007/08 Home</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Code</span>
+              <span class="detail-value">237867-648</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Verified</span>
+              <span class="detail-value">2026-01-19</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Confidence</span>
+              <span class="detail-value confidence">94%</span>
+            </div>
+          </div>
+
+          <!-- Verification Summary -->
+          <div class="verification-summary">
+            <div class="summary-header">
+              <span class="summary-icon">✓</span>
+              <span>10/11 Checkpoints Passed</span>
+            </div>
+            <div class="checkpoint-bar">
+              <div class="checkpoint-fill" style="width: 91%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ownership -->
+      <div class="cert-ownership">
+        <div class="ownership-row">
+          <span class="ownership-label">Current Owner</span>
+          <span class="ownership-value">seller@vintage-football.com</span>
+        </div>
+        <div class="ownership-row">
+          <span class="ownership-label">Transfer History</span>
+          <span class="ownership-value">0 transfers</span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="cert-footer">
+        <div class="cert-url">
+          <span class="url-icon">🔗</span>
+          <span class="url-text">kitticker.com/certificate/KT-2026-A7B3C1</span>
+        </div>
+        <div class="eu-badge">
+          <span class="eu-flag">🇪🇺</span>
+          <span>EU 2027 Ready</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating decorations -->
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="deco deco-3"></div>
+  </div>
+</div>
+
+<style>
+  .dpp-certificate-demo {
+    padding: 2rem 0;
+  }
+
+  .certificate-wrapper {
+    position: relative;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .certificate-card {
+    background: linear-gradient(135deg, rgba(24, 24, 27, 0.95), rgba(20, 20, 20, 0.98));
+    border: 2px solid rgba(168, 85, 247, 0.4);
+    border-radius: 24px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+      0 0 60px rgba(168, 85, 247, 0.15),
+      0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .certificate-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #a855f7, #06b6d4, #10b981);
+  }
+
+  /* Header */
+  .cert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .cert-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--gold-400);
+  }
+
+  .logo-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .cert-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .badge-pulse {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.9); }
+  }
+
+  /* Title */
+  .cert-title {
+    text-align: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1.25rem;
+  }
+
+  .cert-title h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+  }
+
+  .cert-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* Body */
+  .cert-body {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  /* QR Section */
+  .qr-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .qr-frame {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qr-pattern {
+    width: 100%;
+    height: 100%;
+    background: 
+      repeating-linear-gradient(
+        0deg,
+        #1a1a1a 0px, #1a1a1a 8px,
+        white 8px, white 16px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        #1a1a1a 0px, #1a1a1a 8px,
+        white 8px, white 16px
+      );
+    background-blend-mode: difference;
+    border-radius: 4px;
+  }
+
+  .qr-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+  }
+
+  /* Details */
+  .cert-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .uid-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .uid-code {
+    font-size: 1rem;
+    font-family: monospace;
+    font-weight: 700;
+    color: #a855f7;
+    background: rgba(168, 85, 247, 0.15);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .detail-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .detail-value {
+    font-size: 0.8rem;
+    color: white;
+  }
+
+  .detail-value.confidence {
+    color: #10b981;
+    font-weight: 700;
+  }
+
+  /* Verification Summary */
+  .verification-summary {
+    padding: 0.75rem;
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+  }
+
+  .summary-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #10b981;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .summary-icon {
+    font-size: 0.9rem;
+  }
+
+  .checkpoint-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .checkpoint-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 3px;
+    transition: width 1s ease-out;
+  }
+
+  /* Ownership */
+  .cert-ownership {
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .ownership-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+  }
+
+  .ownership-row:first-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .ownership-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .ownership-value {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  /* Footer */
+  .cert-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cert-url {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .url-icon {
+    font-size: 0.8rem;
+  }
+
+  .url-text {
+    font-family: monospace;
+  }
+
+  .eu-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+
+  .eu-flag {
+    font-size: 0.8rem;
+  }
+
+  /* Decorations */
+  .deco {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .deco-1 {
+    width: 100px;
+    height: 100px;
+    background: rgba(168, 85, 247, 0.15);
+    top: -30px;
+    right: -30px;
+    filter: blur(40px);
+  }
+
+  .deco-2 {
+    width: 80px;
+    height: 80px;
+    background: rgba(6, 182, 212, 0.15);
+    bottom: -20px;
+    left: -20px;
+    filter: blur(30px);
+  }
+
+  .deco-3 {
+    width: 60px;
+    height: 60px;
+    background: rgba(16, 185, 129, 0.15);
+    bottom: 40%;
+    right: -15px;
+    filter: blur(25px);
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .cert-body {
+      grid-template-columns: 1fr;
+    }
+
+    .qr-section {
+      order: -1;
+    }
+  }
+</style>

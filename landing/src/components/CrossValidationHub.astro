@@ -1,0 +1,982 @@
+---
+/**
+ * CrossValidationHub Component
+ * 
+ * Unified interface for visual verification methods (Camera/Upload)
+ * with real-time cross-validation checkpoint display.
+ * 
+ * Features:
+ * - Tabbed interface for Camera Scan / Photo Upload
+ * - Always-visible cross-validation checkpoints grid
+ * - Live updates as verification signals are processed
+ * - Collapsible photo tips section
+ */
+---
+
+<div class="cross-validation-hub p-6 sm:p-8 bg-gradient-to-br from-zinc-900 to-zinc-900/50 rounded-2xl border border-white/10">
+  <!-- Header -->
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-cyan-500/20 flex items-center justify-center">
+      <svg class="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
+    </div>
+    <div>
+      <h3 class="font-semibold text-white text-lg">Visual Cross-Validation</h3>
+      <p class="text-sm text-zinc-500">Scan or upload photos to extract and verify codes</p>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="flex border-b border-white/10 mb-6">
+    <button 
+      id="tab-camera" 
+      class="tab-btn flex-1 py-3 px-4 text-center font-medium transition-all border-b-2 border-amber-500 text-amber-400"
+      data-tab="camera"
+    >
+      <span class="flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Camera Scan
+      </span>
+    </button>
+    <button 
+      id="tab-upload" 
+      class="tab-btn flex-1 py-3 px-4 text-center font-medium transition-all border-b-2 border-transparent text-zinc-400 hover:text-zinc-300"
+      data-tab="upload"
+    >
+      <span class="flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        Upload Photos
+      </span>
+    </button>
+  </div>
+
+  <!-- Tab Content: Camera -->
+  <div id="tab-content-camera" class="tab-content">
+    <div class="camera-panel">
+      <!-- Camera Permission Request -->
+      <div id="hub-camera-permission" class="text-center py-8">
+        <div class="w-16 h-16 mx-auto rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <p class="text-zinc-400 text-sm mb-4">Point your camera at the product label</p>
+        <button
+          id="hub-start-camera-btn"
+          class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-black font-medium rounded-lg transition-colors text-sm"
+        >
+          Enable Camera
+        </button>
+      </div>
+
+      <!-- Camera View -->
+      <div id="hub-camera-container" class="hidden">
+        <div class="relative rounded-xl overflow-hidden bg-black aspect-[4/3]">
+          <video 
+            id="hub-camera-video" 
+            autoplay 
+            playsinline 
+            muted
+            class="w-full h-full object-cover"
+          ></video>
+          
+          <!-- Frame Guide -->
+          <div class="absolute inset-4 border-2 border-white/30 rounded-lg pointer-events-none">
+            <div class="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-amber-400 -translate-x-0.5 -translate-y-0.5"></div>
+            <div class="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-amber-400 translate-x-0.5 -translate-y-0.5"></div>
+            <div class="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-amber-400 -translate-x-0.5 translate-y-0.5"></div>
+            <div class="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-amber-400 translate-x-0.5 translate-y-0.5"></div>
+          </div>
+        </div>
+
+        <canvas id="hub-capture-canvas" class="hidden"></canvas>
+
+        <!-- Capture Button -->
+        <div class="flex justify-center mt-5">
+          <button
+            id="hub-capture-btn"
+            class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+          >
+            <div class="w-12 h-12 rounded-full border-4 border-zinc-900"></div>
+          </button>
+        </div>
+
+        <p id="hub-camera-status" class="text-center text-sm text-zinc-500 mt-3">Position label in frame, then tap capture</p>
+
+        <button
+          id="hub-close-camera-btn"
+          class="w-full mt-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+        >
+          Close Camera
+        </button>
+      </div>
+
+      <!-- Processing State -->
+      <div id="hub-camera-processing" class="hidden text-center py-8">
+        <svg class="animate-spin w-8 h-8 text-amber-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p id="hub-camera-processing-text" class="text-zinc-400 text-sm">Extracting code...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content: Upload -->
+  <div id="tab-content-upload" class="tab-content hidden">
+    <div class="upload-panel">
+      <!-- Upload Zone -->
+      <div 
+        id="hub-drop-zone"
+        class="relative border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer transition-all hover:border-amber-500/50 hover:bg-amber-500/5"
+      >
+        <input 
+          type="file" 
+          id="hub-file-input"
+          accept="image/*"
+          multiple
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        
+        <div id="hub-upload-prompt" class="space-y-3">
+          <div class="w-16 h-16 mx-auto rounded-full bg-zinc-800 flex items-center justify-center">
+            <svg class="w-8 h-8 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-zinc-300 font-medium">Drop your photos here</p>
+            <p class="text-sm text-zinc-500">or click to browse • Max 4 images</p>
+          </div>
+          <div class="flex flex-wrap justify-center gap-2 pt-2">
+            <span class="px-2 py-1 text-xs bg-zinc-800 text-zinc-400 rounded">📷 Label</span>
+            <span class="px-2 py-1 text-xs bg-zinc-800 text-zinc-400 rounded">🏷️ Wash Tag</span>
+            <span class="px-2 py-1 text-xs bg-zinc-800 text-zinc-400 rounded">👕 Front</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Previews -->
+      <div id="hub-image-previews" class="hidden mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+
+      <!-- OCR Progress -->
+      <div id="hub-ocr-progress" class="hidden mt-4 p-4 bg-zinc-800/50 rounded-lg">
+        <div class="flex items-center gap-3">
+          <svg class="animate-spin w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm text-zinc-300">Extracting product codes...</p>
+            <div class="mt-1 h-1.5 bg-zinc-700 rounded-full overflow-hidden">
+              <div id="hub-progress-bar" class="h-full bg-amber-500 transition-all" style="width: 0%"></div>
+            </div>
+          </div>
+          <span id="hub-progress-text" class="text-sm text-zinc-500">0%</span>
+        </div>
+      </div>
+
+      <!-- Extracted Codes -->
+      <div id="hub-extracted-codes" class="hidden mt-4 space-y-3">
+        <p class="text-sm text-zinc-400 flex items-center gap-2">
+          <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          Extracted Codes
+        </p>
+        <div id="hub-codes-list" class="space-y-2"></div>
+        <button 
+          id="hub-verify-btn"
+          class="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          Verify All Codes
+        </button>
+      </div>
+
+      <!-- No Code Found - Manual Entry -->
+      <div id="hub-no-code-found" class="hidden mt-4 p-4 bg-zinc-800/50 rounded-xl border border-yellow-500/30">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-medium text-yellow-400 text-sm">No code detected</h4>
+            <p class="text-xs text-zinc-400 mt-1">We couldn't find a product code in your photos. You can enter it manually:</p>
+          </div>
+        </div>
+        <div class="mt-4 flex gap-2">
+          <input 
+            type="text" 
+            id="hub-manual-code-input"
+            placeholder="Enter product code (e.g., CZ3984-100)"
+            class="flex-1 px-4 py-2.5 bg-zinc-900 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-amber-500"
+          />
+          <button 
+            id="hub-manual-verify-btn"
+            class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-black font-medium rounded-lg transition-colors text-sm whitespace-nowrap"
+          >
+            Verify
+          </button>
+        </div>
+        <p class="text-xs text-zinc-500 mt-2">💡 Tip: Check the wash/size label for the product code</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cross-Validation Checkpoints (Always Visible) -->
+  <div id="cross-validation-panel" class="mt-6 p-4 bg-zinc-900/80 rounded-xl border border-white/10">
+    <h4 class="text-sm font-semibold text-zinc-300 mb-3 flex items-center gap-2">
+      <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+      </svg>
+      Cross-Validation Checkpoints
+    </h4>
+    <div id="checkpoint-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+      <!-- Pending state checkpoints - 10 total -->
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">🔍</span>
+          <span class="text-xs text-zinc-500">Database</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">⛔</span>
+          <span class="text-xs text-zinc-500">Blacklist</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">📝</span>
+          <span class="text-xs text-zinc-500">Format</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">🏅</span>
+          <span class="text-xs text-zinc-500">Brand</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">📅</span>
+          <span class="text-xs text-zinc-500">Era Valid</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">🏭</span>
+          <span class="text-xs text-zinc-500">Manufacturer</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">🏷️</span>
+          <span class="text-xs text-zinc-500">Sponsor</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">⚙️</span>
+          <span class="text-xs text-zinc-500">Technology</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">🎨</span>
+          <span class="text-xs text-zinc-500">Color</span>
+        </div>
+      </div>
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">📍</span>
+          <span class="text-xs text-zinc-500">Label Era</span>
+        </div>
+      </div>
+    </div>
+    <p id="checkpoint-summary" class="text-xs text-zinc-500 mt-3 text-center">
+      Scan or upload a photo to start verification
+    </p>
+  </div>
+
+  <!-- Verification Result -->
+  <div id="hub-verification-result" class="hidden mt-4">
+    <div id="hub-result-content" class="p-4 rounded-xl border"></div>
+  </div>
+
+  <!-- Collapsible Photo Tips -->
+  <details class="mt-4 group">
+    <summary class="cursor-pointer text-sm text-zinc-500 hover:text-zinc-400 flex items-center gap-2">
+      <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      📷 Photo tips for best results
+    </summary>
+    <div class="mt-3 p-4 bg-zinc-800/30 rounded-lg space-y-2">
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        Use good lighting — natural daylight works best
+      </p>
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        Capture the wash/size label clearly — this contains the product code
+      </p>
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        Make sure text is in focus and readable
+      </p>
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        For best results, also capture: front, back, and neck label
+      </p>
+    </div>
+  </details>
+</div>
+
+<script>
+  import { preprocessForOCR, extractProductCode } from '../lib/ocr';
+  import { verifyProductCode, verifyWithVisualData, type VerdictType, type AuthenticationSignal, type VisualData } from '../lib/verifier';
+  import { analyzeImage } from '../lib/image-analyzer';
+  import Tesseract from 'tesseract.js';
+
+  // ============================================
+  // Checkpoint Configuration
+  // ============================================
+  
+  interface Checkpoint {
+    id: string;
+    label: string;
+    icon: string;
+  }
+
+  const CHECKPOINTS: Checkpoint[] = [
+    { id: 'database_match', label: 'Database', icon: '🔍' },
+    { id: 'blacklist_check', label: 'Blacklist', icon: '⛔' },
+    { id: 'format_validation', label: 'Format', icon: '📝' },
+    { id: 'brand_consistency', label: 'Brand', icon: '🏅' },
+    { id: 'era_plausibility', label: 'Era Valid', icon: '📅' },
+    { id: 'manufacturer_era_consistency', label: 'Manufacturer', icon: '🏭' },
+    { id: 'sponsor_era', label: 'Sponsor', icon: '🏷️' },
+    { id: 'technology_tier', label: 'Technology', icon: '⚙️' },
+    { id: 'color_suffix', label: 'Color', icon: '🎨' },
+    { id: 'label_position', label: 'Label Era', icon: '📍' },
+    { id: 'manufacturing_origin', label: 'Origin', icon: '🌏' },
+  ];
+
+  // ============================================
+  // DOM Elements
+  // ============================================
+  
+  // Tabs
+  const tabCamera = document.getElementById('tab-camera');
+  const tabUpload = document.getElementById('tab-upload');
+  const tabContentCamera = document.getElementById('tab-content-camera');
+  const tabContentUpload = document.getElementById('tab-content-upload');
+  
+  // Camera elements
+  const cameraPermission = document.getElementById('hub-camera-permission');
+  const cameraContainer = document.getElementById('hub-camera-container');
+  const cameraProcessing = document.getElementById('hub-camera-processing');
+  const startCameraBtn = document.getElementById('hub-start-camera-btn');
+  const captureBtn = document.getElementById('hub-capture-btn');
+  const closeCameraBtn = document.getElementById('hub-close-camera-btn');
+  const video = document.getElementById('hub-camera-video') as HTMLVideoElement;
+  const canvas = document.getElementById('hub-capture-canvas') as HTMLCanvasElement;
+  const cameraStatus = document.getElementById('hub-camera-status');
+  const cameraProcessingText = document.getElementById('hub-camera-processing-text');
+  
+  // Upload elements
+  const dropZone = document.getElementById('hub-drop-zone');
+  const fileInput = document.getElementById('hub-file-input') as HTMLInputElement;
+  const imagePreviews = document.getElementById('hub-image-previews');
+  const ocrProgress = document.getElementById('hub-ocr-progress');
+  const progressBar = document.getElementById('hub-progress-bar');
+  const progressText = document.getElementById('hub-progress-text');
+  const extractedCodes = document.getElementById('hub-extracted-codes');
+  const codesList = document.getElementById('hub-codes-list');
+  const verifyBtn = document.getElementById('hub-verify-btn');
+  
+  // Checkpoint elements
+  const checkpointGrid = document.getElementById('checkpoint-grid');
+  const checkpointSummary = document.getElementById('checkpoint-summary');
+  
+  // Result elements
+  const verificationResult = document.getElementById('hub-verification-result');
+  const resultContent = document.getElementById('hub-result-content');
+
+  // State
+  let currentStream: MediaStream | null = null;
+  let uploadedFiles: File[] = [];
+  let detectedCodes: { code: string; brand: string }[] = [];
+  const MAX_IMAGES = 4;
+  const ctx = canvas?.getContext('2d');
+
+  // ============================================
+  // Tab Switching
+  // ============================================
+  
+  function switchTab(tab: 'camera' | 'upload') {
+    const isCamera = tab === 'camera';
+    
+    tabCamera?.classList.toggle('border-amber-500', isCamera);
+    tabCamera?.classList.toggle('text-amber-400', isCamera);
+    tabCamera?.classList.toggle('border-transparent', !isCamera);
+    tabCamera?.classList.toggle('text-zinc-400', !isCamera);
+    
+    tabUpload?.classList.toggle('border-amber-500', !isCamera);
+    tabUpload?.classList.toggle('text-amber-400', !isCamera);
+    tabUpload?.classList.toggle('border-transparent', isCamera);
+    tabUpload?.classList.toggle('text-zinc-400', isCamera);
+    
+    tabContentCamera?.classList.toggle('hidden', !isCamera);
+    tabContentUpload?.classList.toggle('hidden', isCamera);
+  }
+
+  tabCamera?.addEventListener('click', () => switchTab('camera'));
+  tabUpload?.addEventListener('click', () => switchTab('upload'));
+
+  // ============================================
+  // Checkpoint Rendering
+  // ============================================
+  
+  function getCheckpointClasses(status: string) {
+    switch (status) {
+      case 'pass':
+        return 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400';
+      case 'fail':
+        return 'border-red-500/50 bg-red-500/10 text-red-400';
+      case 'warning':
+        return 'border-yellow-500/50 bg-yellow-500/10 text-yellow-400';
+      default:
+        return 'border-zinc-700 bg-zinc-800/50 text-zinc-500';
+    }
+  }
+
+  function renderCheckpoints(signals: AuthenticationSignal[]) {
+    if (!checkpointGrid) return;
+    
+    checkpointGrid.innerHTML = CHECKPOINTS.map(cp => {
+      const signal = signals.find(s => s.id === cp.id);
+      const status = signal?.value || 'pending';
+      const classes = getCheckpointClasses(status);
+      const iconClass = status === 'pending' ? 'text-zinc-500' : '';
+      
+      return `
+        <div class="checkpoint p-2 rounded-lg border ${classes}" title="${signal?.evidence || 'Pending verification'}">
+          <div class="flex items-center gap-2">
+            <span class="${iconClass}">${cp.icon}</span>
+            <span class="text-xs">${cp.label}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function resetCheckpoints() {
+    if (!checkpointGrid) return;
+    
+    checkpointGrid.innerHTML = CHECKPOINTS.map(cp => `
+      <div class="checkpoint checkpoint-pending p-2 rounded-lg border border-zinc-700 bg-zinc-800/50">
+        <div class="flex items-center gap-2">
+          <span class="text-zinc-500">${cp.icon}</span>
+          <span class="text-xs text-zinc-500">${cp.label}</span>
+        </div>
+      </div>
+    `).join('');
+    
+    if (checkpointSummary) {
+      checkpointSummary.textContent = 'Scan or upload a photo to start verification';
+    }
+  }
+
+  // ============================================
+  // Verification Result Display
+  // ============================================
+  
+  function getVerdictColors(verdict: VerdictType) {
+    const colors = {
+      highly_likely_authentic: { bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', text: 'text-emerald-400', icon: '✓' },
+      probably_authentic: { bg: 'bg-green-500/10', border: 'border-green-500/30', text: 'text-green-400', icon: '✓' },
+      uncertain: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-400', icon: '?' },
+      suspicious: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400', icon: '⚠' },
+      likely_fake: { bg: 'bg-red-500/10', border: 'border-red-500/30', text: 'text-red-400', icon: '✗' },
+      blacklisted: { bg: 'bg-red-600/20', border: 'border-red-600/50', text: 'text-red-500', icon: '⛔' },
+    };
+    return colors[verdict];
+  }
+
+  function getVerdictLabel(verdict: VerdictType): string {
+    const labels = {
+      highly_likely_authentic: 'Highly Likely Authentic',
+      probably_authentic: 'Probably Authentic',
+      uncertain: 'Uncertain',
+      suspicious: 'Suspicious',
+      likely_fake: 'Likely Fake',
+      blacklisted: 'Known Counterfeit',
+    };
+    return labels[verdict];
+  }
+
+  function showVerificationResult(result: Awaited<ReturnType<typeof verifyProductCode>>) {
+    if (!verificationResult || !resultContent) return;
+    
+    const colors = getVerdictColors(result.verdict);
+    
+    verificationResult.classList.remove('hidden');
+    resultContent.innerHTML = `
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center">
+          <span class="${colors.text} text-2xl">${colors.icon}</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-semibold ${colors.bg} ${colors.text} rounded">${getVerdictLabel(result.verdict)}</span>
+            <span class="text-xl font-bold ${colors.text}">${result.confidenceScore}%</span>
+          </div>
+          <p class="text-sm text-zinc-400 mt-1">${result.recommendation}</p>
+          ${result.matchedProduct ? `
+            <p class="text-sm text-zinc-300 mt-2">${result.matchedProduct.team} • ${result.matchedProduct.brand} • ${result.matchedProduct.season || ''}</p>
+          ` : ''}
+        </div>
+      </div>
+      <button id="hub-scan-again-btn" class="w-full mt-4 py-2 text-sm text-amber-400 hover:text-amber-300">
+        Scan Another
+      </button>
+    `;
+    resultContent.className = `p-4 rounded-xl border ${colors.border} ${colors.bg}`;
+    
+    document.getElementById('hub-scan-again-btn')?.addEventListener('click', () => {
+      verificationResult.classList.add('hidden');
+      resetCheckpoints();
+    });
+    
+    // Update checkpoint summary
+    if (checkpointSummary) {
+      const passCount = result.signals.filter(s => s.value === 'pass').length;
+      checkpointSummary.textContent = `${passCount}/${result.signals.length} checks passed`;
+      checkpointSummary.className = `text-xs mt-3 text-center ${colors.text}`;
+    }
+  }
+
+  // ============================================
+  // Camera Functions
+  // ============================================
+  
+  async function startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      
+      currentStream = stream;
+      video.srcObject = stream;
+      
+      video.onloadedmetadata = () => {
+        cameraPermission?.classList.add('hidden');
+        cameraContainer?.classList.remove('hidden');
+      };
+    } catch (error) {
+      console.error('Camera error:', error);
+      alert('Could not access camera. Please check permissions.');
+    }
+  }
+
+  function stopCamera() {
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+      currentStream = null;
+    }
+    video.srcObject = null;
+    cameraContainer?.classList.add('hidden');
+    cameraPermission?.classList.remove('hidden');
+  }
+
+  async function captureAndProcess() {
+    if (!video.videoWidth || !ctx) return;
+    
+    // Show processing
+    cameraContainer?.classList.add('hidden');
+    cameraProcessing?.classList.remove('hidden');
+    if (cameraProcessingText) cameraProcessingText.textContent = 'Capturing image...';
+    
+    // Capture frame
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
+    const imageData = canvas.toDataURL('image/png');
+    
+    try {
+      if (cameraProcessingText) cameraProcessingText.textContent = 'Extracting code...';
+      const processed = await preprocessForOCR(imageData);
+      const ocrResult = await extractProductCode(processed);
+      
+      if (ocrResult.extractedCodes.length > 0) {
+        const code = ocrResult.extractedCodes[0];
+        if (cameraProcessingText) cameraProcessingText.textContent = 'Verifying...';
+        
+        const result = await verifyProductCode(code.code);
+        
+        // Update checkpoints
+        renderCheckpoints(result.signals);
+        
+        // Show result
+        cameraProcessing?.classList.add('hidden');
+        showVerificationResult(result);
+      } else {
+        // No code found
+        cameraProcessing?.classList.add('hidden');
+        cameraContainer?.classList.remove('hidden');
+        if (cameraStatus) cameraStatus.textContent = 'No code found. Try capturing the label more closely.';
+      }
+    } catch (error) {
+      console.error('Processing error:', error);
+      cameraProcessing?.classList.add('hidden');
+      cameraContainer?.classList.remove('hidden');
+      if (cameraStatus) cameraStatus.textContent = 'Error processing image. Please try again.';
+    }
+  }
+
+  startCameraBtn?.addEventListener('click', startCamera);
+  captureBtn?.addEventListener('click', captureAndProcess);
+  closeCameraBtn?.addEventListener('click', stopCamera);
+
+  // ============================================
+  // Upload Functions
+  // ============================================
+
+  const CODE_PATTERNS: Record<string, RegExp[]> = {
+    Nike: [/[A-Z]{2}\d{4}-\d{3}/g, /\d{6}-\d{3}/g],
+    Adidas: [/[A-Z]{2}\d{4}/g, /[A-Z]\d{5}/g],
+    Puma: [/\d{6}-\d{2}/g],
+    Umbro: [/\d{5}-U/gi],
+  };
+
+  function extractCodesFromText(text: string): { code: string; brand: string }[] {
+    const codes: { code: string; brand: string }[] = [];
+    const seen = new Set<string>();
+    const normalizedText = text.toUpperCase().replace(/[Oo]/g, '0').replace(/[Il]/g, '1');
+    
+    for (const [brand, patterns] of Object.entries(CODE_PATTERNS)) {
+      for (const pattern of patterns) {
+        pattern.lastIndex = 0;
+        const matches = normalizedText.matchAll(pattern);
+        for (const match of matches) {
+          const code = match[0].toUpperCase();
+          if (!seen.has(code)) {
+            seen.add(code);
+            codes.push({ code, brand });
+          }
+        }
+      }
+    }
+    return codes;
+  }
+
+  function handleFiles(files: FileList | File[]) {
+    const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+    
+    if (uploadedFiles.length + imageFiles.length > MAX_IMAGES) {
+      alert(`Maximum ${MAX_IMAGES} images allowed`);
+      return;
+    }
+    
+    uploadedFiles = [...uploadedFiles, ...imageFiles];
+    renderPreviews();
+    
+    if (uploadedFiles.length > 0) {
+      processUploadedImages();
+    }
+  }
+
+  function renderPreviews() {
+    if (!imagePreviews) return;
+    
+    if (uploadedFiles.length === 0) {
+      imagePreviews.classList.add('hidden');
+      return;
+    }
+    
+    imagePreviews.classList.remove('hidden');
+    imagePreviews.innerHTML = uploadedFiles.map((file, index) => `
+      <div class="relative group aspect-square rounded-lg overflow-hidden bg-zinc-800">
+        <img src="${URL.createObjectURL(file)}" alt="Upload ${index + 1}" class="w-full h-full object-cover" />
+        <button class="remove-btn absolute top-1 right-1 w-6 h-6 bg-red-500/80 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" data-index="${index}">
+          <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = parseInt((btn as HTMLElement).dataset.index || '0');
+        uploadedFiles.splice(index, 1);
+        renderPreviews();
+        if (uploadedFiles.length > 0) {
+          processUploadedImages();
+        } else {
+          extractedCodes?.classList.add('hidden');
+          detectedCodes = [];
+        }
+      });
+    });
+  }
+
+  async function processUploadedImages() {
+    if (!ocrProgress || !progressBar || !progressText) return;
+    
+    ocrProgress.classList.remove('hidden');
+    detectedCodes = [];
+    
+    for (let i = 0; i < uploadedFiles.length; i++) {
+      const file = uploadedFiles[i];
+      
+      try {
+        const processedImage = await preprocessForOCR(file);
+        const { data } = await Tesseract.recognize(processedImage, 'eng', {
+          logger: (m) => {
+            if (m.status === 'recognizing text') {
+              const totalProgress = ((i + m.progress) / uploadedFiles.length) * 100;
+              progressBar.style.width = `${totalProgress}%`;
+              progressText.textContent = `${Math.round(totalProgress)}%`;
+            }
+          },
+        });
+        
+        const codes = extractCodesFromText(data.text);
+        detectedCodes.push(...codes);
+      } catch (error) {
+        console.error('OCR error:', error);
+      }
+    }
+    
+    ocrProgress.classList.add('hidden');
+    renderExtractedCodes();
+  }
+
+  function renderExtractedCodes() {
+    if (!extractedCodes || !codesList) return;
+    
+    const noCodeFound = document.getElementById('hub-no-code-found');
+    
+    if (detectedCodes.length === 0) {
+      extractedCodes.classList.add('hidden');
+      // Show manual entry option when no codes detected
+      noCodeFound?.classList.remove('hidden');
+      if (checkpointSummary) {
+        checkpointSummary.textContent = 'No code found - enter manually above';
+        checkpointSummary.className = 'text-xs text-yellow-400 mt-3 text-center';
+      }
+      return;
+    }
+    
+    // Hide manual entry if codes were found
+    noCodeFound?.classList.add('hidden');
+    extractedCodes.classList.remove('hidden');
+    codesList.innerHTML = detectedCodes.map((item, index) => `
+      <div class="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+        <div class="flex items-center gap-3">
+          <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-xs flex items-center justify-center">${index + 1}</span>
+          <code class="font-mono text-zinc-200">${item.code}</code>
+        </div>
+        <span class="px-2 py-1 text-xs rounded bg-zinc-700 text-zinc-400">${item.brand}</span>
+      </div>
+    `).join('');
+  }
+
+  async function verifyAllCodes() {
+    if (detectedCodes.length === 0) return;
+    
+    // Use the first code for now (can be extended to verify all)
+    const firstCode = detectedCodes[0];
+    
+    if (checkpointSummary) checkpointSummary.textContent = 'Analyzing images...';
+    
+    try {
+      // Analyze uploaded images for visual cross-validation
+      let visualData: VisualData | undefined;
+      
+      if (uploadedFiles.length > 0) {
+        // Use the first image for color/visual analysis
+        const firstImage = uploadedFiles[0];
+        
+        // Get all OCR texts for sponsor/technology detection
+        const allOcrTexts: string[] = [];
+        for (const file of uploadedFiles) {
+          try {
+            const processed = await preprocessForOCR(file);
+            const { data } = await Tesseract.recognize(processed, 'eng');
+            allOcrTexts.push(data.text);
+          } catch {
+            // Continue even if OCR fails for some images
+          }
+        }
+        
+        // Analyze the image for visual data
+        const analysisResult = await analyzeImage(firstImage, allOcrTexts);
+        
+        visualData = {
+          dominantColor: analysisResult.dominantColor,
+          sponsorHint: analysisResult.sponsorHint,
+          technologyHint: analysisResult.technologyHint,
+          colorConfidence: analysisResult.colorConfidence
+        };
+        
+        // Show what we detected
+        if (checkpointSummary) {
+          const detected = [];
+          if (visualData.dominantColor) detected.push(`Color: ${visualData.dominantColor}`);
+          if (visualData.sponsorHint) detected.push(`Sponsor: ${visualData.sponsorHint}`);
+          if (visualData.technologyHint) detected.push(`Tech: ${visualData.technologyHint}`);
+          checkpointSummary.textContent = detected.length > 0 
+            ? `Detected: ${detected.join(' • ')} - Verifying...`
+            : 'Verifying...';
+        }
+      } else {
+        if (checkpointSummary) checkpointSummary.textContent = 'Verifying...';
+      }
+      
+      // Use visual cross-validation if we have visual data
+      const result = visualData 
+        ? await verifyWithVisualData(firstCode.code, visualData)
+        : await verifyProductCode(firstCode.code);
+      
+      // Update checkpoints with full signal suite
+      renderCheckpoints(result.signals);
+      
+      // Show result
+      showVerificationResult(result);
+    } catch (error) {
+      console.error('Verification error:', error);
+      if (checkpointSummary) checkpointSummary.textContent = 'Verification failed. Please try again.';
+    }
+  }
+
+  // Drag and drop
+  dropZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-amber-500', 'bg-amber-500/10');
+  });
+
+  dropZone?.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-amber-500', 'bg-amber-500/10');
+  });
+
+  dropZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-amber-500', 'bg-amber-500/10');
+    if (e.dataTransfer?.files) {
+      handleFiles(e.dataTransfer.files);
+    }
+  });
+
+  fileInput?.addEventListener('change', () => {
+    if (fileInput.files) {
+      handleFiles(fileInput.files);
+    }
+  });
+
+  verifyBtn?.addEventListener('click', verifyAllCodes);
+
+  // ============================================
+  // Manual Code Entry
+  // ============================================
+  
+  const manualCodeInput = document.getElementById('hub-manual-code-input') as HTMLInputElement;
+  const manualVerifyBtn = document.getElementById('hub-manual-verify-btn');
+
+  async function verifyManualCode() {
+    const code = manualCodeInput?.value.trim();
+    if (!code) {
+      alert('Please enter a product code');
+      return;
+    }
+    
+    if (checkpointSummary) checkpointSummary.textContent = 'Analyzing...';
+    
+    try {
+      // Check if we have uploaded images for visual cross-validation
+      let visualData: VisualData | undefined;
+      
+      if (uploadedFiles.length > 0) {
+        if (checkpointSummary) checkpointSummary.textContent = 'Analyzing images...';
+        
+        // Use the first image for color/visual analysis
+        const firstImage = uploadedFiles[0];
+        
+        // Get all OCR texts for sponsor/technology detection
+        const allOcrTexts: string[] = [];
+        for (const file of uploadedFiles) {
+          try {
+            const processed = await preprocessForOCR(file);
+            const { data } = await Tesseract.recognize(processed, 'eng');
+            allOcrTexts.push(data.text);
+          } catch {
+            // Continue even if OCR fails
+          }
+        }
+        
+        // Analyze the image for visual data
+        const analysisResult = await analyzeImage(firstImage, allOcrTexts);
+        
+        visualData = {
+          dominantColor: analysisResult.dominantColor,
+          sponsorHint: analysisResult.sponsorHint,
+          technologyHint: analysisResult.technologyHint,
+          colorConfidence: analysisResult.colorConfidence
+        };
+        
+        // Show what we detected
+        const detected = [];
+        if (visualData.dominantColor) detected.push(`Color: ${visualData.dominantColor}`);
+        if (visualData.sponsorHint) detected.push(`Sponsor: ${visualData.sponsorHint}`);
+        if (visualData.technologyHint) detected.push(`Tech: ${visualData.technologyHint}`);
+        
+        if (checkpointSummary) {
+          checkpointSummary.textContent = detected.length > 0 
+            ? `Detected: ${detected.join(' • ')} - Verifying...`
+            : 'Verifying...';
+        }
+      } else {
+        if (checkpointSummary) checkpointSummary.textContent = 'Verifying...';
+      }
+      
+      // Use visual cross-validation if we have visual data
+      const result = visualData 
+        ? await verifyWithVisualData(code, visualData)
+        : await verifyProductCode(code);
+      
+      // Update checkpoints with full signal suite
+      renderCheckpoints(result.signals);
+      
+      // Show result
+      showVerificationResult(result);
+      
+      // Hide manual entry section
+      document.getElementById('hub-no-code-found')?.classList.add('hidden');
+    } catch (error) {
+      console.error('Verification error:', error);
+      if (checkpointSummary) checkpointSummary.textContent = 'Verification failed. Please try again.';
+    }
+  }
+
+  manualVerifyBtn?.addEventListener('click', verifyManualCode);
+  manualCodeInput?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      verifyManualCode();
+    }
+  });
+</script>

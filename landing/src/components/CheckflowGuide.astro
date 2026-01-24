@@ -1,0 +1,279 @@
+---
+/**
+ * CheckflowGuide Component
+ * 
+ * Visual guide showing which photos are needed for authentication.
+ * Similar to KitLegit's Checkflow system.
+ */
+
+interface PhotoStep {
+  id: string;
+  label: string;
+  icon: string;
+  description: string;
+  tip: string;
+}
+
+const photoSteps: PhotoStep[] = [
+  {
+    id: 'front',
+    label: 'Front',
+    icon: '👕',
+    description: 'Full front of the shirt',
+    tip: 'Lay flat, capture entire design'
+  },
+  {
+    id: 'back',
+    label: 'Back',
+    icon: '🔙',
+    description: 'Full back of the shirt',
+    tip: 'Show any printing or numbers'
+  },
+  {
+    id: 'neck-label',
+    label: 'Neck Label',
+    icon: '🏷️',
+    description: 'Inside neck brand label',
+    tip: 'Close-up, make text readable'
+  },
+  {
+    id: 'size-tag',
+    label: 'Size Tag',
+    icon: '📏',
+    description: 'Size and wash care tag',
+    tip: 'Show the product code clearly'
+  },
+  {
+    id: 'wash-tag',
+    label: 'Wash Label',
+    icon: '🧺',
+    description: 'Care instructions label',
+    tip: 'Often contains product code'
+  }
+];
+
+interface Props {
+  completedSteps?: string[];
+  currentStep?: string;
+  onStepClick?: (stepId: string) => void;
+}
+
+const { completedSteps = [], currentStep = 'front' } = Astro.props;
+---
+
+<div class="checkflow-guide">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+        <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-semibold text-white">Checkflow Guide</h3>
+        <p class="text-xs text-zinc-500">5 photos for best results</p>
+      </div>
+    </div>
+    <div class="text-sm">
+      <span class="text-amber-400 font-semibold" id="completed-count">{completedSteps.length}</span>
+      <span class="text-zinc-500">/5 complete</span>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="h-1.5 bg-zinc-800 rounded-full mb-6 overflow-hidden">
+    <div 
+      class="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-300"
+      style={`width: ${(completedSteps.length / 5) * 100}%`}
+      id="progress-fill"
+    ></div>
+  </div>
+
+  <!-- Photo Step Cards -->
+  <div class="grid grid-cols-5 gap-2" id="step-cards">
+    {photoSteps.map((step, index) => {
+      const isCompleted = completedSteps.includes(step.id);
+      const isCurrent = step.id === currentStep;
+      
+      return (
+        <button 
+          class={`checkflow-step relative p-3 rounded-xl border-2 transition-all text-center group
+            ${isCompleted 
+              ? 'bg-green-500/10 border-green-500/50 hover:bg-green-500/20' 
+              : isCurrent 
+                ? 'bg-amber-500/10 border-amber-500 shadow-lg shadow-amber-500/20' 
+                : 'bg-zinc-800/50 border-zinc-700 hover:border-zinc-600'
+            }`}
+          data-step={step.id}
+          data-index={index}
+        >
+          {/* Step Number */}
+          <div class={`absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center
+            ${isCompleted 
+              ? 'bg-green-500 text-white' 
+              : isCurrent 
+                ? 'bg-amber-500 text-black' 
+                : 'bg-zinc-700 text-zinc-400'
+            }`}>
+            {isCompleted ? (
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            ) : (
+              index + 1
+            )}
+          </div>
+          
+          {/* Icon */}
+          <div class="text-2xl mb-1">{step.icon}</div>
+          
+          {/* Label */}
+          <div class={`text-xs font-medium truncate ${isCompleted ? 'text-green-400' : isCurrent ? 'text-amber-400' : 'text-zinc-400'}`}>
+            {step.label}
+          </div>
+          
+          {/* Tooltip */}
+          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-zinc-900 border border-zinc-700 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 text-left">
+            <p class="text-xs text-white font-medium mb-0.5">{step.description}</p>
+            <p class="text-xs text-zinc-400">💡 {step.tip}</p>
+          </div>
+        </button>
+      );
+    })}
+  </div>
+
+  <!-- Current Step Details -->
+  <div class="mt-6 p-4 bg-zinc-800/50 rounded-xl border border-zinc-700" id="current-step-details">
+    {photoSteps.map(step => (
+      <div 
+        class={`step-detail ${step.id === currentStep ? '' : 'hidden'}`}
+        data-step-detail={step.id}
+      >
+        <div class="flex items-start gap-3">
+          <div class="text-3xl">{step.icon}</div>
+          <div class="flex-1">
+            <h4 class="font-semibold text-white">{step.label} Photo</h4>
+            <p class="text-sm text-zinc-400 mb-2">{step.description}</p>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="px-2 py-1 bg-amber-500/20 text-amber-400 rounded">💡 {step.tip}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Tips Section (Collapsed by default) -->
+  <details class="mt-4 group">
+    <summary class="cursor-pointer text-sm text-zinc-500 hover:text-zinc-400 flex items-center gap-2">
+      <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      Photo tips for best results
+    </summary>
+    <div class="mt-3 p-4 bg-zinc-800/30 rounded-lg space-y-2">
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        Use good lighting — natural daylight works best
+      </p>
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        Lay shirt flat on a plain background
+      </p>
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        Make sure labels are in focus and readable
+      </p>
+      <p class="text-xs text-zinc-400 flex items-start gap-2">
+        <span class="text-amber-400">💡</span>
+        The product code is usually on the size/wash tag
+      </p>
+    </div>
+  </details>
+</div>
+
+<style>
+  .checkflow-step:focus {
+    outline: none;
+  }
+  
+  .checkflow-step:focus-visible {
+    outline: 2px solid var(--gold-500);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  // Handle step clicks
+  document.querySelectorAll('.checkflow-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const stepId = (btn as HTMLElement).dataset.step;
+      
+      // Update current step highlight
+      document.querySelectorAll('.checkflow-step').forEach(s => {
+        s.classList.remove('bg-amber-500/10', 'border-amber-500', 'shadow-lg', 'shadow-amber-500/20');
+        s.classList.add('bg-zinc-800/50', 'border-zinc-700');
+      });
+      btn.classList.remove('bg-zinc-800/50', 'border-zinc-700');
+      btn.classList.add('bg-amber-500/10', 'border-amber-500', 'shadow-lg', 'shadow-amber-500/20');
+      
+      // Update current step details
+      document.querySelectorAll('.step-detail').forEach(detail => {
+        if ((detail as HTMLElement).dataset.stepDetail === stepId) {
+          detail.classList.remove('hidden');
+        } else {
+          detail.classList.add('hidden');
+        }
+      });
+      
+      // Update step number colors
+      document.querySelectorAll('.checkflow-step [class*="absolute -top"]').forEach((num, index) => {
+        if ((btn as HTMLElement).dataset.index === index.toString()) {
+          num.classList.remove('bg-zinc-700', 'text-zinc-400');
+          num.classList.add('bg-amber-500', 'text-black');
+        }
+      });
+      
+      // Dispatch custom event for parent components
+      btn.dispatchEvent(new CustomEvent('checkflow-step-selected', {
+        bubbles: true,
+        detail: { stepId }
+      }));
+    });
+  });
+  
+  // Mark step as complete function (can be called externally)
+  (window as any).markCheckflowComplete = function(stepId: string) {
+    const stepBtn = document.querySelector(`.checkflow-step[data-step="${stepId}"]`);
+    if (!stepBtn) return;
+    
+    // Update visual state to completed
+    stepBtn.classList.remove('bg-amber-500/10', 'border-amber-500', 'bg-zinc-800/50', 'border-zinc-700');
+    stepBtn.classList.add('bg-green-500/10', 'border-green-500/50');
+    
+    // Update number badge to checkmark
+    const numberBadge = stepBtn.querySelector('[class*="absolute -top"]');
+    if (numberBadge) {
+      numberBadge.classList.remove('bg-amber-500', 'text-black', 'bg-zinc-700', 'text-zinc-400');
+      numberBadge.classList.add('bg-green-500', 'text-white');
+      numberBadge.innerHTML = `<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`;
+    }
+    
+    // Update label color
+    const label = stepBtn.querySelector('.text-xs.font-medium');
+    if (label) {
+      label.classList.remove('text-amber-400', 'text-zinc-400');
+      label.classList.add('text-green-400');
+    }
+    
+    // Update progress
+    const completedCount = document.querySelectorAll('.checkflow-step.bg-green-500\\/10').length;
+    const countEl = document.getElementById('completed-count');
+    const progressFill = document.getElementById('progress-fill');
+    
+    if (countEl) countEl.textContent = completedCount.toString();
+    if (progressFill) progressFill.style.width = `${(completedCount / 5) * 100}%`;
+  };
+</script>

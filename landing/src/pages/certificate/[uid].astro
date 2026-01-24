@@ -1,0 +1,283 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export const prerender = false;
+
+// Get DPP UID from URL
+const { uid } = Astro.params;
+
+// Import the DPP lookup function
+import { getDppByUid, generateQrCodeUrl } from '../../lib/dpp';
+
+// Fetch DPP data
+let dpp = null;
+let product = null;
+let error = null;
+let qrCodeUrl = '';
+
+if (uid) {
+  const result = await getDppByUid(uid);
+  if (result.success && result.dpp) {
+    dpp = result.dpp;
+    product = result.dpp.product;
+    qrCodeUrl = generateQrCodeUrl(uid);
+  } else {
+    error = result.error || 'Certificate not found';
+  }
+}
+
+const title = dpp ? `Certificate ${uid} | KitTicker` : 'Certificate Not Found | KitTicker';
+const description = dpp && product 
+  ? `Verified authenticity certificate for ${product.team} ${product.season} ${product.kit_type} kit. Digital Product Passport powered by KitTicker.`
+  : 'This certificate could not be found.';
+
+// Format date
+function formatDate(dateString: string | null) {
+  if (!dateString) return 'Pending';
+  return new Date(dateString).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+}
+
+// Verification status badge color
+function getStatusColor(status: string) {
+  switch (status) {
+    case 'verified': return 'green';
+    case 'pending': return 'yellow';
+    case 'failed': return 'red';
+    default: return 'gray';
+  }
+}
+
+const shareUrl = `https://kitticker.com/certificate/${uid}`;
+const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`My vintage football shirt is verified! ✅`)}&url=${encodeURIComponent(shareUrl)}`;
+const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  
+  <main class="pt-24 pb-16 px-4 min-h-screen">
+    {error ? (
+      <!-- Error State -->
+      <div class="container max-w-2xl mx-auto text-center">
+        <div class="glass-card p-12">
+          <div class="text-6xl mb-6">🔍</div>
+          <h1 class="text-3xl font-bold mb-4">Certificate Not Found</h1>
+          <p class="text-[var(--text-secondary)] mb-8">
+            The certificate with ID <code class="bg-zinc-800 px-2 py-1 rounded">{uid}</code> does not exist or has been revoked.
+          </p>
+          <a href="/" class="btn-primary inline-block">Go to Homepage</a>
+        </div>
+      </div>
+    ) : dpp && product ? (
+      <!-- Certificate Display -->
+      <div class="container max-w-4xl mx-auto">
+        <!-- Certificate Card -->
+        <div class="glass-card-gold p-8 md:p-12 relative overflow-hidden">
+          <!-- Watermark -->
+          <div class="absolute top-0 right-0 opacity-5 text-[200px] font-bold leading-none pointer-events-none select-none">
+            KT
+          </div>
+          
+          <!-- Header -->
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 pb-8 border-b border-[var(--gold-500)]/30">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-6 h-6 text-amber-400" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                <span class="text-xl font-bold text-gradient">KitTicker</span>
+              </div>
+              <h1 class="text-2xl md:text-3xl font-bold">Digital Product Passport</h1>
+            </div>
+            <div class={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold ${
+              dpp.verification_status === 'verified' 
+                ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                : dpp.verification_status === 'pending'
+                ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                : 'bg-red-500/20 text-red-400 border border-red-500/30'
+            }`}>
+              {dpp.verification_status === 'verified' ? (
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              ) : null}
+              {dpp.verification_status === 'verified' ? 'Verified' : dpp.verification_status === 'pending' ? 'Pending' : 'Failed'}
+            </div>
+          </div>
+          
+          <!-- Content Grid -->
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Left: Product Details -->
+            <div class="space-y-6">
+              <div>
+                <h2 class="text-[var(--text-muted)] text-sm uppercase tracking-wider mb-2">Product Details</h2>
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Team</span>
+                    <span class="font-semibold">{product.team || 'Unknown'}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Season</span>
+                    <span class="font-semibold">{product.season || 'Unknown'}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Kit Type</span>
+                    <span class="font-semibold">{product.kit_type || 'Unknown'}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Brand</span>
+                    <span class="font-semibold">{product.brand || 'Unknown'}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Product Code</span>
+                    <code class="bg-zinc-800 px-2 py-1 rounded text-sm">{product.code}</code>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h2 class="text-[var(--text-muted)] text-sm uppercase tracking-wider mb-2">Certificate Info</h2>
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Certificate ID</span>
+                    <code class="bg-zinc-800 px-2 py-1 rounded text-sm">{uid}</code>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Issued On</span>
+                    <span class="font-semibold">{formatDate(dpp.created_at)}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-[var(--text-secondary)]">Verified On</span>
+                    <span class="font-semibold">{formatDate(dpp.verification_date)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right: QR Code -->
+            <div class="flex flex-col items-center justify-center">
+              <div class="bg-white p-4 rounded-xl mb-4">
+                <img 
+                  src={qrCodeUrl} 
+                  alt={`QR Code for certificate ${uid}`}
+                  class="w-48 h-48"
+                  loading="lazy"
+                />
+              </div>
+              <p class="text-[var(--text-muted)] text-sm text-center mb-4">
+                Scan to verify this certificate
+              </p>
+              
+              <!-- Share Buttons -->
+              <div class="flex items-center gap-3">
+                <a 
+                  href={twitterShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                  Share
+                </a>
+                <a 
+                  href={facebookShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                  Share
+                </a>
+                <button 
+                  id="copy-link-btn"
+                  class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg transition-colors"
+                  data-url={shareUrl}
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Copy Link
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Footer -->
+          <div class="mt-8 pt-8 border-t border-[var(--gold-500)]/30 text-center">
+            <p class="text-[var(--text-muted)] text-sm">
+              This certificate is powered by <strong class="text-white">KitTicker</strong> — the authentication API for vintage football shirts.
+            </p>
+            <p class="text-[var(--text-muted)] text-xs mt-2">
+              EU Digital Product Passport (DPP) Ready • Verified at {shareUrl}
+            </p>
+          </div>
+        </div>
+        
+        <!-- Verification Evidence (if available) -->
+        {dpp.verification_evidence && dpp.verification_evidence.length > 0 && (
+          <div class="glass-card p-8 mt-8">
+            <h2 class="text-xl font-bold mb-4">Verification Evidence</h2>
+            <div class="space-y-3">
+              {dpp.verification_evidence.map((evidence: any) => (
+                <div class="flex items-start gap-3 p-4 bg-zinc-800/50 rounded-lg">
+                  <svg class={`w-5 h-5 flex-shrink-0 mt-0.5 ${evidence.passed ? 'text-green-400' : 'text-red-400'}`} fill="currentColor" viewBox="0 0 20 20">
+                    {evidence.passed ? (
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    ) : (
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    )}
+                  </svg>
+                  <div>
+                    <div class="font-semibold">{evidence.signal}</div>
+                    <div class="text-[var(--text-secondary)] text-sm">{evidence.details}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        <!-- CTA -->
+        <div class="text-center mt-8">
+          <a href="/how-it-works" class="text-[var(--gold-500)] hover:text-[var(--gold-400)] font-medium">
+            Learn how KitTicker verification works →
+          </a>
+        </div>
+      </div>
+    ) : null}
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<script>
+  const copyBtn = document.getElementById('copy-link-btn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const url = copyBtn.getAttribute('data-url');
+      if (url) {
+        await navigator.clipboard.writeText(url);
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = `
+          <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Copied!
+        `;
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      }
+    });
+  }
+</script>

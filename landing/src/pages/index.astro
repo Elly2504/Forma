@@ -3,10 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import ProductCodeChecker from '../components/ProductCodeChecker.astro';
+import CrossValidationHub from '../components/CrossValidationHub.astro';
 import ProblemSection from '../components/ProblemSection.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import Features from '../components/Features.astro';
-import Pricing from '../components/Pricing.astro';
 import FAQ from '../components/FAQ.astro';
 import CTASection from '../components/CTASection.astro';
 import Footer from '../components/Footer.astro';
@@ -34,15 +34,27 @@ const description = "Know your vintage football shirt's true value in 60 seconds
         <ProductCodeChecker />
       </div>
     </section>
+
+    <!-- Visual Cross-Validation Section (Unified Camera + Upload) -->
+    <section class="py-16 sm:py-24 px-4">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-8">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-400 text-sm font-semibold tracking-wider uppercase">Full Verification</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white mt-2">Visual Cross-Validation</h2>
+          <p class="text-zinc-400 mt-3 max-w-lg mx-auto">
+            Don't have a code? We'll find it for you and run full cross-validation against our database.
+          </p>
+        </div>
+        <CrossValidationHub />
+      </div>
+    </section>
     
     <ProblemSection />
     <HowItWorks />
     <Features />
-    <Pricing />
     <FAQ />
     <CTASection />
   </main>
   
   <Footer />
 </BaseLayout>
-

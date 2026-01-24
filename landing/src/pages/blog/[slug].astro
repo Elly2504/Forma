@@ -4,6 +4,9 @@ import BlogLayout from '../../layouts/BlogLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
+// Force static generation for all blog pages
+export const prerender = true;
+
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
   return guides.map((guide) => ({

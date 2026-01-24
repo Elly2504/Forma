@@ -147,6 +147,47 @@ body {
   }
 }
 
+/* Code Found Animation */
+@keyframes code-found {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.05); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Shake Animation (for errors) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+/* Bounce Animation */
+@keyframes bounce-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Scanner Line */
+@keyframes scan-line {
+  0%, 100% { top: 35%; opacity: 0.3; }
+  50% { top: 55%; opacity: 1; }
+}
+
+/* Glow Pulse */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px currentColor; }
+  50% { box-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
+}
+
+/* Checkmark Draw */
+@keyframes draw-check {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -157,6 +198,142 @@ body {
 
 .animate-fade-in {
   animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-code-found {
+  animation: code-found 0.5s ease-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.4s ease-out forwards;
+}
+
+.animate-scan-line {
+  animation: scan-line 2s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Verdict Glow Effects */
+.verdict-glow-authentic {
+  box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.3),
+    0 0 40px rgba(16, 185, 129, 0.15),
+    inset 0 1px 0 rgba(16, 185, 129, 0.1);
+}
+
+.verdict-glow-warning {
+  box-shadow: 
+    0 0 20px rgba(234, 179, 8, 0.3),
+    0 0 40px rgba(234, 179, 8, 0.15),
+    inset 0 1px 0 rgba(234, 179, 8, 0.1);
+}
+
+.verdict-glow-fake {
+  box-shadow: 
+    0 0 20px rgba(239, 68, 68, 0.3),
+    0 0 40px rgba(239, 68, 68, 0.15),
+    inset 0 1px 0 rgba(239, 68, 68, 0.1);
+}
+
+/* Enhanced Glassmorphism */
+.glass-card-enhanced {
+  background: linear-gradient(135deg,
+      rgba(24, 24, 27, 0.6),
+      rgba(20, 20, 20, 0.4));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-cyan {
+  background: linear-gradient(135deg,
+      rgba(6, 182, 212, 0.08),
+      rgba(20, 20, 20, 0.6));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 16px;
+}
+
+.glass-card-purple {
+  background: linear-gradient(135deg,
+      rgba(168, 85, 247, 0.08),
+      rgba(20, 20, 20, 0.6));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 16px;
+}
+
+/* Confidence Gauge */
+.confidence-gauge {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.confidence-gauge-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease-out, background 0.3s;
+  position: relative;
+}
+
+.confidence-gauge-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.confidence-authentic { background: linear-gradient(90deg, #10b981, #34d399); }
+.confidence-warning { background: linear-gradient(90deg, #eab308, #facc15); }
+.confidence-fake { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+/* Target Box Enhancement */
+.target-box {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.target-box::before,
+.target-box::after,
+.target-box .corner-tl,
+.target-box .corner-tr,
+.target-box .corner-bl,
+.target-box .corner-br {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: currentColor;
+  transition: all 0.3s ease;
+}
+
+.target-box.found {
+  border-color: #10b981;
+  animation: code-found 0.5s ease-out;
 }
 
 /* Counter badge */

@@ -1,0 +1,453 @@
+---
+/**
+ * FakeDetectionCompare Component
+ * 
+ * Side-by-side comparison of authentic vs fake kit detection.
+ * Shows how sponsor/era mismatch catches fakes.
+ */
+---
+
+<div class="fake-detection-compare">
+  <div class="compare-header">
+    <h3 class="compare-title">How We Catch Fakes</h3>
+    <p class="compare-subtitle">Same product code, but visual mismatch reveals the counterfeit</p>
+  </div>
+
+  <div class="compare-grid">
+    <!-- Authentic -->
+    <div class="compare-card card-authentic">
+      <div class="card-badge badge-authentic">
+        <span class="badge-icon">✓</span>
+        <span>AUTHENTIC</span>
+      </div>
+
+      <div class="card-jersey">
+        <div class="jersey-visual">
+          <div class="jersey-emoji">👕</div>
+          <div class="sponsor-text">AIG</div>
+        </div>
+      </div>
+
+      <div class="card-details">
+        <div class="detail-row">
+          <span class="detail-label">Code</span>
+          <code class="detail-code">237867-648</code>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Team</span>
+          <span class="detail-value">Manchester United</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Season</span>
+          <span class="detail-value">2007/08 Home</span>
+        </div>
+        <div class="detail-row detail-highlight">
+          <span class="detail-label">Sponsor</span>
+          <span class="detail-value detail-pass">
+            <span class="status-dot dot-pass"></span>
+            AIG (2006-2010)
+          </span>
+        </div>
+      </div>
+
+      <div class="card-result">
+        <div class="result-score">94%</div>
+        <div class="result-text">
+          <span class="result-label">Confidence</span>
+          <span class="result-verdict verdict-pass">All 10 checks passed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS Divider -->
+    <div class="compare-vs">
+      <span class="vs-text">VS</span>
+    </div>
+
+    <!-- Fake -->
+    <div class="compare-card card-fake">
+      <div class="card-badge badge-fake">
+        <span class="badge-icon">⚠</span>
+        <span>DETECTED FAKE</span>
+      </div>
+
+      <div class="card-jersey jersey-fake">
+        <div class="jersey-visual">
+          <div class="jersey-emoji">👕</div>
+          <div class="sponsor-text sponsor-wrong">Chevrolet</div>
+        </div>
+        <div class="fake-indicator">
+          <span class="fake-x">✗</span>
+        </div>
+      </div>
+
+      <div class="card-details">
+        <div class="detail-row">
+          <span class="detail-label">Code</span>
+          <code class="detail-code">237867-648</code>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Team</span>
+          <span class="detail-value">Manchester United</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Season</span>
+          <span class="detail-value">2007/08 Home</span>
+        </div>
+        <div class="detail-row detail-highlight detail-error">
+          <span class="detail-label">Sponsor</span>
+          <span class="detail-value detail-fail">
+            <span class="status-dot dot-fail"></span>
+            Chevrolet (started 2014!)
+          </span>
+        </div>
+      </div>
+
+      <div class="card-result result-fake">
+        <div class="result-score score-fake">12%</div>
+        <div class="result-text">
+          <span class="result-label">Confidence</span>
+          <span class="result-verdict verdict-fail">Sponsor/Era mismatch</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Explanation -->
+  <div class="compare-explanation">
+    <div class="explanation-icon">💡</div>
+    <div class="explanation-content">
+      <p class="explanation-title">Why This Matters</p>
+      <p class="explanation-text">
+        Counterfeiters often reuse valid product codes but fail to match historical details. 
+        Chevrolet became Man Utd's sponsor in <strong>2014</strong>, not 2007. 
+        Our cross-validation catches this instantly.
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fake-detection-compare {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .compare-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .compare-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .compare-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+    margin-bottom: 2rem;
+  }
+
+  .compare-card {
+    background: rgba(24, 24, 27, 0.6);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: transform 0.3s ease;
+  }
+
+  .compare-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card-authentic {
+    border: 2px solid rgba(16, 185, 129, 0.4);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
+  }
+
+  .card-fake {
+    border: 2px solid rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.1);
+  }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    width: fit-content;
+  }
+
+  .badge-authentic {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+  }
+
+  .badge-fake {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+  }
+
+  .badge-icon {
+    font-size: 0.9rem;
+  }
+
+  .card-jersey {
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .jersey-fake {
+    position: relative;
+  }
+
+  .jersey-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .jersey-emoji {
+    font-size: 4rem;
+  }
+
+  .sponsor-text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.05em;
+  }
+
+  .sponsor-wrong {
+    color: #ef4444;
+    text-decoration: line-through;
+    text-decoration-color: #ef4444;
+  }
+
+  .fake-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 68, 68, 0.3);
+    border-radius: 50%;
+    animation: pulse-fake 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-fake {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  }
+
+  .fake-x {
+    color: #ef4444;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+
+  .detail-highlight {
+    background: rgba(16, 185, 129, 0.05);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin: 0.25rem -0.5rem;
+    border-bottom: none;
+  }
+
+  .detail-error {
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  .detail-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .detail-value {
+    font-size: 0.85rem;
+    color: white;
+  }
+
+  .detail-code {
+    font-size: 0.85rem;
+    font-family: monospace;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--gold-400);
+  }
+
+  .detail-pass, .detail-fail {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+
+  .detail-pass { color: #10b981; }
+  .detail-fail { color: #ef4444; }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .dot-pass { background: #10b981; }
+  .dot-fail { background: #ef4444; }
+
+  .card-result {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 10px;
+    margin-top: auto;
+  }
+
+  .result-fake {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  .result-score {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #10b981;
+  }
+
+  .score-fake {
+    color: #ef4444;
+  }
+
+  .result-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .result-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .result-verdict {
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .verdict-pass { color: #10b981; }
+  .verdict-fail { color: #ef4444; }
+
+  /* VS Divider */
+  .compare-vs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vs-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 50%;
+  }
+
+  /* Explanation */
+  .compare-explanation {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: rgba(251, 191, 36, 0.05);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 12px;
+  }
+
+  .explanation-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .explanation-content {
+    flex: 1;
+  }
+
+  .explanation-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--gold-400);
+    margin-bottom: 0.25rem;
+  }
+
+  .explanation-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .explanation-text strong {
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .compare-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .compare-vs {
+      display: none;
+    }
+  }
+</style>

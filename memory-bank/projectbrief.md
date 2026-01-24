@@ -1,33 +1,89 @@
 # KitTicker - Project Brief
 
 ## One-Liner
-AI-powered vintage football shirt valuation platform that gives condition-adjusted price estimates.
+**Data infrastructure for vintage football shirt authentication** — We power retailers, clubs, and platforms with verified product code data via API.
+
+## Vision
+Become the **authoritative data layer** for the vintage football shirt market by building the world's most comprehensive product code database and making it accessible via developer-friendly APIs.
 
 ## Core Goal
-Help collectors know the *true* value of their vintage football shirts based on actual condition, not just title and year.
+**B2B Data-as-a-Service:** Sell structured verification data (product codes, images, pricing, DPP) to retailers, vintage sellers, and clubs who integrate KitTicker into their own platforms.
 
-## Target Users
-| Segment | Description | Primary Pain |
-|---------|-------------|--------------|
-| **Collectors** | Own 10-50+ vintage shirts | Don't know what their collection is worth |
-| **Resellers** | Buy/sell on eBay, Depop, Vinted | Misprice items, leaving money on table |
-| **Buyers** | Looking to purchase | Can't verify seller claims about condition |
+---
 
-## Business Model
-**Freemium SaaS** with hybrid subscription + usage credits.
+## Target Customers (B2B)
 
-| Tier | Price | Valuations/mo | Key Features |
-|------|-------|---------------|--------------|
-| Free | $0 | 3 | Basic grade (A-F), watermarked reports |
-| Collector | $9.99/mo | 25 | Detailed breakdown, PDF certificates, trends |
-| Dealer | $49.99/mo | 100 | API access, bulk upload, white-label |
+| Segment | Examples | Pain Point | KitTicker Solution | Scenario |
+|---------|----------|------------|-------------------|----------|
+| **Specialist Retailer** | CFS | Manual intake slow/costly | Barcode→auto-identify | Acquisition |
+| **Circular Platform** | Birl, Trove, Reflaunt | Can't verify authenticity instantly | API Valid/Invalid query | API Licensing |
+| **Marketplace** | eBay, StockX, Vinted | Low category trust, high returns | Mandatory code check at listing | Tech Acquisition |
+| **Brand Protection** | Nike, Adidas | Hard to track/detect fakes | Fake code intelligence data | Data Partnership |
 
-**Credit Packs**: $0.30/valuation for pay-as-you-go users.
+---
+
+## Business Model: API-First
+
+| Tier | Price | Limit | Key Features |
+|------|-------|-------|--------------|
+| **Free** | $0 | 1K/mo | Lookup only (code, brand, team) |
+| **Starter** | $49/mo | 5K/mo | + Images, batch validation |
+| **Business** | $199/mo | 25K/mo | + Pricing data, DPP generation |
+| **Enterprise** | Custom | ∞ | SLA, dedicated support, custom integration |
+
+### Revenue Streams
+1. **API Subscriptions** — Monthly recurring revenue
+2. **Overage Fees** — $0.02/request over limit
+3. **Data Licensing** — Bulk historical data exports
+4. **DPP Certificates** — White-label Digital Product Passports (Trove, Reflaunt-tier clients)
+
+---
+
+## Key Differentiator: Data Defense
+
+> **Kitticker, kendisini veri öncelikli mimarisiyle farklılaştırır.**
+> Entrupy piksellere, KitLegit desenlere bakarken; **KitTicker mantığa bakar.**
+
+Sahteciler orijinal ürünlerden geçerli kodları kopyalıyor ancak kodu yanlış kit varyantıyla eşleştiriyorlar.
+KitTicker, kodu **beklenen görsel özelliklerle** (renk, sezon, versiyon) çapraz sorgulayarak mantıksal bir savunma sunar.
+
+---
 
 ## Success Metrics
-- **Phase 0**: 200+ waitlist signups in 2 weeks
-- **Phase 1**: 50 paying users within 30 days of launch
-- **Phase 2**: $1K MRR within 90 days
 
-## Key Differentiator
-The "Kelley Blue Book" for vintage football shirts—nobody else combines AI condition analysis with market valuation.
+| Metric | Phase 1 (3 mo) | Phase 2 (6 mo) | Phase 3 (12 mo) |
+|--------|----------------|----------------|-----------------|
+| Product Codes | 150+ | 500+ | 2,000+ |
+| API Customers | 5 | 25 | 100 |
+| MRR | $500 | $3K | $15K |
+| API Calls/mo | 10K | 100K | 1M |
+
+---
+
+## Digital Product Passport (DPP)
+
+2027 sonrası piyasaya sürülen ürünler "dijital doğacak" — blockchain veya merkezi sicillerde kimlik taşıyacak.
+Vintage pazar (1980-2026) bu dijital tanımlayıcılardan yoksun.
+
+**KitTicker'ın rolü:** Vintage ürünler için **"Vekil DPP"** oluşturarak iki kademeli pazarı köprülemek.
+
+---
+
+## Exit Strategy (M&A Precedents)
+
+| Acquisition | Year | Lesson |
+|-------------|------|--------|
+| eBay × Certilogo | 2023 | DPP infra > build in-house |
+| Poshmark × Suede One | 2021 | CV+ML sneaker auth acquired |
+| StockX × Scout | 2023 | Inventory tools→ future auth (football category growth) |
+
+**Football shirts = #2 collectible vertical after sneakers.**
+KitTicker's data moat makes it attractive acquisition target for marketplaces.
+
+### Exit Scenarios
+
+| Scenario | Acquirer | Probability | Model |
+|----------|----------|-------------|-------|
+| **A** | CFS | Highest | Acqui-hire + DB integration (processing time ↓50%) |
+| **B** | StockX / eBay | Medium | Vertical expertise acquisition (Suede One model) |
+| **C** | B2B SaaS (no exit) | Ongoing | API licensing to Birl, Trove, Reflaunt ($0.05/query or monthly) |

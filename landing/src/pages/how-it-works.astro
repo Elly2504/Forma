@@ -1,0 +1,189 @@
+---
+/**
+ * How It Works Page - Complete Redesign
+ * 
+ * 8 Sections:
+ * 1. Hero - "From Photo to Proof in 60 Seconds"
+ * 2. Process Pipeline - Animated 4-step flow
+ * 3. AI Analysis Deep-Dive - Image extraction demo
+ * 4. 11 Checkpoint Grid - Visual validation points
+ * 5. Fake Detection Demo - Side-by-side comparison
+ * 6. DPP Preview - Certificate generation
+ * 7. Competitor Comparison - Table
+ * 8. B2B CTA - API integration call
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProcessPipeline from '../components/ProcessPipeline.astro';
+import AIAnalysisVisual from '../components/AIAnalysisVisual.astro';
+import CheckpointGrid from '../components/CheckpointGrid.astro';
+import FakeDetectionCompare from '../components/FakeDetectionCompare.astro';
+import DPPPreview from '../components/DPPPreview.astro';
+import CompetitorTable from '../components/CompetitorTable.astro';
+
+const title = "How It Works | KitTicker - 11-Point Verification System";
+const description = "See how KitTicker's AI Vision extracts 6 data points, runs 11 cross-validation checks, and generates Digital Product Passports for vintage football shirts.";
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  
+  <main>
+    <!-- Section 1: Hero -->
+    <section class="hero-section relative pt-32 pb-20 px-4 overflow-hidden">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[var(--gold-500)] rounded-full blur-[200px] opacity-10"></div>
+      <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500 rounded-full blur-[200px] opacity-5"></div>
+      
+      <div class="container relative max-w-4xl mx-auto text-center">
+        <div class="counter-badge mx-auto mb-6 animate-fade-in">
+          <span class="counter-dot"></span>
+          <span>Advanced Multi-Signal Authentication</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 animate-fade-in" style="animation-delay: 0.1s">
+          From Photo to Proof <br/>
+          <span class="text-gradient">in 60 Seconds</span>
+        </h1>
+        
+        <p class="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-8 animate-fade-in" style="animation-delay: 0.2s">
+          AI Vision extracts data → 11-point cross-validation → Digital Product Passport. 
+          <strong class="text-white">Complete authenticity verification, fully explainable.</strong>
+        </p>
+
+        <!-- Trust Badges -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mb-10 animate-fade-in" style="animation-delay: 0.3s">
+          <div class="flex items-center gap-2 bg-zinc-800/50 border border-zinc-700 rounded-full px-4 py-2 text-sm">
+            <span class="text-cyan-400">🤖</span>
+            <span class="text-zinc-300">AI Vision</span>
+          </div>
+          <div class="flex items-center gap-2 bg-zinc-800/50 border border-zinc-700 rounded-full px-4 py-2 text-sm">
+            <span class="text-green-400">🔍</span>
+            <span class="text-zinc-300">11 Checkpoints</span>
+          </div>
+          <div class="flex items-center gap-2 bg-zinc-800/50 border border-zinc-700 rounded-full px-4 py-2 text-sm">
+            <span class="text-purple-400">📜</span>
+            <span class="text-zinc-300">DPP Ready</span>
+          </div>
+          <div class="flex items-center gap-2 bg-zinc-800/50 border border-zinc-700 rounded-full px-4 py-2 text-sm">
+            <span class="text-amber-400">⚡</span>
+            <span class="text-zinc-300">< 100ms</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style="animation-delay: 0.4s">
+          <a href="/#product-checker" class="btn-primary text-lg px-8 py-4">
+            Try Live Demo
+          </a>
+          <a href="/docs" class="text-amber-400 hover:text-amber-300 flex items-center gap-2 font-medium">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            API Documentation
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Process Pipeline -->
+    <section class="py-20 px-4 bg-gradient-to-b from-transparent to-zinc-900/30">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">The Verification Pipeline</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Four automated steps transform your photo into a verified Digital Product Passport
+          </p>
+        </div>
+        <ProcessPipeline />
+      </div>
+    </section>
+
+    <!-- Section 3: AI Analysis Deep-Dive -->
+    <section class="py-20 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Step 2: AI Vision</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">What Our AI Extracts</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Advanced pattern recognition analyzes your shirt photos and extracts 6 critical data points for cross-validation
+          </p>
+        </div>
+        <AIAnalysisVisual />
+      </div>
+    </section>
+
+    <!-- Section 4: 11 Checkpoint Grid -->
+    <section class="py-20 px-4 bg-gradient-to-b from-zinc-900/30 to-transparent">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-green-400 text-sm font-semibold uppercase tracking-wider">Step 3: Cross-Validation</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">11 Checkpoints. Zero Guesswork.</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Every signal is weighted and combined using Bayesian-inspired scoring. Hover over each checkpoint to see the evidence.
+          </p>
+        </div>
+        <CheckpointGrid />
+      </div>
+    </section>
+
+    <!-- Section 5: Fake Detection Demo -->
+    <section class="py-20 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <FakeDetectionCompare />
+      </div>
+    </section>
+
+    <!-- Section 6: DPP Preview -->
+    <section class="py-20 px-4 bg-gradient-to-b from-transparent to-zinc-900/30">
+      <div class="container max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-purple-400 text-sm font-semibold uppercase tracking-wider">Step 4: Certificate</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">Generate Your DPP</h2>
+          <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Create a blockchain-ready Digital Product Passport with unique UID and QR code for instant verification
+          </p>
+        </div>
+        <DPPPreview />
+      </div>
+    </section>
+
+    <!-- Section 7: Competitor Comparison -->
+    <section class="py-20 px-4">
+      <div class="container max-w-5xl mx-auto">
+        <CompetitorTable />
+      </div>
+    </section>
+
+    <!-- Section 8: B2B CTA -->
+    <section class="py-20 px-4">
+      <div class="container max-w-3xl mx-auto">
+        <div class="glass-card-gold p-8 sm:p-12 text-center">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Add Verification to Your Platform</h2>
+          <p class="text-[var(--text-secondary)] mb-8 max-w-xl mx-auto">
+            One API call. 11 checkpoints. Digital proof. Integrate KitTicker's authentication engine in minutes.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <a href="/pricing" class="btn-primary text-lg px-8 py-4">
+              Get API Key
+            </a>
+            <a href="/docs" class="btn-secondary text-lg px-8 py-4">
+              View Documentation
+            </a>
+          </div>
+
+          <p class="text-[var(--text-muted)] text-sm mb-4">Trusted by vintage retailers on</p>
+          <div class="flex items-center justify-center gap-6 sm:gap-8 opacity-60 flex-wrap">
+            <span class="text-lg font-semibold">Depop</span>
+            <span class="text-lg font-semibold">Vinted</span>
+            <span class="text-lg font-semibold">eBay</span>
+            <span class="text-lg font-semibold">CFS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>

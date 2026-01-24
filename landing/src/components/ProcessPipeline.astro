@@ -1,0 +1,279 @@
+---
+/**
+ * ProcessPipeline Component
+ * 
+ * Animated 4-step pipeline showing:
+ * Upload → AI Analysis → 11-Point Validation → DPP Generation
+ */
+---
+
+<div class="process-pipeline">
+  <div class="pipeline-container">
+    <!-- Step 1: Upload -->
+    <div class="pipeline-step" data-step="1">
+      <div class="step-icon">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h3 class="step-title">Upload</h3>
+      <p class="step-subtitle">Photo or Code</p>
+      <div class="step-badge">< 1s</div>
+    </div>
+
+    <!-- Connector 1 -->
+    <div class="pipeline-connector">
+      <div class="connector-line"></div>
+      <div class="connector-arrow">→</div>
+    </div>
+
+    <!-- Step 2: AI Analysis -->
+    <div class="pipeline-step" data-step="2">
+      <div class="step-icon step-icon-ai">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h3 class="step-title">AI Vision</h3>
+      <p class="step-subtitle">Extract 6 Data Points</p>
+      <div class="step-badge">Automated</div>
+    </div>
+
+    <!-- Connector 2 -->
+    <div class="pipeline-connector">
+      <div class="connector-line"></div>
+      <div class="connector-arrow">→</div>
+    </div>
+
+    <!-- Step 3: 11-Point Validation -->
+    <div class="pipeline-step" data-step="3">
+      <div class="step-icon step-icon-validate">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      </div>
+      <h3 class="step-title">11-Point Check</h3>
+      <p class="step-subtitle">Cross-Validate All Signals</p>
+      <div class="step-badge">100ms</div>
+    </div>
+
+    <!-- Connector 3 -->
+    <div class="pipeline-connector">
+      <div class="connector-line"></div>
+      <div class="connector-arrow">→</div>
+    </div>
+
+    <!-- Step 4: DPP Generation -->
+    <div class="pipeline-step" data-step="4">
+      <div class="step-icon step-icon-dpp">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h3 class="step-title">DPP Certificate</h3>
+      <p class="step-subtitle">UID + QR Code</p>
+      <div class="step-badge">EU 2027</div>
+    </div>
+  </div>
+
+  <!-- Animated particles overlay -->
+  <div class="pipeline-particles">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+  </div>
+</div>
+
+<style>
+  .process-pipeline {
+    position: relative;
+    padding: 3rem 1rem;
+    overflow: hidden;
+  }
+
+  .pipeline-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    max-width: 1000px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .pipeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(24, 24, 27, 0.8), rgba(20, 20, 20, 0.6));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    min-width: 140px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  .pipeline-step:hover {
+    transform: translateY(-4px);
+    border-color: rgba(251, 191, 36, 0.4);
+    box-shadow: 0 8px 32px rgba(251, 191, 36, 0.15);
+  }
+
+  .step-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 16px;
+    color: var(--gold-400);
+    margin-bottom: 1rem;
+  }
+
+  .step-icon-ai {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1));
+    border-color: rgba(6, 182, 212, 0.3);
+    color: #06b6d4;
+  }
+
+  .step-icon-validate {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
+  }
+
+  .step-icon-dpp {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.1));
+    border-color: rgba(168, 85, 247, 0.3);
+    color: #a855f7;
+  }
+
+  .step-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+  }
+
+  .step-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .step-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    color: var(--text-secondary);
+  }
+
+  .pipeline-connector {
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    position: relative;
+  }
+
+  .connector-line {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(251, 191, 36, 0.3), rgba(251, 191, 36, 0.6), rgba(251, 191, 36, 0.3));
+    position: relative;
+    overflow: hidden;
+  }
+
+  .connector-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 1), transparent);
+    animation: flow 2s ease-in-out infinite;
+  }
+
+  @keyframes flow {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .connector-arrow {
+    color: var(--gold-500);
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-left: 0.25rem;
+  }
+
+  .pipeline-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--gold-400);
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+
+  .particle-1 {
+    top: 30%;
+    animation: particle-move 4s ease-in-out infinite;
+  }
+
+  .particle-2 {
+    top: 50%;
+    animation: particle-move 4s ease-in-out infinite 1.3s;
+  }
+
+  .particle-3 {
+    top: 70%;
+    animation: particle-move 4s ease-in-out infinite 2.6s;
+  }
+
+  @keyframes particle-move {
+    0% { left: 5%; opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { left: 95%; opacity: 0; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .pipeline-container {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .pipeline-connector {
+      transform: rotate(90deg);
+      padding: 0.5rem 0;
+    }
+
+    .connector-line {
+      width: 30px;
+    }
+
+    .pipeline-step {
+      width: 100%;
+      max-width: 200px;
+    }
+  }
+</style>

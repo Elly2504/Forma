@@ -1,0 +1,369 @@
+---
+/**
+ * AIAnalysisVisual Component
+ * 
+ * Shows how AI extracts 6 data points from an uploaded image.
+ * Uses Manchester United 2007/08 as example.
+ */
+
+const extractedData = [
+  { label: "Product Code", value: "237867-648", icon: "🏷️", status: "success" },
+  { label: "Dominant Color", value: "Red", icon: "🎨", status: "success", colorHex: "#DA291C" },
+  { label: "Sponsor", value: "AIG", icon: "🏢", status: "success" },
+  { label: "Technology", value: "Dri-FIT", icon: "⚙️", status: "success" },
+  { label: "Origin", value: "Thailand", icon: "🌏", status: "success" },
+  { label: "Confidence", value: "94%", icon: "📊", status: "success" },
+];
+---
+
+<div class="ai-analysis-visual">
+  <div class="analysis-container">
+    <!-- Left: Mock Image -->
+    <div class="image-side">
+      <div class="image-frame">
+        <div class="image-content">
+          <div class="jersey-mock">
+            <div class="jersey-icon">👕</div>
+            <div class="jersey-sponsor">AIG</div>
+            <div class="jersey-details">
+              <span class="brand-badge">Nike</span>
+              <span class="team-badge">Manchester United</span>
+            </div>
+            <div class="jersey-season">2007/08 Home</div>
+          </div>
+        </div>
+        <!-- Scan animation overlay -->
+        <div class="scan-overlay">
+          <div class="scan-line"></div>
+        </div>
+        <!-- Corner markers -->
+        <div class="corner-marker corner-tl"></div>
+        <div class="corner-marker corner-tr"></div>
+        <div class="corner-marker corner-bl"></div>
+        <div class="corner-marker corner-br"></div>
+      </div>
+      <p class="image-caption">📷 Uploaded label photo analyzed by AI</p>
+    </div>
+
+    <!-- Right: Extracted Data -->
+    <div class="data-side">
+      <div class="data-header">
+        <div class="ai-badge">
+          <span class="ai-icon">🤖</span>
+          <span>AI Vision Analysis</span>
+        </div>
+        <span class="processing-badge">Processed in 1.2s</span>
+      </div>
+
+      <div class="extracted-data-grid">
+        {extractedData.map((item, index) => (
+          <div class="data-item" style={`animation-delay: ${index * 0.1}s`}>
+            <div class="data-icon">{item.icon}</div>
+            <div class="data-content">
+              <span class="data-label">{item.label}</span>
+              <span class="data-value">
+                {item.colorHex && (
+                  <span class="color-swatch" style={`background: ${item.colorHex}`}></span>
+                )}
+                {item.value}
+              </span>
+            </div>
+            <div class="data-status">
+              <svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="data-footer">
+        <p class="footer-note">
+          <span class="note-icon">💡</span>
+          All 6 data points extracted for cross-validation
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ai-analysis-visual {
+    padding: 2rem 0;
+  }
+
+  .analysis-container {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(24, 24, 27, 0.6), rgba(20, 20, 20, 0.4));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+  }
+
+  /* Image Side */
+  .image-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid rgba(251, 191, 36, 0.3);
+  }
+
+  .image-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .jersey-mock {
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .jersey-icon {
+    font-size: 5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .jersey-sponsor {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .jersey-details {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .brand-badge, .team-badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .brand-badge {
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--gold-400);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+  }
+
+  .team-badge {
+    background: rgba(218, 41, 28, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(218, 41, 28, 0.3);
+  }
+
+  .jersey-season {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* Scan overlay */
+  .scan-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .scan-line {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+    box-shadow: 0 0 10px var(--gold-400);
+    animation: scan 3s ease-in-out infinite;
+  }
+
+  @keyframes scan {
+    0%, 100% { top: 20%; opacity: 0.3; }
+    50% { top: 80%; opacity: 1; }
+  }
+
+  /* Corner markers */
+  .corner-marker {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--gold-400);
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .corner-tl { top: 8px; left: 8px; border-top-width: 3px; border-left-width: 3px; }
+  .corner-tr { top: 8px; right: 8px; border-top-width: 3px; border-right-width: 3px; }
+  .corner-bl { bottom: 8px; left: 8px; border-bottom-width: 3px; border-left-width: 3px; }
+  .corner-br { bottom: 8px; right: 8px; border-bottom-width: 3px; border-right-width: 3px; }
+
+  .image-caption {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  /* Data Side */
+  .data-side {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .data-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .ai-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #06b6d4;
+  }
+
+  .ai-icon {
+    font-size: 1.25rem;
+  }
+
+  .processing-badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 100px;
+    color: #10b981;
+  }
+
+  .extracted-data-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .data-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    animation: fadeInRight 0.5s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .data-icon {
+    font-size: 1.25rem;
+    width: 32px;
+    text-align: center;
+  }
+
+  .data-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .data-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .data-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .color-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .data-status {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 185, 129, 0.2);
+    border-radius: 50%;
+  }
+
+  .check-icon {
+    width: 14px;
+    height: 14px;
+    color: #10b981;
+  }
+
+  .data-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+  }
+
+  .footer-note {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding: 0.75rem;
+    background: rgba(251, 191, 36, 0.05);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 8px;
+  }
+
+  .note-icon {
+    font-size: 1rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .analysis-container {
+      grid-template-columns: 1fr;
+      padding: 1.5rem;
+    }
+
+    .image-frame {
+      max-width: 280px;
+      margin: 0 auto;
+    }
+  }
+</style>

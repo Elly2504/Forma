@@ -1,47 +1,117 @@
 ---
-const features = [
+// Phase 1: Expanded from 3 to 5 steps with B2B focus
+const steps = [
   {
-    icon: "📸",
-    title: "Upload Photos",
-    description: "Take 4 photos of your shirt: front, back, label, and any details. Our AI does the rest."
+    icon: "📷",
+    title: "Enter Product Code",
+    description: "Type in the product code from the shirt's label. Our database covers 75+ verified codes across Nike, Adidas, Puma, and Umbro.",
+    highlight: "< 1 second"
   },
   {
     icon: "🔍",
-    title: "AI Condition Analysis",
-    description: "Advanced vision AI grades your shirt on 6 criteria: fabric wear, print quality, collar condition, and more."
+    title: "Multi-Signal Analysis",
+    description: "Our AI checks format validation, era plausibility, brand patterns, and cross-references against known fakes.",
+    highlight: "5 signals"
   },
   {
-    icon: "💰",
-    title: "Get Your Valuation",
-    description: "Receive a condition-adjusted price range with market comparisons in under 60 seconds."
+    icon: "🗄️",
+    title: "Database Cross-Check",
+    description: "We match the code against our verified database with team, season, kit type, and expected visual attributes.",
+    highlight: "Real data"
+  },
+  {
+    icon: "📊",
+    title: "Get Confidence Score",
+    description: "Receive an explainable confidence score with evidence breakdown. Know exactly why we made our decision.",
+    highlight: "Transparent"
+  },
+  {
+    icon: "📜",
+    title: "Share Certificate",
+    description: "Generate a Digital Product Passport (DPP) with unique ID and QR code. Share proof of authenticity instantly.",
+    highlight: "DPP Ready"
   }
 ];
 ---
 
-<section id="how-it-works" class="relative">
+<section id="how-it-works" class="relative py-24">
   <div class="bg-radial-gold absolute inset-0 pointer-events-none"></div>
   <div class="container relative">
     <div class="text-center mb-16">
       <span class="text-[var(--gold-500)] text-sm font-semibold uppercase tracking-wider">How It Works</span>
       <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6">
-        Three Steps to Your <span class="text-gradient">True Value</span>
+        Five Steps to <span class="text-gradient">Verified Authenticity</span>
       </h2>
       <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">
-        No more guessing. No more leaving money on the table. Get an accurate, condition-based valuation in under a minute.
+        Unlike black-box AI, we show our work. Every verification is explainable and backed by real data.
       </p>
     </div>
     
-    <div class="grid lg:grid-cols-3 gap-8">
-      {features.map((feature, index) => (
-        <div class="glass-card feature-card p-8 text-center" style={`animation-delay: ${index * 0.1}s`}>
-          <div class="text-5xl mb-6">{feature.icon}</div>
-          <div class="w-10 h-10 rounded-full bg-[var(--gold-500)] text-black font-bold flex items-center justify-center mx-auto mb-4">
-            {index + 1}
+    <!-- Desktop Timeline -->
+    <div class="hidden lg:block relative">
+      <!-- Connection line -->
+      <div class="absolute top-24 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-[var(--gold-500)] to-transparent opacity-30"></div>
+      
+      <div class="grid lg:grid-cols-5 gap-6">
+        {steps.map((step, index) => (
+          <div class="glass-card feature-card p-6 text-center relative" style={`animation-delay: ${index * 0.1}s`}>
+            <!-- Step number badge -->
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+              <div class="w-8 h-8 rounded-full bg-[var(--gold-500)] text-black font-bold flex items-center justify-center text-sm shadow-lg shadow-amber-500/30">
+                {index + 1}
+              </div>
+            </div>
+            
+            <div class="text-4xl mb-4 mt-4">{step.icon}</div>
+            <h3 class="text-lg font-semibold mb-2">{step.title}</h3>
+            <p class="text-[var(--text-secondary)] text-sm mb-4">{step.description}</p>
+            
+            <!-- Highlight badge -->
+            <div class="inline-flex items-center gap-1 bg-[var(--gold-500)]/10 border border-[var(--gold-500)]/30 rounded-full px-3 py-1 text-xs text-[var(--gold-500)]">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              {step.highlight}
+            </div>
           </div>
-          <h3 class="text-xl font-semibold mb-3">{feature.title}</h3>
-          <p class="text-[var(--text-secondary)]">{feature.description}</p>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Mobile/Tablet Cards -->
+    <div class="lg:hidden grid sm:grid-cols-2 gap-6">
+      {steps.map((step, index) => (
+        <div class="glass-card feature-card p-6" style={`animation-delay: ${index * 0.1}s`}>
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-[var(--gold-500)] text-black font-bold flex items-center justify-center">
+                {index + 1}
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="text-3xl mb-2">{step.icon}</div>
+              <h3 class="text-lg font-semibold mb-2">{step.title}</h3>
+              <p class="text-[var(--text-secondary)] text-sm mb-3">{step.description}</p>
+              <div class="inline-flex items-center gap-1 bg-[var(--gold-500)]/10 border border-[var(--gold-500)]/30 rounded-full px-3 py-1 text-xs text-[var(--gold-500)]">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                {step.highlight}
+              </div>
+            </div>
+          </div>
         </div>
       ))}
+    </div>
+    
+    <!-- CTA -->
+    <div class="text-center mt-12">
+      <a href="/how-it-works" class="text-[var(--gold-500)] hover:text-[var(--gold-400)] font-medium inline-flex items-center gap-2 transition-colors">
+        Learn more about our verification process
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
     </div>
   </div>
 </section>

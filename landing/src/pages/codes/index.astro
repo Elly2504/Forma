@@ -67,6 +67,43 @@ const brands = Object.keys(groupedCodes).sort();
       </div>
     </section>
     
+    <!-- Search & Filter -->
+    <section class="py-8 border-b border-white/10">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <!-- Search Input -->
+          <div class="relative w-full md:w-auto md:flex-1 max-w-md">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search by code, team, or season..."
+              class="w-full pl-12 pr-4 py-3 bg-zinc-900/80 border border-white/10 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+            />
+          </div>
+          
+          <!-- Brand Filter -->
+          <div class="flex flex-wrap gap-2">
+            <button data-brand="all" class="brand-filter active px-4 py-2 text-sm font-medium rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
+              All
+            </button>
+            {brands.map(brand => (
+              <button data-brand={brand.toLowerCase()} class="brand-filter px-4 py-2 text-sm font-medium rounded-lg bg-zinc-800 text-zinc-400 border border-white/10 hover:border-amber-500/30 hover:text-white transition-all">
+                {brand}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <!-- Results count -->
+        <p id="results-count" class="mt-4 text-sm text-zinc-500 text-center md:text-left">
+          Showing all {codes.length} codes
+        </p>
+      </div>
+    </section>
+    
     <!-- Codes by Brand -->
     {brands.map(brand => (
       <section class="py-12 border-b border-white/10" id={brand.toLowerCase()}>
@@ -81,9 +118,15 @@ const brands = Object.keys(groupedCodes).sort();
             <span class="text-zinc-500 text-lg font-normal">({groupedCodes[brand].length} codes)</span>
           </h2>
           
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 code-grid">
             {groupedCodes[brand].map(code => (
-              <div class="bg-[#111111] rounded-xl border border-white/10 p-5 hover:border-amber-500/30 transition-all">
+              <div 
+                class="code-card bg-[#111111] rounded-xl border border-white/10 p-5 hover:border-amber-500/30 transition-all"
+                data-code={code.data.code.toLowerCase()}
+                data-team={code.data.team.toLowerCase()}
+                data-season={code.data.season.toLowerCase()}
+                data-brand={brand.toLowerCase()}
+              >
                 <div class="flex justify-between items-start mb-3">
                   <span class="font-mono text-amber-400 text-lg">{code.data.code}</span>
                   {code.data.verified && (
@@ -140,4 +183,73 @@ const brands = Object.keys(groupedCodes).sort();
   </main>
   
   <Footer />
+  
+  <script>
+    // Search and filter functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('search-input');
+      const brandFilters = document.querySelectorAll('.brand-filter');
+      const codeCards = document.querySelectorAll('.code-card');
+      const brandSections = document.querySelectorAll('section[id]');
+      const resultsCount = document.getElementById('results-count');
+      
+      let currentBrand = 'all';
+      let searchTerm = '';
+      
+      function filterCards() {
+        let visibleCount = 0;
+        
+        codeCards.forEach(card => {
+          const cardBrand = card.dataset.brand;
+          const cardCode = card.dataset.code;
+          const cardTeam = card.dataset.team;
+          const cardSeason = card.dataset.season;
+          const searchText = `${cardCode} ${cardTeam} ${cardSeason}`;
+          
+          const matchesBrand = currentBrand === 'all' || cardBrand === currentBrand;
+          const matchesSearch = searchTerm === '' || searchText.includes(searchTerm.toLowerCase());
+          
+          if (matchesBrand && matchesSearch) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        
+        // Update section visibility
+        brandSections.forEach(section => {
+          const sectionId = section.id;
+          if (!sectionId || sectionId === 'search-input') return;
+          
+          const visibleCards = section.querySelectorAll('.code-card:not([style*="display: none"])');
+          section.style.display = visibleCards.length > 0 ? '' : 'none';
+        });
+        
+        // Update results count
+        resultsCount.textContent = `Showing ${visibleCount} of ${codeCards.length} codes`;
+      }
+      
+      // Search input handler
+      searchInput.addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        filterCards();
+      });
+      
+      // Brand filter handlers
+      brandFilters.forEach(btn => {
+        btn.addEventListener('click', () => {
+          brandFilters.forEach(b => {
+            b.classList.remove('active', 'bg-amber-500/20', 'text-amber-400', 'border-amber-500/30');
+            b.classList.add('bg-zinc-800', 'text-zinc-400', 'border-white/10');
+          });
+          btn.classList.remove('bg-zinc-800', 'text-zinc-400', 'border-white/10');
+          btn.classList.add('active', 'bg-amber-500/20', 'text-amber-400', 'border-amber-500/30');
+          
+          currentBrand = btn.dataset.brand;
+          filterCards();
+        });
+      });
+    });
+  </script>
 </BaseLayout>

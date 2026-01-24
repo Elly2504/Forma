@@ -1,0 +1,698 @@
+openapi: 3.0.3
+info:
+  title: KitTicker API
+  description: |
+    **B2B Data-as-a-Service API for Vintage Football Shirt Authentication**
+    
+    KitTicker provides the world's most comprehensive product code database for vintage football shirt verification. 
+    Our API enables retailers, marketplaces, and platforms to integrate authentication directly into their workflows.
+    
+    ## Authentication
+    All endpoints (except `/health` and `/dpp/{uid}`) require an API key in the Authorization header:
+    ```
+    Authorization: Bearer kt_live_xxxxxxxxxxxx
+    ```
+    
+    ## Rate Limits
+    | Tier | Rate Limit | Monthly Quota | Price |
+    |------|------------|---------------|-------|
+    | Free | 100/hour | 1,000/month | $0 |
+    | Starter | 500/hour | 5,000/month | $49/month |
+    | Business | 2,000/hour | 25,000/month | $199/month |
+    | Enterprise | Custom | Unlimited | Contact us |
+    
+    ## Base URL
+    Production: `https://kitticker.com/api/v1`
+  version: 1.0.0
+  contact:
+    name: KitTicker Support
+    url: https://kitticker.com
+  license:
+    name: Proprietary
+    url: https://kitticker.com/terms
+
+servers:
+  - url: https://kitticker.com/api/v1
+    description: Production
+
+tags:
+  - name: Health
+    description: System monitoring
+  - name: Codes
+    description: Product code lookup and validation
+  - name: Verify
+    description: Multi-signal authentication
+  - name: DPP
+    description: Digital Product Passport
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Returns API and database health status. No authentication required.
+      operationId: getHealth
+      responses:
+        '200':
+          description: System healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: System degraded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /codes/lookup:
+    get:
+      tags: [Codes]
+      summary: Lookup product code
+      description: |
+        Lookup a single product code in the KitTicker database.
+        Returns product information based on your API tier.
+      operationId: lookupCode
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: code
+          in: query
+          required: true
+          description: The product code to lookup (e.g., CZ3984-100)
+          schema:
+            type: string
+          example: CZ3984-100
+        - name: include_price
+          in: query
+          required: false
+          description: Include pricing data (Business+ tier only)
+          schema:
+            type: boolean
+            default: false
+        - name: include_visual
+          in: query
+          required: false
+          description: Include visual attributes for cross-validation
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Code found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeLookupResponse'
+              example:
+                success: true
+                cached: false
+                request_id: "550e8400-e29b-41d4-a716-446655440000"
+                data:
+                  code: "CZ3984-100"
+                  brand: "Nike"
+                  team: "England"
+                  season: "2022/23"
+                  kit_type: "Home"
+                  variant: "replica"
+                  verified: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /codes/validate:
+    post:
+      tags: [Codes]
+      summary: Batch validate codes
+      description: |
+        Validate multiple product codes in a single request.
+        **Requires Starter tier or higher.**
+        
+        Maximum batch size:
+        - Starter/Business: 100 codes
+        - Enterprise: 500 codes
+      operationId: validateCodes
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchValidateRequest'
+            example:
+              codes: ["CZ3984-100", "CW1526", "IT9785", "FAKE001"]
+      responses:
+        '200':
+          description: Validation complete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchValidateResponse'
+              example:
+                success: true
+                request_id: "550e8400-e29b-41d4-a716-446655440000"
+                results:
+                  - code: "CZ3984-100"
+                    found: true
+                    verified: true
+                    brand: "Nike"
+                    blacklisted: false
+                  - code: "CW1526"
+                    found: false
+                    verified: false
+                    blacklisted: true
+                stats:
+                  total: 4
+                  found: 2
+                  verified: 2
+                  blacklisted: 1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /verify:
+    post:
+      tags: [Verify]
+      summary: Full multi-signal verification
+      description: |
+        Comprehensive product authentication using multiple signals:
+        - Database match (30% weight)
+        - Blacklist check (25% weight)
+        - Format validation (20% weight)
+        - Brand consistency (15% weight)
+        - Era plausibility (10% weight)
+        
+        Optional: Include visual attributes for **Data Defense** cross-validation.
+      operationId: verifyCode
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FullVerifyRequest'
+            example:
+              code: "CZ3984-100"
+              brand: "Nike"
+              visual_attributes:
+                primary_color: "white"
+                kit_type: "home"
+      responses:
+        '200':
+          description: Verification complete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullVerifyResponse'
+              example:
+                success: true
+                request_id: "550e8400-e29b-41d4-a716-446655440000"
+                data:
+                  verdict: "likely_authentic"
+                  confidence: 87
+                  evidence:
+                    - signal: "database_match"
+                      weight: 30
+                      passed: true
+                      details: "✓ Matches Nike England 2022/23 Home"
+                    - signal: "blacklist_check"
+                      weight: 25
+                      passed: true
+                      details: "Not on known fake list"
+                    - signal: "format_validation"
+                      weight: 20
+                      passed: true
+                      details: "Format matches Nike modern pattern"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /dpp/generate:
+    post:
+      tags: [DPP]
+      summary: Generate Digital Product Passport
+      description: |
+        Create a Digital Product Passport (DPP) for a verified product.
+        **Requires Business tier or higher.**
+        
+        Returns a unique UID and QR code URL that can be used for physical labeling.
+      operationId: generateDpp
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DPPGenerateRequest'
+            example:
+              code: "CZ3984-100"
+              owner_email: "seller@example.com"
+              owner_name: "VintageKits Ltd"
+              notes: "Purchased from trusted supplier"
+      responses:
+        '201':
+          description: DPP created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DPPGenerateResponse'
+              example:
+                success: true
+                request_id: "550e8400-e29b-41d4-a716-446655440000"
+                data:
+                  uid: "KT-2026-A1B2C3"
+                  qr_code_url: "https://kitticker.com/dpp/KT-2026-A1B2C3"
+                  verification_status: "verified"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /dpp/{uid}:
+    get:
+      tags: [DPP]
+      summary: Lookup DPP by UID
+      description: |
+        Public endpoint to lookup a Digital Product Passport by its UID.
+        No authentication required - designed for QR code scanning.
+      operationId: lookupDpp
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: The DPP unique identifier (e.g., KT-2026-A1B2C3)
+          schema:
+            type: string
+            pattern: '^KT-\d{4}-[A-Z0-9]{6}$'
+          example: KT-2026-A1B2C3
+      responses:
+        '200':
+          description: DPP found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DPPLookupResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in format `kt_live_xxxxxxxxxxxx`
+
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, timestamp, version]
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded]
+        timestamp:
+          type: string
+          format: date-time
+        version:
+          type: string
+        latency_ms:
+          type: integer
+        services:
+          type: object
+          properties:
+            database:
+              type: string
+              enum: [ok, error]
+            api:
+              type: string
+              enum: [ok, error]
+
+    CodeLookupResponse:
+      type: object
+      required: [success, cached, request_id]
+      properties:
+        success:
+          type: boolean
+        cached:
+          type: boolean
+        request_id:
+          type: string
+          format: uuid
+        data:
+          $ref: '#/components/schemas/ProductCodeData'
+        error:
+          type: string
+
+    ProductCodeData:
+      type: object
+      properties:
+        code:
+          type: string
+        brand:
+          type: string
+          enum: [Nike, Adidas, Puma, Umbro, New Balance]
+        team:
+          type: string
+        season:
+          type: string
+        kit_type:
+          type: string
+          enum: [Home, Away, Third, Fourth, Goalkeeper]
+        variant:
+          type: string
+          enum: [replica, authentic, player_issue]
+        verified:
+          type: boolean
+        image_url:
+          type: string
+          format: uri
+          description: Available for Starter+ tiers
+        thumbnail_url:
+          type: string
+          format: uri
+        estimated_price:
+          $ref: '#/components/schemas/PriceEstimate'
+        visual_attributes:
+          $ref: '#/components/schemas/VisualAttributes'
+
+    PriceEstimate:
+      type: object
+      description: Available for Business+ tiers only
+      properties:
+        min:
+          type: number
+        max:
+          type: number
+        currency:
+          type: string
+          default: GBP
+        confidence:
+          type: string
+          enum: [low, medium, high]
+        last_updated:
+          type: string
+          format: date-time
+
+    VisualAttributes:
+      type: object
+      properties:
+        primary_color:
+          type: string
+        secondary_color:
+          type: string
+        pattern:
+          type: string
+
+    BatchValidateRequest:
+      type: object
+      required: [codes]
+      properties:
+        codes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 500
+
+    BatchValidateResponse:
+      type: object
+      required: [success, results, stats, request_id]
+      properties:
+        success:
+          type: boolean
+        request_id:
+          type: string
+          format: uuid
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              found:
+                type: boolean
+              verified:
+                type: boolean
+              brand:
+                type: string
+              blacklisted:
+                type: boolean
+        stats:
+          type: object
+          properties:
+            total:
+              type: integer
+            found:
+              type: integer
+            verified:
+              type: integer
+            blacklisted:
+              type: integer
+
+    FullVerifyRequest:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: string
+        brand:
+          type: string
+        visual_attributes:
+          type: object
+          properties:
+            primary_color:
+              type: string
+            kit_type:
+              type: string
+              enum: [home, away, third]
+
+    FullVerifyResponse:
+      type: object
+      required: [success, request_id]
+      properties:
+        success:
+          type: boolean
+        request_id:
+          type: string
+          format: uuid
+        data:
+          type: object
+          properties:
+            verdict:
+              type: string
+              enum: [authentic, likely_authentic, uncertain, suspicious, fake]
+            confidence:
+              type: integer
+              minimum: 0
+              maximum: 100
+            evidence:
+              type: array
+              items:
+                $ref: '#/components/schemas/Evidence'
+            warnings:
+              type: array
+              items:
+                type: string
+        error:
+          type: string
+
+    Evidence:
+      type: object
+      properties:
+        signal:
+          type: string
+        weight:
+          type: integer
+        passed:
+          type: boolean
+        details:
+          type: string
+
+    DPPGenerateRequest:
+      type: object
+      required: [code, owner_email]
+      properties:
+        code:
+          type: string
+        owner_email:
+          type: string
+          format: email
+        owner_name:
+          type: string
+        notes:
+          type: string
+
+    DPPGenerateResponse:
+      type: object
+      required: [success, request_id]
+      properties:
+        success:
+          type: boolean
+        request_id:
+          type: string
+          format: uuid
+        data:
+          type: object
+          properties:
+            uid:
+              type: string
+              pattern: '^KT-\d{4}-[A-Z0-9]{6}$'
+            qr_code_url:
+              type: string
+              format: uri
+            verification_status:
+              type: string
+              enum: [pending, verified]
+        error:
+          type: string
+
+    DPPLookupResponse:
+      type: object
+      required: [success, request_id]
+      properties:
+        success:
+          type: boolean
+        request_id:
+          type: string
+          format: uuid
+        data:
+          $ref: '#/components/schemas/DigitalProductPassport'
+        error:
+          type: string
+
+    DigitalProductPassport:
+      type: object
+      properties:
+        uid:
+          type: string
+        verification_status:
+          type: string
+          enum: [pending, verified, failed, disputed]
+        verification_date:
+          type: string
+          format: date-time
+        qr_code_url:
+          type: string
+          format: uri
+        owner_name:
+          type: string
+        transfer_history:
+          type: array
+          items:
+            type: object
+            properties:
+              from_email:
+                type: string
+              to_email:
+                type: string
+              date:
+                type: string
+                format: date-time
+        product:
+          $ref: '#/components/schemas/ProductCodeData'
+
+    ApiError:
+      type: object
+      required: [success, error, request_id]
+      properties:
+        success:
+          type: boolean
+          default: false
+        error:
+          type: string
+        request_id:
+          type: string
+          format: uuid
+        quota:
+          type: object
+          properties:
+            remaining:
+              type: integer
+            reset_date:
+              type: string
+              format: date-time
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            success: false
+            error: "Missing required parameter: code"
+            request_id: "550e8400-e29b-41d4-a716-446655440000"
+
+    Unauthorized:
+      description: Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            success: false
+            error: "Invalid API key"
+            request_id: "550e8400-e29b-41d4-a716-446655440000"
+
+    Forbidden:
+      description: Insufficient tier for this operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            success: false
+            error: "This feature requires Business tier or higher"
+            request_id: "550e8400-e29b-41d4-a716-446655440000"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            success: false
+            error: "Product code not found"
+            request_id: "550e8400-e29b-41d4-a716-446655440000"
+
+    RateLimited:
+      description: Rate limit or quota exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            success: false
+            error: "Monthly quota exceeded. Please upgrade your plan."
+            request_id: "550e8400-e29b-41d4-a716-446655440000"
+            quota:
+              remaining: 0
+              reset_date: "2026-02-01T00:00:00Z"

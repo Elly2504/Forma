@@ -1,0 +1,317 @@
+---
+/**
+ * DPPIntegration Component
+ * 
+ * API integration code example with syntax highlighting.
+ */
+---
+
+<div class="dpp-integration">
+  <div class="integration-container">
+    <!-- Left: Code Example -->
+    <div class="code-section">
+      <div class="code-header">
+        <div class="code-tabs">
+          <button class="code-tab active">Request</button>
+          <button class="code-tab">Response</button>
+        </div>
+        <span class="code-lang">REST API</span>
+      </div>
+      
+      <div class="code-block" id="request-code">
+        <pre><code><span class="code-method">POST</span> <span class="code-url">/api/v1/dpp/generate</span>
+<span class="code-header-text">Authorization</span>: Bearer kt_live_xxxxx
+<span class="code-header-text">Content-Type</span>: application/json
+
+&#123;
+  <span class="code-key">"product_code_id"</span>: <span class="code-string">"abc-123"</span>,
+  <span class="code-key">"owner_email"</span>: <span class="code-string">"seller@vintage.com"</span>,
+  <span class="code-key">"owner_name"</span>: <span class="code-string">"Vintage Football Store"</span>
+&#125;</code></pre>
+      </div>
+
+      <div class="code-block hidden" id="response-code">
+        <pre><code>&#123;
+  <span class="code-key">"success"</span>: <span class="code-bool">true</span>,
+  <span class="code-key">"dpp"</span>: &#123;
+    <span class="code-key">"uid"</span>: <span class="code-string">"KT-2026-A7B3C1"</span>,
+    <span class="code-key">"qr_url"</span>: <span class="code-string">"https://api.qr.../..."</span>,
+    <span class="code-key">"certificate_url"</span>: <span class="code-string">"https://kitticker.com/certificate/KT-2026-A7B3C1"</span>,
+    <span class="code-key">"verification_status"</span>: <span class="code-string">"verified"</span>,
+    <span class="code-key">"confidence_score"</span>: <span class="code-number">94</span>
+  &#125;
+&#125;</code></pre>
+      </div>
+    </div>
+
+    <!-- Right: Description -->
+    <div class="desc-section">
+      <h3 class="desc-title">One API Call</h3>
+      <p class="desc-text">
+        Generate a complete Digital Product Passport with a single request. 
+        No complex integrations, no SDKs required.
+      </p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="feature-icon">⚡</span>
+          <div class="feature-content">
+            <span class="feature-label">Instant Generation</span>
+            <span class="feature-desc">< 500ms response time</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🔗</span>
+          <div class="feature-content">
+            <span class="feature-label">QR Code Included</span>
+            <span class="feature-desc">Ready-to-use shareable URL</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📜</span>
+          <div class="feature-content">
+            <span class="feature-label">Full Evidence</span>
+            <span class="feature-desc">All 11 checkpoints stored</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="/docs" class="docs-link">
+        <span>View Full API Documentation</span>
+        <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.code-tab');
+    const requestCode = document.getElementById('request-code');
+    const responseCode = document.getElementById('response-code');
+    
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        if (index === 0) {
+          requestCode?.classList.remove('hidden');
+          responseCode?.classList.add('hidden');
+        } else {
+          requestCode?.classList.add('hidden');
+          responseCode?.classList.remove('hidden');
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .dpp-integration {
+    padding: 1rem 0;
+  }
+
+  .integration-container {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(24, 24, 27, 0.6), rgba(20, 20, 20, 0.4));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+
+  /* Code Section */
+  .code-section {
+    background: #0d0d0d;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .code-tabs {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .code-tab {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .code-tab:hover {
+    color: white;
+  }
+
+  .code-tab.active {
+    color: var(--gold-400);
+    background: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.3);
+  }
+
+  .code-lang {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .code-block {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+
+  .code-block.hidden {
+    display: none;
+  }
+
+  .code-block pre {
+    margin: 0;
+    font-family: 'Fira Code', 'Monaco', monospace;
+    font-size: 0.75rem;
+    line-height: 1.7;
+  }
+
+  .code-block code {
+    color: #e5e5e5;
+  }
+
+  .code-method {
+    color: #f97316;
+    font-weight: 600;
+  }
+
+  .code-url {
+    color: #60a5fa;
+  }
+
+  .code-header-text {
+    color: #a78bfa;
+  }
+
+  .code-key {
+    color: #4ade80;
+  }
+
+  .code-string {
+    color: #fbbf24;
+  }
+
+  .code-bool {
+    color: #f472b6;
+  }
+
+  .code-number {
+    color: #22d3ee;
+  }
+
+  /* Description Section */
+  .desc-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .desc-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+
+  .desc-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .feature-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .feature-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .feature-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  .feature-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .docs-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gold-400);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .docs-link:hover {
+    color: var(--gold-300);
+    gap: 0.75rem;
+  }
+
+  .arrow-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s ease;
+  }
+
+  .docs-link:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .integration-container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
